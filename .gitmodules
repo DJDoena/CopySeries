@@ -1,0 +1,9 @@
+[submodule "AbstractionLayer"]
+	path = AbstractionLayer
+	url = https://github.com/DJDoena/AbstractionLayer.git
+[submodule "ToolBox"]
+	path = ToolBox
+	url = https://github.com/DJDoena/ToolBox.git
+[submodule "Microsoft.WindowsAPICodePack"]
+	path = Microsoft.WindowsAPICodePack
+	url = https://github.com/DJDoena/Microsoft.WindowsAPICodePack.git

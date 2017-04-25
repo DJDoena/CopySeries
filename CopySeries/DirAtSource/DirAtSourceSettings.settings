@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DoenaSoft.CopySeries" GeneratedClassName="DirAtSourceSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LocalDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\source</Value>
+    </Setting>
+    <Setting Name="StickDrive" Type="System.String" Scope="User">
+      <Value Profile="(Default)">S:\</Value>
+    </Setting>
+    <Setting Name="BeyondCompare" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Program Files (x86)\Beyond Compare 4\BCompare.exe</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

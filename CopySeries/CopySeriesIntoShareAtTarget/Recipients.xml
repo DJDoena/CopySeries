@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<Recipients>
+  <RecipientList>
+    <!--<Recipient>example@example.com</Recipient>-->
+    <!--<Recipient DayOfWeek="Friday">example2@example.com</Recipient>-->
+    <!--<Recipient NewSeries="true">example3@example.com</Recipient>-->
+  </RecipientList>
+</Recipients>

@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DoenaSoft.CopySeries" GeneratedClassName="CopySeriesIntoShareAtSourceSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TargetDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\source</Value>
+    </Setting>
+    <Setting Name="SourceDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\download</Value>
+    </Setting>
+    <Setting Name="StickDrive" Type="System.String" Scope="User">
+      <Value Profile="(Default)">S:\</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
