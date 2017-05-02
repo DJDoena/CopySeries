@@ -83,11 +83,11 @@ namespace DoenaSoft.CopySeries
             String bcc = GetBcc(newSeries);
 
             email.Append(bcc);
-            email.Append("&subject=Share Update (Home)&body=");
+            email.Append("&subject=Share Update&body=");
 
             foreach (EpisodeData episode in episodes)
             {
-                String name = episode.ToString().Replace("\"", "%22");
+                String name = Uri.EscapeDataString(episode.ToString());
 
                 email.Append(name);
                 email.Append("%0D%0A");
@@ -128,11 +128,6 @@ namespace DoenaSoft.CopySeries
                     bcc.Append(";");
                     bcc.Append(recipient.Value);
                 }
-            }
-
-            if (bcc.Length > 0)
-            {
-                bcc.Remove(bcc.Length - 1, 1);
             }
 
             return (bcc.ToString());

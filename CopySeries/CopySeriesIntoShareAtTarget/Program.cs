@@ -14,21 +14,33 @@ namespace DoenaSoft.CopySeries
     public static class Program
     {
         private static readonly String StickDrive;
+
         private static readonly String SourceDir;
+
         private static readonly String TargetDir;
+
         private static readonly String RemoteDir;
+
         private static readonly String CompleteSeriesFile;
+
         private static readonly Int64 TenGigaByte;
+
         private static readonly String DirFile;
 
         static Program()
         {
             StickDrive = CopySeriesIntoShareAtTargetSettings.Default.StickDrive;
-            SourceDir = StickDrive + "Series";
+
+            SourceDir = Path.Combine(StickDrive, "Series");
+
             TargetDir = CopySeriesIntoShareAtTargetSettings.Default.TargetPath;
+
             RemoteDir = CopySeriesIntoShareAtTargetSettings.Default.SourcePath;
+
             CompleteSeriesFile = "CompleteSeriesList.txt";
+
             TenGigaByte = 10L * ((Int64)(Math.Pow(2, 30)));
+
             DirFile = Path.Combine(StickDrive, "dir.txt");
         }
 
@@ -63,7 +75,7 @@ namespace DoenaSoft.CopySeries
 
                     Dir.CreateFileList(StickDrive, TargetDir);
 
-                    File.Copy(StickDrive + CompleteSeriesFile, TargetDir + CompleteSeriesFile, true);
+                    File.Copy(Path.Combine(StickDrive, CompleteSeriesFile), Path.Combine(TargetDir, CompleteSeriesFile), true);
 
                     WriteEmail(episodes, (new FileInfo(newFileName)).Name);
                 }
@@ -246,7 +258,7 @@ namespace DoenaSoft.CopySeries
 
         private static String GetBcc(Boolean newSeries)
         {
-            Recipients recipients = Serializer<Recipients>.Deserialize(Path.Combine(StickDrive, "Recipients.xml"));
+            Recipients recipients = Serializer<Recipients>.Deserialize(Path.Combine(TargetDir, "Recipients.xml"));
 
             StringBuilder bcc = new StringBuilder();
 
@@ -339,9 +351,9 @@ namespace DoenaSoft.CopySeries
         {
             if (names.Contains(episode.SeriesName) == false)
             {
-                addInfo += "New " + text + ": " + episode.SeriesName + Environment.NewLine + Environment.NewLine;
+                addInfo += $"New  {text}: {episode.DisplayName}{Environment.NewLine}{Environment.NewLine}";
 
-                names.Add(episode.DisplayName);
+                names.Add(episode.SeriesName);
             }
         }
 
