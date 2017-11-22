@@ -73,7 +73,7 @@ namespace DoenaSoft.CopySeries
                 {
                     foreach (String file in allFiles)
                     {
-                        sw.WriteLine(file.Replace(targetDir, ""));
+                        sw.WriteLine($"{file.Replace(targetDir, String.Empty)};{(new FileInfo(file)).Length}");
                     }
                 }
             }

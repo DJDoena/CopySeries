@@ -5,9 +5,9 @@ namespace DoenaSoft.CopySeries
 {
     public class FileSize
     {
-        private readonly String FileSizeFormatted;
+        private String FileSizeFormatted { get; }
 
-        private readonly Int64 FileSizeInBytes;
+        private Int64 FileSizeInBytes { get; }
 
         public Int64 InBytes
             => (FileSizeInBytes);
@@ -26,19 +26,19 @@ namespace DoenaSoft.CopySeries
             Decimal roundBytes;
             if (CheckOrderOfMagnitude(fileSize, 40, 1, out roundBytes))
             {
-                bytesPower = " TByte";
+                bytesPower = " TiB";
             }
             else if (CheckOrderOfMagnitude(fileSize, 30, 1, out roundBytes))
             {
-                bytesPower = " GByte";
+                bytesPower = " GiB";
             }
             else if (CheckOrderOfMagnitude(fileSize, 20, 0, out roundBytes))
             {
-                bytesPower = " MByte";
+                bytesPower = " MiB";
             }
             else if (CheckOrderOfMagnitude(fileSize, 10, 0, out roundBytes))
             {
-                bytesPower = " KByte";
+                bytesPower = " KiB";
             }
             else
             {
@@ -47,7 +47,7 @@ namespace DoenaSoft.CopySeries
                 bytesPower = " Byte";
             }
 
-            String formatted = roundBytes.ToString(CultureInfo.GetCultureInfo("en-US")).PadLeft(numberPadding) + bytesPower;
+            String formatted = roundBytes.ToString(CultureInfo.GetCultureInfo("de-DE")).PadLeft(numberPadding) + bytesPower;
 
             return (formatted);
         }

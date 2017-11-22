@@ -13,12 +13,6 @@ namespace DoenaSoft.CopySeries.Filter.Implementations
 {
     internal sealed class FilterViewModel : IFilterViewModel
     {
-        #region Readonlies
-
-        private readonly IWindowFactory WindowFactory;
-
-        #endregion
-
         #region Fields
 
         private Boolean m_NoSubs;
@@ -28,6 +22,12 @@ namespace DoenaSoft.CopySeries.Filter.Implementations
         private Boolean m_OnlySDs;
 
         private String m_Filter;
+
+        #endregion
+
+        #region Properties
+
+        private IWindowFactory WindowFactory { get; }
 
         #endregion
 

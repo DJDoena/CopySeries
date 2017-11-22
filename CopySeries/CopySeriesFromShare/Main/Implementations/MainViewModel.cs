@@ -19,24 +19,6 @@ namespace DoenaSoft.CopySeries.Main.Implementations
 {
     internal sealed class MainViewModel : IMainViewModel
     {
-        #region Readonlies
-
-        private readonly IMainModel Model;
-
-        private readonly IIOServices IOServices;
-
-        private readonly IUIServices UIServices;
-
-        private readonly IWindowFactory WindowFactory;
-
-        private readonly IRemainingTimeCalculator RemainingTimeCalculator;
-
-        private readonly IWindowsProgressBarHandler WindowsProgressBarHandler;
-
-        private readonly ISynchronizer Synchronizer;
-
-        #endregion
-
         #region Fields
 
         #region Thread-unsafe Fields
@@ -65,6 +47,20 @@ namespace DoenaSoft.CopySeries.Main.Implementations
         #endregion
 
         #region Properties
+
+        private IMainModel Model { get; }
+
+        private IIOServices IOServices { get; }
+
+        private IUIServices UIServices { get; }
+
+        private IWindowFactory WindowFactory { get; }
+
+        private IRemainingTimeCalculator RemainingTimeCalculator { get; }
+
+        private IWindowsProgressBarHandler WindowsProgressBarHandler { get; }
+
+        private ISynchronizer Synchronizer { get; }
 
         private String LastFolder { get; set; }
 

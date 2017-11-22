@@ -10,16 +10,6 @@ namespace DoenaSoft.CopySeries.Main.Implementations
 {
     internal sealed class MainModel : IMainModel
     {
-        #region Readonlies
-
-        private readonly IUIServices UIServices;
-
-        private readonly IIOServices IOServices;
-
-        private readonly HashSet<String> HashedEntries;
-
-        #endregion
-
         #region Fields
 
         private Nullable<Int64> m_Size;
@@ -27,6 +17,12 @@ namespace DoenaSoft.CopySeries.Main.Implementations
         #endregion
 
         #region Properties
+
+        private IUIServices UIServices { get; }
+
+        private IIOServices IOServices { get; }
+
+        private HashSet<String> HashedEntries { get; }
 
         private String TargetLocation { get; set; }
 

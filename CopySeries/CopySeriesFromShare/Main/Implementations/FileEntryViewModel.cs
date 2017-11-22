@@ -4,7 +4,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
 {
     internal sealed class FileEntryViewModel : IFileEntryViewModel
     {
-        private readonly String File;
+        private String File { get; }
 
         public FileEntryViewModel(String file)
         {

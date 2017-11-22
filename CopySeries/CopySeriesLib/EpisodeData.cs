@@ -1,25 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace DoenaSoft.CopySeries
 {
     public sealed class EpisodeData : IComparable<EpisodeData>
     {
-        private readonly Name Name;
+        private Name Name { get; }
 
-        private readonly String SeasonNumber;
+        private String SeasonNumber { get; }
 
-        private readonly String EpisodeNumber;
+        private String EpisodeNumber { get; }
 
-        private readonly Boolean IsDateShow;
+        private Boolean IsDateShow { get; }
 
-        public readonly String EpisodeID;
+        public String EpisodeID { get; }
 
-        public readonly String EpisodeName;
+        public String EpisodeName { get; }
 
-        public readonly String AddInfo;
+        public String AddInfo { get; }
 
-        public readonly FileSize FileSize;
+        public FileSize FileSize { get; }
 
         public String SeriesName
             => (Name.LongName);
@@ -35,6 +36,8 @@ namespace DoenaSoft.CopySeries
 
         public Boolean IsPilot
             => ((IsDateShow == false) && (SeasonNumber == "1") && (IsFirstOfSeason));
+
+        private List<String> Languages { get; }
 
         public EpisodeData(Name name
             , String seasonNumber
@@ -59,6 +62,8 @@ namespace DoenaSoft.CopySeries
             AddInfo = addInfo;
 
             FileSize = fileSize;
+
+            Languages = new List<String>();
         }
 
         #region IComparable<EpisodeData>
@@ -96,7 +101,7 @@ namespace DoenaSoft.CopySeries
             => (IsDateShow ? GetDateShowID() : GetSeasonShowID());
 
         private String GetDateShowID()
-            => ($"{SeasonNumber.PadLeft(2, '0')}/{EpisodeNumber}");
+            => ($"{EpisodeNumber}.{SeasonNumber.PadLeft(2, '0')}.");
 
         private String GetSeasonShowID()
             => ($"{SeasonNumber}x{EpisodeNumber}");
@@ -117,7 +122,19 @@ namespace DoenaSoft.CopySeries
             sb.Append(FileSize.ToString());
             sb.Append(")");
 
+            if (Languages.Count > 0)
+            {
+                sb.Append(": ");
+
+                sb.Append(String.Join(", ", Languages));
+            }
+
             return (sb.ToString());
-        }    
+        }
+
+        public void AddLanguage(String language)
+        {
+            Languages.Add(language);
+        }
     }
 }

@@ -16,9 +16,9 @@ namespace DoenaSoft.CopySeries.Implementations
 {
     internal sealed class WindowFactory : IWindowFactory
     {
-        private readonly IUIServices UIServices;
+        private IUIServices UIServices { get; }
 
-        private readonly IIOServices IOServices;
+        private IIOServices IOServices { get; }
 
         public WindowFactory()
         {

@@ -9,15 +9,15 @@ namespace DoenaSoft.CopySeries
 {
     public static class Program
     {
-        private static readonly String TargetDir = DirAtSourceSettings.Default.LocalDir;
+        private static String TargetDir { get; } = DirAtSourceSettings.Default.LocalDir;
 
-        private static readonly String DirFile = DirAtSourceSettings.Default.StickDrive + "dir@home.txt";
+        private static String DirFile { get; } = DirAtSourceSettings.Default.StickDrive + "dir@home.txt";
 
-        private static readonly String RemoteDirFile = DirAtSourceSettings.Default.StickDrive + "dir.txt";
+        private static String RemoteDirFile { get; } = DirAtSourceSettings.Default.StickDrive + "dir.txt";
 
-        private static readonly String FileTypesFile = DirAtSourceSettings.Default.StickDrive + "FileTypes.xml";
+        private static String FileTypesFile { get; } = DirAtSourceSettings.Default.StickDrive + "FileTypes.xml";
 
-        private static readonly String BeyondCompareFile = DirAtSourceSettings.Default.BeyondCompare;
+        private static String BeyondCompareFile { get; } = DirAtSourceSettings.Default.BeyondCompare;
 
         [STAThread]
         static void Main(String[] args)
@@ -120,7 +120,7 @@ namespace DoenaSoft.CopySeries
                             }
                         }
 
-                        sw.WriteLine(shortFile);
+                        sw.WriteLine($"{shortFile};{(new FileInfo(file)).Length}");
                     }
                 }
             }

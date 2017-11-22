@@ -13,19 +13,19 @@ namespace DoenaSoft.CopySeries
 {
     public static class Program
     {
-        private static readonly String StickDrive;
+        private static String StickDrive { get; }
 
-        private static readonly String SourceDir;
+        private static String SourceDir { get; }
 
-        private static readonly String TargetDir;
+        private static String TargetDir { get; }
 
-        private static readonly String RemoteDir;
+        private static String RemoteDir { get; }
 
-        private static readonly String CompleteSeriesFile;
+        private static String CompleteSeriesFile { get; }
 
-        private static readonly Int64 TenGigaByte;
+        private static Int64 TenGibiByte { get; }
 
-        private static readonly String DirFile;
+        private static String DirFile { get; }
 
         static Program()
         {
@@ -39,7 +39,7 @@ namespace DoenaSoft.CopySeries
 
             CompleteSeriesFile = "CompleteSeriesList.txt";
 
-            TenGigaByte = 10L * ((Int64)(Math.Pow(2, 30)));
+            TenGibiByte = 10L * ((Int64)(Math.Pow(2, 30)));
 
             DirFile = Path.Combine(StickDrive, "dir.txt");
         }
@@ -242,7 +242,7 @@ namespace DoenaSoft.CopySeries
 
             email.AppendLine("".PadLeft(padding + 12, '-'));
 
-            if (fileSize >= TenGigaByte)
+            if (fileSize >= TenGibiByte)
             {
                 email.Append("".PadLeft(padding - 1, ' '));
             }

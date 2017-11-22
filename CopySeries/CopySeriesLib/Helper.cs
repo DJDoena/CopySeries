@@ -10,7 +10,7 @@ namespace DoenaSoft.CopySeries
 {
     public static class Helper
     {
-        private static readonly Regex NameRegex;
+        private static Regex NameRegex { get; }
 
         private static Dictionary<String, Name> Names { get; set; }
 
