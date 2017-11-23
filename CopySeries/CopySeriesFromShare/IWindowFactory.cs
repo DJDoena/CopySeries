@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DoenaSoft.CopySeries
+﻿namespace DoenaSoft.CopySeries
 {
+    using System;
+    using System.Collections.Generic;
+
     internal interface IWindowFactory
     {
         void OpenMainWindow();

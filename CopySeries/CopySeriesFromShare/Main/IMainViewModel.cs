@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Input;
-using DoenaSoft.ToolBox.Commands;
-
-namespace DoenaSoft.CopySeries.Main
+﻿namespace DoenaSoft.CopySeries.Main
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Windows.Input;
+    using ToolBox.Commands;
+
     internal interface IMainViewModel : INotifyPropertyChanged
     {
         String Filter { get; set; }
@@ -47,7 +47,7 @@ namespace DoenaSoft.CopySeries.Main
 
         Boolean TaskIsRunning { get; }
 
-        Boolean TaskIsNotRunning { get; }        
+        Boolean TaskIsNotRunning { get; }
 
         Int32 ProgressMax { get; }
 

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Globalization;
-
-namespace DoenaSoft.CopySeries
+﻿namespace DoenaSoft.CopySeries
 {
+    using System;
+    using System.Globalization;
+
     public class FileSize
     {
         private String FileSizeFormatted { get; }

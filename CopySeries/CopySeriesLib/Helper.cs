@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using DoenaSoft.ToolBox.Generics;
-
-namespace DoenaSoft.CopySeries
+﻿namespace DoenaSoft.CopySeries
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using ToolBox.Generics;
+
     public static class Helper
     {
         private static Regex NameRegex { get; }

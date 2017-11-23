@@ -1,7 +1,7 @@
-﻿using System.Windows;
-
-namespace DoenaSoft.CopySeries.SelectFolders.Implementations
+﻿namespace DoenaSoft.CopySeries.SelectFolders.Implementations
 {
+    using System.Windows;
+
     public partial class SelectFoldersWindow : Window, ICloseable
     {
         public SelectFoldersWindow()

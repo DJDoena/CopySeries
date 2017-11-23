@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using DoenaSoft.AbstractionLayer.IOServices;
-using DoenaSoft.AbstractionLayer.UIServices;
-using DoenaSoft.ToolBox.Generics;
-
-namespace DoenaSoft.CopySeries.Main.Implementations
+﻿namespace DoenaSoft.CopySeries.Main.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using AbstractionLayer.IOServices;
+    using AbstractionLayer.UIServices;
+    using ToolBox.Generics;
+
     internal sealed class MainModel : IMainModel
     {
         #region Fields
@@ -191,9 +191,9 @@ namespace DoenaSoft.CopySeries.Main.Implementations
 
             foreach (String entry in Entries)
             {
-                if (IOServices.Directory.Exists(entry))
+                if (IOServices.Folder.Exists(entry))
                 {
-                    String[] files = IOServices.Directory.GetFiles(entry, searchOption: System.IO.SearchOption.AllDirectories);
+                    String[] files = IOServices.Folder.GetFiles(entry, searchOption: System.IO.SearchOption.AllDirectories);
 
                     fileInfos.AddRange(files.Select(file => new SourceTarget(IOServices.GetFileInfo(file))));
                 }
@@ -211,7 +211,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
 
             ResetSize();
 
-            IDriveInfo driveInfo = IOServices.GetDriveInfo(IOServices.GetDirectoryInfo(TargetLocation).Root.Name.Substring(0, 1));
+            IDriveInfo driveInfo = IOServices.GetDriveInfo(IOServices.GetFolderInfo(TargetLocation).Root.Name.Substring(0, 1));
 
             if (driveInfo.AvailableFreeSpace <= Size)
             {
@@ -262,7 +262,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
                     }
                     else
                     {
-                        fileInfo.TargetFolder = IOServices.GetDirectoryInfo(TargetLocation);
+                        fileInfo.TargetFolder = IOServices.GetFolderInfo(TargetLocation);
                     }
                 }
 
@@ -388,7 +388,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
 
         private void EnsureSubFolders(SourceTarget fileInfo)
         {
-            String directoryName = fileInfo.SourceFile.DirectoryName;
+            String directoryName = fileInfo.SourceFile.FolderName;
 
             String newPath;
             if (directoryName.StartsWith(Properties.Settings.Default.SourcePath))
@@ -414,7 +414,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
 
             String path = IOServices.Path.Combine(TargetLocation, newPath);
 
-            fileInfo.TargetFolder = IOServices.GetDirectoryInfo(path);
+            fileInfo.TargetFolder = IOServices.GetFolderInfo(path);
 
             if (fileInfo.TargetFolder.Exists == false)
             {
@@ -516,7 +516,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
 
             foreach (String partner in partners)
             {
-                String folder = fi.DirectoryName + @"\..\" + (toHD ? "HD" : "SD");
+                String folder = fi.FolderName + @"\..\" + (toHD ? "HD" : "SD");
 
                 String fileInQuestion = folder + @"\" + fileWithoutExtension + partner;
 
@@ -568,7 +568,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
         private void GetEntrySize(String entry
             , ref Int64 size)
         {
-            if (IOServices.Directory.Exists(entry))
+            if (IOServices.Folder.Exists(entry))
             {
                 GetFolderSize(entry, ref size);
             }
@@ -581,7 +581,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
         private void GetFolderSize(String folder
             , ref Int64 size)
         {
-            String[] files = IOServices.Directory.GetFiles(folder, searchOption: System.IO.SearchOption.AllDirectories);
+            String[] files = IOServices.Folder.GetFiles(folder, searchOption: System.IO.SearchOption.AllDirectories);
 
             foreach (String file in files)
             {

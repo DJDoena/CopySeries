@@ -1,8 +1,8 @@
-﻿using System;
-using DoenaSoft.CopySeries.Main;
-
-namespace DoenaSoft.CopySeries.Implementations
+﻿namespace DoenaSoft.CopySeries.Implementations
 {
+    using System;
+    using Main;
+
     internal static class SortHelper
     {
         internal static Int32 CompareFileEntries(IFileEntryViewModel left

@@ -1,12 +1,12 @@
-﻿using DoenaSoft.AbstractionLayer.IOServices;
-
-namespace DoenaSoft.CopySeries.Main.Implementations
+﻿namespace DoenaSoft.CopySeries.Main.Implementations
 {
+    using AbstractionLayer.IOServices;
+
     internal sealed class SourceTarget
     {
         internal IFileInfo SourceFile { get; private set; }
 
-        internal IDirectoryInfo TargetFolder { get; set; }
+        internal IFolderInfo TargetFolder { get; set; }
 
         internal SourceTarget(IFileInfo sourceFile)
         {

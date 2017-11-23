@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Data;
-
-namespace DoenaSoft.CopySeries.SelectFolders.Implementations
+﻿namespace DoenaSoft.CopySeries.SelectFolders.Implementations
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Windows.Data;
+
     public sealed class AcceptButtonCommandParametersConverter : IMultiValueConverter
     {
         #region IMultiValueConverter

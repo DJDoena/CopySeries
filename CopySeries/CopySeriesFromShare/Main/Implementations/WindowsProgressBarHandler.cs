@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.WindowsAPICodePack.Taskbar;
-
-namespace DoenaSoft.CopySeries.Main.Implementations
+﻿namespace DoenaSoft.CopySeries.Main.Implementations
 {
+    using System;
+    using Microsoft.WindowsAPICodePack.Taskbar;
+
     internal sealed class WindowsProgressBarHandler : IWindowsProgressBarHandler
     {
         private Boolean Indeterminate

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace DoenaSoft.CopySeries.Main
+﻿namespace DoenaSoft.CopySeries.Main
 {
+    using System;
+
     interface IFileEntryViewModel
     {
         String DisplayName { get; }

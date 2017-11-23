@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DoenaSoft.CopySeries.SelectFolders
+﻿namespace DoenaSoft.CopySeries.SelectFolders
 {
+    using System;
+    using System.Collections.Generic;
+
     internal interface IAcceptButtonCommandParameters
     {
         IEnumerable<String> SelectedFolders { get; }

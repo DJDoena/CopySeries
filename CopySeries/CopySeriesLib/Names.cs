@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Xml.Serialization;
-
-namespace DoenaSoft.CopySeries
+﻿namespace DoenaSoft.CopySeries
 {
+    using System;
+    using System.Diagnostics;
+    using System.Xml.Serialization;
+
     [XmlRoot]
     public class Names
     {

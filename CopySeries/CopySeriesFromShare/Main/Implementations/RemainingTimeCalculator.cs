@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace DoenaSoft.CopySeries.Main.Implementations
+﻿namespace DoenaSoft.CopySeries.Main.Implementations
 {
+    using System;
+
     internal sealed class RemainingTimeCalculator : IRemainingTimeCalculator
     {
         private DateTime StartTime { get; set; }

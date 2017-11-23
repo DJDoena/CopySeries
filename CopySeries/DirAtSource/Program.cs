@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using DoenaSoft.ToolBox.Generics;
-
-namespace DoenaSoft.CopySeries
+﻿namespace DoenaSoft.CopySeries
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Text;
+    using ToolBox.Generics;
+
     public static class Program
     {
         private static String TargetDir { get; } = DirAtSourceSettings.Default.LocalDir;

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DoenaSoft.CopySeries
+﻿namespace DoenaSoft.CopySeries
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
     public sealed class EpisodeData : IComparable<EpisodeData>
     {
         private Name Name { get; }

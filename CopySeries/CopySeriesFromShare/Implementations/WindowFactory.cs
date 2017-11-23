@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using DoenaSoft.AbstractionLayer.IOServices;
-using DoenaSoft.AbstractionLayer.IOServices.Implementations;
-using DoenaSoft.AbstractionLayer.UIServices;
-using DoenaSoft.AbstractionLayer.UIServices.Implementations;
-using DoenaSoft.CopySeries.Filter;
-using DoenaSoft.CopySeries.Filter.Implementations;
-using DoenaSoft.CopySeries.Main;
-using DoenaSoft.CopySeries.Main.Implementations;
-using DoenaSoft.CopySeries.SelectFolders;
-using DoenaSoft.CopySeries.SelectFolders.Implementations;
-
-namespace DoenaSoft.CopySeries.Implementations
+﻿namespace DoenaSoft.CopySeries.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows;
+    using AbstractionLayer.IOServices;
+    using AbstractionLayer.IOServices.Implementations;
+    using AbstractionLayer.UIServices;
+    using AbstractionLayer.UIServices.Implementations;
+    using Filter;
+    using Filter.Implementations;
+    using Main;
+    using Main.Implementations;
+    using SelectFolders;
+    using SelectFolders.Implementations;
+
     internal sealed class WindowFactory : IWindowFactory
     {
         private IUIServices UIServices { get; }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Input;
-using DoenaSoft.AbstractionLayer.UIServices;
-using DoenaSoft.ToolBox.Generics;
-
-namespace DoenaSoft.CopySeries.SelectFolders
+﻿namespace DoenaSoft.CopySeries.SelectFolders
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows.Input;
+
     internal interface ISelectFoldersViewModel
     {
         IEnumerable<String> Folders { get; }

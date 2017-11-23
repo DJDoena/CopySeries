@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using DoenaSoft.ToolBox.Generics;
-
-namespace DoenaSoft.CopySeries.Main
+﻿namespace DoenaSoft.CopySeries.Main
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using ToolBox.Generics;
+
     internal interface IMainModel
     {
         IEnumerable<String> Entries { get; }

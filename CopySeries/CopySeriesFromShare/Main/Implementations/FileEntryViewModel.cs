@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace DoenaSoft.CopySeries.Main.Implementations
+﻿namespace DoenaSoft.CopySeries.Main.Implementations
 {
+    using System;
+
     internal sealed class FileEntryViewModel : IFileEntryViewModel
     {
         private String File { get; }

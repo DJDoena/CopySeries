@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
-using DoenaSoft.AbstractionLayer.IOServices;
-using DoenaSoft.ToolBox.Commands;
-
-namespace DoenaSoft.CopySeries.SelectFolders.Implementations
+﻿namespace DoenaSoft.CopySeries.SelectFolders.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows.Input;
+    using AbstractionLayer.IOServices;
+    using ToolBox.Commands;
+
     internal sealed class SelectFoldersViewModel : ISelectFoldersViewModel
     {
         #region Properties
@@ -26,7 +26,7 @@ namespace DoenaSoft.CopySeries.SelectFolders.Implementations
 
         public SelectFoldersViewModel(IIOServices ioServices)
         {
-            Folders = ioServices.Directory.GetFolders(Properties.Settings.Default.SourcePath);
+            Folders = ioServices.Folder.GetFolders(Properties.Settings.Default.SourcePath);
 
             Folders = Folders.Select(GetFolderName).Where(NotInExcludeList);
         }

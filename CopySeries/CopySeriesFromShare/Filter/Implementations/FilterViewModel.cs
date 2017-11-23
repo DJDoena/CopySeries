@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Input;
-using DoenaSoft.AbstractionLayer.UIServices;
-using DoenaSoft.CopySeries.Implementations;
-using DoenaSoft.ToolBox.Commands;
-using DoenaSoft.ToolBox.Extensions;
-using DoenaSoft.ToolBox.Generics;
-
-namespace DoenaSoft.CopySeries.Filter.Implementations
+﻿namespace DoenaSoft.CopySeries.Filter.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Windows.Input;
+    using CopySeries.Implementations;
+    using ToolBox.Commands;
+    using ToolBox.Extensions;
+
     internal sealed class FilterViewModel : IFilterViewModel
     {
         #region Fields

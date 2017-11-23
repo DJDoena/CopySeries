@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Input;
-using DoenaSoft.AbstractionLayer.UIServices;
-using DoenaSoft.ToolBox.Generics;
-
-namespace DoenaSoft.CopySeries.Filter
+﻿namespace DoenaSoft.CopySeries.Filter
 {
+    using System;
+    using System.ComponentModel;
+    using System.Windows.Input;
+
     internal interface IFilterViewModel : INotifyPropertyChanged
     {
         Boolean NoSubs { get; set; }

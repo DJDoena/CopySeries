@@ -1,22 +1,23 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading;
-using System.Windows;
-using System.Windows.Input;
-using DoenaSoft.AbstractionLayer.IOServices;
-using DoenaSoft.AbstractionLayer.UIServices;
-using DoenaSoft.CopySeries.Implementations;
-using DoenaSoft.ToolBox.Commands;
-using DoenaSoft.ToolBox.Extensions;
-using DoenaSoft.ToolBox.Generics;
-using DoenaSoft.ToolBox.Threading;
-
-namespace DoenaSoft.CopySeries.Main.Implementations
+﻿namespace DoenaSoft.CopySeries.Main.Implementations
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Threading;
+    using System.Windows;
+    using System.Windows.Input;
+    using AbstractionLayer.IOServices;
+    using AbstractionLayer.UIServices;
+    using CopySeries.Implementations;
+    using ToolBox.Commands;
+    using ToolBox.Extensions;
+    using ToolBox.Generics;
+    using ToolBox.Threading;
+
+
     internal sealed class MainViewModel : IMainViewModel
     {
         #region Fields
@@ -303,7 +304,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
             {
                 String targetPath = Properties.Settings.Default.TargetPath;
 
-                if (IOServices.Directory.Exists(targetPath) == false)
+                if (IOServices.Folder.Exists(targetPath) == false)
                 {
                     targetPath = @"C:\";
                 }
@@ -569,13 +570,13 @@ namespace DoenaSoft.CopySeries.Main.Implementations
 
             options.CheckFileExists = true;
             options.Filter = "Film files|*.avi;*.srt;*.mkv;*.mp4;*.flv|Recent files|RecentFiles.*.xml|All files|*.*";
-            options.InitialDirectory = LastFolder;
+            options.InitialFolder = LastFolder;
             options.Title = "Select File(s) to Copy";
 
             String[] fileNames;
             if (UIServices.ShowOpenFileDialog(options, out fileNames))
             {
-                LastFolder = IOServices.GetFileInfo(fileNames[0]).DirectoryName;
+                LastFolder = IOServices.GetFileInfo(fileNames[0]).FolderName;
 
                 foreach (String file in fileNames)
                 {
@@ -725,7 +726,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
 
         private void SaschasFunction()
         {
-            IDirectoryInfo di = IOServices.GetDirectoryInfo(IOServices.Path.Combine(Properties.Settings.Default.SourcePath, "_RecentFiles"));
+            IFolderInfo di = IOServices.GetFolderInfo(IOServices.Path.Combine(Properties.Settings.Default.SourcePath, "_RecentFiles"));
 
             IEnumerable<IFileInfo> fis = di.GetFiles("RecentFiles.*.xml");
 
@@ -757,7 +758,7 @@ namespace DoenaSoft.CopySeries.Main.Implementations
             {
                 Model.ReadXml(recentFile);
 
-                LastFolder = IOServices.GetFileInfo(recentFile).DirectoryName;
+                LastFolder = IOServices.GetFileInfo(recentFile).FolderName;
             }
 
             SaschasFunction();

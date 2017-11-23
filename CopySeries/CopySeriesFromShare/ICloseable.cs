@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace DoenaSoft.CopySeries
+﻿namespace DoenaSoft.CopySeries
 {
+    using System;
+
     internal interface ICloseable
     {
         Nullable<Boolean> DialogResult { get; set; }

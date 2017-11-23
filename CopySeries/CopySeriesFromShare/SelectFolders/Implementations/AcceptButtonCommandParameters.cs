@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace DoenaSoft.CopySeries.SelectFolders.Implementations
+﻿namespace DoenaSoft.CopySeries.SelectFolders.Implementations
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     internal sealed class AcceptButtonCommandParameters : IAcceptButtonCommandParameters
     {
         public IEnumerable<String> SelectedFolders { get; private set; }

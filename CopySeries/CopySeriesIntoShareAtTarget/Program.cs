@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using DoenaSoft.ToolBox.Extensions;
-using DoenaSoft.ToolBox.Generics;
-using Outlook = Microsoft.Office.Interop.Outlook;
-
-namespace DoenaSoft.CopySeries
+﻿namespace DoenaSoft.CopySeries
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Text;
+    using System.Threading;
+    using ToolBox.Extensions;
+    using ToolBox.Generics;
+    using Outlook = Microsoft.Office.Interop.Outlook;
+
     public static class Program
     {
         private static String StickDrive { get; }
