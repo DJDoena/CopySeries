@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="VideoInfo" type="VideoInfo" />
+
+  <xs:complexType name="VideoInfo">
+    <xs:sequence>
+      <xs:element name="Episode" type="Episode" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Video" type ="Video" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Audio" type ="Audio" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Subtitle" type ="Subtitle" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Duration" type="xs:unsignedInt" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="Episode">
+    <xs:attribute name="SeriesName" type="xs:string" use="required" />
+    <xs:attribute name="EpisodeNumber" type="xs:string" use="required" />
+    <xs:attribute name="EpisodeName" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="StreamBase">
+    <xs:attribute name="CodecName" type="xs:string" use="required" />
+    <xs:attribute name="CodecLongName" type="xs:string" use="required" />
+    <xs:attribute name="Language" type="xs:string" use="optional" />
+    <xs:attribute name="Title" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="Video">
+    <xs:complexContent>
+      <xs:extension base="StreamBase">
+        <xs:sequence>
+          <xs:element name="AspectRatio" type="AspectRatio" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AspectRatio">
+    <xs:attribute name="Width" type="xs:unsignedShort" use="required" />
+    <xs:attribute name="Height" type="xs:unsignedShort" use="required" />
+    <xs:attribute name="CodedWidth" type="xs:unsignedShort" use="optional" />
+    <xs:attribute name="CodedHeight" type="xs:unsignedShort" use="optional" />
+    <xs:attribute name="Ratio" type="xs:decimal" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="Audio">
+    <xs:complexContent>
+      <xs:extension base="StreamBase">
+        <xs:attribute name="SampleRate" type="xs:int" use="required" />
+        <xs:attribute name="Channels" type="xs:int" use="required" />
+        <xs:attribute name="ChannelLayout" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Subtitle">
+    <xs:complexContent>
+      <xs:extension base="StreamBase" />
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="Recipients" type="Recipients" />
+
+  <xs:complexType name="Recipients">
+    <xs:sequence>
+      <xs:element name="RecipientList" type="Recipient" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Recipient">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="DayOfWeek" type="xs:boolean" use="optional" />
+        <xs:attribute name="NewSeries" type="xs:boolean" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+</xs:schema>

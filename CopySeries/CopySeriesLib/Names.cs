@@ -17,32 +17,46 @@
 
         private String m_DisplayName;
 
+        private String m_LocalizedName;
+
         public String ShortName;
 
         public String LongName;
 
         public String SortName
         {
-            get
-            {
-                return (String.IsNullOrEmpty(m_SortName) ? LongName : m_SortName);
-            }
-            set
-            {
-                m_SortName = value;
-            }
+            get => (SortNameSpecified ? m_SortName : LongName);
+            set => m_SortName = value;
         }
+
+        [XmlIgnore]
+        public Boolean SortNameSpecified
+            => (String.IsNullOrEmpty(m_SortName) == false);
 
         public String DisplayName
         {
-            get
-            {
-                return (String.IsNullOrEmpty(m_DisplayName) ? LongName : m_DisplayName);
-            }
-            set
-            {
-                m_DisplayName = value;
-            }
+            get => (DisplayNameSpecified ? m_DisplayName : LongName);
+            set => m_DisplayName = value;
         }
+
+        [XmlIgnore]
+        public Boolean DisplayNameSpecified
+            => (String.IsNullOrEmpty(m_DisplayName) == false);
+
+        public UInt16 Year;
+
+        [XmlIgnore]
+        public Boolean YearSpecified
+            => (Year > 0);
+
+        public String LocalizedName
+        {
+            get => (LocalizedNameSpecified ? m_LocalizedName : DisplayName);
+            set => m_LocalizedName = value;
+        }
+
+        [XmlIgnore]
+        public Boolean LocalizedNameSpecified
+            => (String.IsNullOrEmpty(m_LocalizedName) == false);
     }
 }

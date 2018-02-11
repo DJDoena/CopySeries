@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="RecentFiles" type="RecentFiles" />
+
+  <xs:complexType name="RecentFiles">
+    <xs:sequence>
+      <xs:element name="Files" type="File" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="File">
+    <xs:sequence>
+      <xs:element name="File" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

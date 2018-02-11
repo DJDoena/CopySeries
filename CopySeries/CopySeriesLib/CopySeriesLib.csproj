@@ -27,28 +27,53 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DateShows.cs" />
+    <Compile Include="DateShows.cs">
+      <DependentUpon>DateShows.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Dir.cs" />
     <Compile Include="EpisodeData.cs" />
     <Compile Include="FileSize.cs" />
-    <Compile Include="FileTypes.cs" />
+    <Compile Include="FileTypes.cs">
+      <DependentUpon>FileTypes.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Helper.cs" />
-    <Compile Include="IgnoreDirectories.cs" />
-    <Compile Include="Names.cs" />
+    <Compile Include="IgnoreDirectories.cs">
+      <DependentUpon>IgnoreDirectories.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Names.cs">
+      <DependentUpon>Names.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecentFiles.cs" />
-    <Compile Include="Recipients.cs" />
+    <Compile Include="RecentFiles.cs">
+      <DependentUpon>RecentFiles.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Recipients.cs">
+      <DependentUpon>Recipients.xsd</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="DateShows.xsd" />
+    <None Include="FileTypes.xsd" />
+    <None Include="IgnoreDirectories.xsd" />
+    <None Include="Names.xsd" />
+    <None Include="RecentFiles.xsd" />
+    <None Include="Recipients.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DateShows.xml">
+      <DependentUpon>DateShows.xsd</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="FileTypes.xml">
+      <DependentUpon>FileTypes.xsd</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Names.xml">
+      <DependentUpon>Names.xsd</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="IgnoreDirectories.xml">
+      <DependentUpon>IgnoreDirectories.xsd</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -57,11 +82,6 @@
       <Project>{4782e10e-b5cc-4c2d-9d7f-d132cb5a50a0}</Project>
       <Name>ToolBox</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="DateShows.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

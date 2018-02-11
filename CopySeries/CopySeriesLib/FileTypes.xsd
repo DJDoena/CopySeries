@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="FileTypes" type="FileTypes" />
+
+  <xs:complexType name="FileTypes">
+    <xs:sequence>
+      <xs:element name="FileTypeList" type="FileType" minOccurs="1" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FileType">
+    <xs:sequence>
+      <xs:element name="FileType" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

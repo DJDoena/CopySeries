@@ -6,19 +6,37 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Web.Script.Serialization;
     using System.Windows.Forms;
+    using NReco.VideoInfo;
     using ToolBox.Extensions;
     using ToolBox.Generics;
 
-    public class Program
+    public static class Program
     {
-        private static String JsonFile = Path.Combine(Path.GetTempPath(), "info.json");
-
         private const String NewLine = "%0D%0A";
+
+        private static readonly String TargetDir;
+
+        private static readonly String StickDir;
+
+        private static readonly String ToolsDir;
+
+        static Program()
+        {
+            TargetDir = CopySeriesIntoShareAtSourceSettings.Default.TargetDir;
+
+            StickDir = CopySeriesIntoShareAtSourceSettings.Default.StickDrive;
+
+            ToolsDir = CopySeriesIntoShareAtSourceSettings.Default.ToolsDir;
+        }
 
         public static void Main(String[] args)
         {
+            if (Process.GetProcessesByName("CopySeriesIntoShareAtSource").Length > 1)
+            {
+                return;
+            }
+
             if (Process.GetProcessesByName("vlc").Length > 0)
             {
                 if (MessageBox.Show("VLC is running. Continue?", String.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
@@ -33,36 +51,35 @@
 
                 SearchOption searchOption = WithoutSubFolder(args) ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
 
-                String targetDir = CopySeriesIntoShareAtSourceSettings.Default.TargetDir;
 
-                String stickDrive = CopySeriesIntoShareAtSourceSettings.Default.StickDrive;
-
-                List<EpisodeData> episodeList;
-                RecentFiles recentFiles;
-                if (Helper.CopySeriesIntoShare(di, searchOption, targetDir, false, null, stickDrive, out episodeList, out recentFiles) == false)
+                if (Helper.CopySeriesIntoShare(di, searchOption, TargetDir, false, null, StickDir, out List<EpisodeData> episodeList, out RecentFiles recentFiles) == false)
                 {
                     return;
                 }
 
-                String copySuggestionsFile = Helper.GetNewFileName("RecentFiles", "txt", targetDir, "_CopySuggestions");
+                const String CopySuggestionsFolder = "_CopySuggestions";
+
+                EnsureCopySuggestionsFolder(CopySuggestionsFolder);
+
+                String copySuggestionsFile = Helper.GetNewFileName("RecentFiles", "txt", TargetDir, CopySuggestionsFolder);
 
                 using (StreamWriter sw = new StreamWriter(copySuggestionsFile, false, Encoding.GetEncoding(1252)))
                 {
                     foreach (String fileName in recentFiles.Files)
                     {
-                        String file = Path.Combine(targetDir, fileName);
+                        String file = Path.Combine(TargetDir, fileName);
 
                         sw.WriteLine(file);
                     }
                 }
 
-                EnrichAudioInfo(targetDir, recentFiles.Files, episodeList);
+                EnrichAudioInfo(recentFiles.Files, episodeList);
 
                 WriteEmail(episodeList);
 
-                Helper.CleanFolder("RecentFiles", "txt", 1, targetDir, "_CopySuggestions");
+                Helper.CleanFolder("RecentFiles", "txt", 1, TargetDir, CopySuggestionsFolder);
 
-                DirAtSource(targetDir);
+                DirAtSource();
             }
             catch (Exception ex)
             {
@@ -77,80 +94,75 @@
             }
         }
 
-        private static void EnrichAudioInfo(String targetDir
-            , String[] files
+        private static void EnsureCopySuggestionsFolder(String subTargetDir)
+        {
+            DirectoryInfo di = new DirectoryInfo(Path.Combine(TargetDir, subTargetDir));
+
+            if (di.Exists == false)
+            {
+                di.Create();
+            }
+        }
+
+        private static void EnrichAudioInfo(String[] files
             , List<EpisodeData> episodes)
         {
             for (Int32 i = 0; i < files.Length; i++)
             {
-                EnrichAudioInfo(targetDir, files[i], episodes[i]);
+                EnrichAudioInfo(files[i], episodes[i]);
             }
         }
 
-        private static void EnrichAudioInfo(String targetDir
-            , String file
+        private static void EnrichAudioInfo(String file
             , EpisodeData episode)
         {
-            Json.RootObject info = GetJson(targetDir, file);
+            FileInfo fi = new FileInfo(Path.Combine(TargetDir, file));
 
-            IEnumerable<Json.Track> tracks = info?.tracks?.Where(t => t.type == "audio") ?? Enumerable.Empty<Json.Track>();
+            Xml.FFProbe mediaInfo = GetMediaInfo(fi);
 
-            tracks = tracks.Where(LanguageIsNotUndefined);
-
-            IEnumerable<String> languages = tracks.Select(track => track.properties.language).Distinct();
-
-            foreach (String language in languages)
+            if (mediaInfo != null)
             {
-                episode.AddLanguage(language);
+                Xml.VideoInfo xmlInfo = MediaInfo2XmlConverter.Convert(mediaInfo, fi.Name);
+
+                xmlInfo.Episode = new Xml.Episode()
+                {
+                    SeriesName = episode.DisplayName,
+                    EpisodeNumber = episode.EpisodeID,
+                    EpisodeName = episode.EpisodeName
+                };
+
+                XmlWriter.Write(fi, xmlInfo);
+            }
+
+            IEnumerable<Xml.Stream> streams = mediaInfo?.streams?.Where(stream => stream.codec_type == "audio") ?? Enumerable.Empty<Xml.Stream>();
+
+            streams = streams.Where(LanguageIsNotUndefined);
+
+            IEnumerable<String> languages = streams.Select(stream => stream.tag.GetLanguage()).Distinct();
+
+            languages.ForEach(language => episode.AddLanguage(language));
+        }
+
+        private static Xml.FFProbe GetMediaInfo(FileInfo fi)
+        {
+            try
+            {
+                MediaInfo mediaInfo = (new FFProbe()).GetMediaInfo(fi.FullName);
+
+                String xml = mediaInfo.Result.CreateNavigator().OuterXml;
+
+                Xml.FFProbe ffprobe = Serializer<Xml.FFProbe>.FromString(xml);
+
+                return (ffprobe);
+            }
+            catch
+            {
+                return (null);
             }
         }
 
-        private static Boolean LanguageIsNotUndefined(Json.Track track)
-            => ((track?.properties?.language != null) && (track.properties.language != "und"));
-
-        private static Json.RootObject GetJson(String targetDir
-            , String file)
-        {
-            CreateJson(targetDir, file);
-
-            Json.RootObject info = ReadJson();
-
-            File.Delete(JsonFile);
-
-            return (info);
-        }
-
-        private static Json.RootObject ReadJson()
-        {
-            using (StreamReader sr = new StreamReader(JsonFile))
-            {
-                String json = sr.ReadToEnd();
-
-                JavaScriptSerializer jss = new JavaScriptSerializer();
-
-                Json.RootObject info = jss.Deserialize<Json.RootObject>(json);
-
-                return (info);
-            }
-        }
-
-        private static void CreateJson(String targetDir
-            , String file)
-        {
-            String arguments = "-r " + JsonFile + " -J \"" + Path.Combine(targetDir, file) + "\"";
-
-            Process p = new Process();
-
-            p.StartInfo = new ProcessStartInfo();
-
-            p.StartInfo.FileName = "mkvmerge.exe";
-            p.StartInfo.Arguments = arguments;
-            p.StartInfo.WorkingDirectory = targetDir;
-
-            p.Start();
-
-            p.WaitForExit();
-        }
+        private static Boolean LanguageIsNotUndefined(Xml.Stream stream)
+            => stream?.tag.GetLanguage() != "und";
 
         private static void WriteEmail(List<EpisodeData> episodes)
         {
@@ -160,9 +172,7 @@
 
             email.Append("mailto:?bcc=");
 
-            String subject;
-            String addInfo;
-            Boolean newSeries = AddNewSeasonInfo(episodes, out subject, out addInfo);
+            Boolean newSeries = AddNewSeasonInfo(episodes, out String subject, out String addInfo);
 
             String bcc = GetBcc(newSeries);
 
@@ -204,60 +214,68 @@
                 previous = episode.SeriesName;
             }
 
-            String emailText = email.ToString();
-
-            Process process = new Process();
-
-            process.StartInfo = new ProcessStartInfo();
-            process.StartInfo.FileName = emailText;
+            Process process = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = email.ToString()
+                }
+            };
 
             process.Start();
         }
 
         private static String GetBcc(Boolean newSeries)
         {
-            Recipients recipients = Serializer<Recipients>.Deserialize(Path.Combine(CopySeriesIntoShareAtSourceSettings.Default.TargetDir, "Recipients.xml"));
-
-            StringBuilder bcc = new StringBuilder();
+            Recipients recipients = Serializer<Recipients>.Deserialize(Path.Combine(StickDir, "Recipients.xml"));
 
             if (recipients?.RecipientList?.Length > 0)
             {
-                DayOfWeek today = DateTime.Now.DayOfWeek;
+                IEnumerable<String> bcc = GetBcc(recipients.RecipientList, newSeries);
 
-                foreach (Recipient recipient in recipients.RecipientList)
-                {
-                    if ((recipient.DayOfWeekSpecified) && (today != recipient.DayOfWeek))
-                    {
-                        continue;
-                    }
-
-                    if ((recipient.NewSeriesSpecified) && (recipient.NewSeries) && (newSeries == false))
-                    {
-                        continue;
-                    }
-
-                    bcc.Append(";");
-                    bcc.Append(recipient.Value);
-                }
+                return (String.Join(";", bcc.ToArray()));
             }
 
-            return (bcc.ToString());
+            return (String.Empty);
+        }
+
+        private static IEnumerable<String> GetBcc(IEnumerable<Recipient> recipients
+            , Boolean newSeries)
+        {
+            DayOfWeek today = DateTime.Now.DayOfWeek;
+
+            foreach (Recipient recipient in recipients)
+            {
+                if ((recipient.DayOfWeekSpecified) && (today != recipient.DayOfWeek))
+                {
+                    continue;
+                }
+
+                if ((recipient.NewSeriesSpecified) && (recipient.NewSeries) && (newSeries == false))
+                {
+                    continue;
+                }
+
+                yield return (recipient.Value);
+            }
         }
 
         private static Boolean WithoutSubFolder(String[] args)
             => ((args?.Length > 0) && (args[0].ToLower() == "/withoutsubfolders"));
 
-        private static void DirAtSource(String targetDir)
+        private static void DirAtSource()
         {
-            Process p = new Process();
+            Process process = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = "DirAtSource.exe",
+                    WorkingDirectory = ToolsDir
+                }
+            };
 
-            p.StartInfo = new ProcessStartInfo();
-            p.StartInfo.FileName = "DirAtSource.exe";
-            p.StartInfo.WorkingDirectory = targetDir;
-
-            p.Start();
-
-            p.WaitForExit();
+            process.Start();
+            process.WaitForExit();
         }
 
         private static Boolean AddNewSeasonInfo(List<EpisodeData> episodes
@@ -270,11 +288,11 @@
 
             addInfo = String.Empty;
 
-            subject = "Share Update";
+            subject = Uri.EscapeDataString("Share Update");
 
             if (newSeason.Any())
             {
-                subject = "Share Update (with Info)";
+                subject = Uri.EscapeDataString("Share Update (with Info)");
 
                 HashSet<String> names = new HashSet<String>();
 

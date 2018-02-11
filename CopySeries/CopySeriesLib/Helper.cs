@@ -48,7 +48,7 @@
                 {
                     String name = fis[i].Name.ToLower();
 
-                    if ((name == "thumbs.db") || (name.EndsWith(".lnk")))
+                    if ((name == "thumbs.db") || (name.EndsWith(".lnk")) || (name.EndsWith(".title")))
                     {
                         fis.RemoveAt(i);
 
@@ -74,11 +74,7 @@
 
                         String seasonNumber = match.Groups["SeasonNumber"].Value;
 
-                        Name name;
-                        GetName(seriesName, namesDir, out name);
-
-                        String resolution;
-                        if (GetResolution(fi, out resolution))
+                        if ((GetName(seriesName, namesDir, mismatches, out Name name)) && (GetResolution(fi, out String resolution)))
                         {
                             CheckSeries(targetDir, mismatches, name.LongName, seasonNumber, resolution, ref abort);
                         }
@@ -130,8 +126,10 @@
                 return (false);
             }
 
-            recentFiles = new RecentFiles();
-            recentFiles.Files = new String[fis.Count];
+            recentFiles = new RecentFiles()
+            {
+                Files = new String[fis.Count]
+            };
 
             episodeList = new List<EpisodeData>(fis.Count);
 
@@ -149,11 +147,9 @@
 
                 String seasonNumber = match.Groups["SeasonNumber"].Value;
 
-                Name name;
-                GetName(seriesName, namesDir, out name);
+                GetName(seriesName, namesDir, null, out Name name);
 
-                String resolution;
-                GetResolution(fi, out resolution);
+                GetResolution(fi, out String resolution);
 
                 String targetFile = $@"{targetDir}{name.LongName}\Season {seasonNumber}\{resolution}\{fi.Name}";
 
@@ -202,13 +198,28 @@
 
             String episodeNumber = match.Groups["EpisodeNumber"].Value;
 
-            String episodeName = match.Groups["EpisodeName"].Value;
+            String titleFile = fi.FullName + ".title";
+
+            String episodeName = File.Exists(titleFile) ? GetEpisodeName(titleFile) : match.Groups["EpisodeName"].Value;
 
             FileSize fileSize = new FileSize(fi.Length);
 
             EpisodeData episodeData = new EpisodeData(name, seasonNumber, episodeNumber, isDateShow, episodeName, addInfo, fileSize);
 
             return (episodeData);
+        }
+
+        private static String GetEpisodeName(String titleFile)
+        {
+            String title;
+            using (StreamReader sr = new StreamReader(titleFile, Encoding.UTF8))
+            {
+                title = sr.ReadLine();
+            }
+
+            File.Delete(titleFile);
+
+            return (title);
         }
 
         private static Boolean GetResolution(FileInfo fi
@@ -219,7 +230,8 @@
                 resolution = "SD";
             }
             else if ((fi.Name.EndsWith(".720.mkv")) || (fi.Name.EndsWith(".1080.mkv"))
-                || (fi.Name.EndsWith(".720.mp4")) || (fi.Name.EndsWith(".1080.mp4")))
+                || (fi.Name.EndsWith(".720.mp4")) || (fi.Name.EndsWith(".1080.mp4"))
+                || (fi.Name.EndsWith(".720.nfo")) || (fi.Name.EndsWith(".1080.nfo")))
             {
                 resolution = "HD";
             }
@@ -292,6 +304,10 @@
             {
                 addinfo = GetSubtitleAddInfo(fi);
             }
+            if (fi.Extension == ".nfo")
+            {
+                addinfo = GetNfoAddInfo(fi);
+            }
             else if ((fi.Extension == ".mkv") || (fi.Extension == ".mp4"))
             {
                 addinfo = GetResultionExtension(fi);
@@ -340,6 +356,19 @@
             return (addInfo);
         }
 
+        private static String GetNfoAddInfo(FileInfo fi)
+        {
+            String addInfo = "NFO, ";
+
+            String newFileName = fi.Name.Substring(0, fi.Name.Length - 4);
+
+            FileInfo newFileInfo = new FileInfo(newFileName);
+
+            addInfo += GetResultionExtension(newFileInfo);
+
+            return (addInfo);
+        }
+
         private static void CheckSeries(String targetDir
             , Dictionary<String, Boolean> mismatches
             , String seriesName
@@ -359,13 +388,12 @@
 
                 if (mismatches.ContainsKey(output) == false)
                 {
-                    String input;
-
                     Console.WriteLine(output);
 
                     Console.Write("Create? ");
 
-                    input = Console.ReadLine();
+                    String input = Console.ReadLine();
+
                     input = input.ToLower();
 
                     if ((input == "y") || (input == "yes"))
@@ -402,9 +430,7 @@
             }
             else
             {
-                String output;
-
-                output = $"No Match: {folderInQuestion}";
+                String output = $"No Match: {folderInQuestion}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
@@ -474,13 +500,14 @@
             }
         }
 
-        private static void GetName(String shortName
+        private static Boolean GetName(String shortName
             , String targetDir
+            , Dictionary<String, Boolean> mismatches
             , out Name name)
         {
             if (Names == null)
             {
-                Names nameList = Serializer<CopySeries.Names>.Deserialize(targetDir + "Names.xml");
+                Names nameList = Serializer<Names>.Deserialize(Path.Combine(targetDir, "Names.xml"));
 
                 Names = new Dictionary<String, Name>();
 
@@ -493,27 +520,21 @@
                 }
             }
 
-            if (Names.TryGetValue(shortName, out name) == false)
+            Boolean success = Names.TryGetValue(shortName, out name);
+
+            if (success == false)
             {
-                StringBuilder sb = new StringBuilder();
+                String output = $"No Match: {shortName}";
 
-                sb.Append(shortName[0]);
-
-                for (Int32 i = 1; i < shortName.Length; i++)
+                if (mismatches.ContainsKey(output) == false)
                 {
-                    if (Char.IsUpper(shortName[i]))
-                    {
-                        sb.Append(" ");
-                    }
+                    mismatches.Add(output, true);
 
-                    sb.Append(shortName[i]);
+                    Console.WriteLine(output);
                 }
-
-                name = new Name() { ShortName = shortName, LongName = sb.ToString() };
-
-                return;
             }
-        }
 
+            return (success);
+        }
     }
 }

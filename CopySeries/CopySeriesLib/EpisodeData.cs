@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using ToolBox.Extensions;
 
     public sealed class EpisodeData : IComparable<EpisodeData>
     {
@@ -29,7 +30,7 @@
             => (Name.SortName);
 
         public String DisplayName
-            => (Name.DisplayName);
+            => (Name.DisplayName + (Name.YearSpecified ? $" ({Name.Year})" : String.Empty));
 
         public Boolean IsFirstOfSeason
             => ((IsDateShow == false) && (EpisodeNumber.StartsWith("01")));
@@ -55,9 +56,9 @@
 
             IsDateShow = isDateShow;
 
-            EpisodeID = GetEpisodeID();
+            EpisodeID = GetEpisodeID(episodeName);
 
-            EpisodeName = episodeName;
+            EpisodeName = GetEpisodeName(episodeName);
 
             AddInfo = addInfo;
 
@@ -97,11 +98,14 @@
 
         #endregion
 
-        private String GetEpisodeID()
-            => (IsDateShow ? GetDateShowID() : GetSeasonShowID());
+        private String GetEpisodeName(String episodeName)
+            => (IsDateShow ? (episodeName.Substring(11)) : episodeName);
 
-        private String GetDateShowID()
-            => ($"{EpisodeNumber}.{SeasonNumber.PadLeft(2, '0')}.");
+        private String GetEpisodeID(String episodeName)
+            => (IsDateShow ? GetDateShowID(episodeName) : GetSeasonShowID());
+
+        private String GetDateShowID(String episodeName)
+            => (DateTime.Parse(episodeName.Substring(0, 10)).ToShortDateString());
 
         private String GetSeasonShowID()
             => ($"{SeasonNumber}x{EpisodeNumber}");
@@ -134,7 +138,10 @@
 
         public void AddLanguage(String language)
         {
-            Languages.Add(language);
+            if (language.IsNotEmpty())
+            {
+                Languages.Add(language);
+            }
         }
     }
 }

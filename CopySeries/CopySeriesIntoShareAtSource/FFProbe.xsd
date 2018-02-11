@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="tag" type="Tag" />
+  <xs:element name="ffprobe" type="FFProbe" />
+
+  <xs:complexType name="Tag">
+    <xs:attribute name="key" type="xs:string" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="FFProbe">
+    <xs:sequence>
+      <xs:element name="streams" type="Streams" />
+      <xs:element name="format" type="Format" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Format">
+    <xs:sequence>
+      <xs:element name="tag" type="Tag" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="filename" type="xs:string" />
+    <xs:attribute name="nb_streams" type="xs:string" />
+    <xs:attribute name="nb_programs" type="xs:string" />
+    <xs:attribute name="format_name" type="xs:string" />
+    <xs:attribute name="format_long_name" type="xs:string" />
+    <xs:attribute name="start_time" type="xs:string" />
+    <xs:attribute name="duration" type="xs:string" />
+    <xs:attribute name="size" type="xs:string" />
+    <xs:attribute name="bit_rate" type="xs:string" />
+    <xs:attribute name="probe_score" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="Streams">
+    <xs:sequence>
+      <xs:element name="stream" type="Stream" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Stream">
+    <xs:sequence>
+      <xs:element name="disposition" type="Disposition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="tag" type="Tag" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="index" type="xs:string" />
+    <xs:attribute name="codec_name" type="xs:string" />
+    <xs:attribute name="codec_long_name" type="xs:string" />
+    <xs:attribute name="profile" type="xs:string" />
+    <xs:attribute name="codec_type" type="xs:string" />
+    <xs:attribute name="codec_time_base" type="xs:string" />
+    <xs:attribute name="codec_tag_string" type="xs:string" />
+    <xs:attribute name="codec_tag" type="xs:string" />
+    <xs:attribute name="width" type="xs:string" />
+    <xs:attribute name="height" type="xs:string" />
+    <xs:attribute name="coded_width" type="xs:string" />
+    <xs:attribute name="coded_height" type="xs:string" />
+    <xs:attribute name="has_b_frames" type="xs:string" />
+    <xs:attribute name="sample_aspect_ratio" type="xs:string" />
+    <xs:attribute name="display_aspect_ratio" type="xs:string" />
+    <xs:attribute name="pix_fmt" type="xs:string" />
+    <xs:attribute name="level" type="xs:string" />
+    <xs:attribute name="chroma_location" type="xs:string" />
+    <xs:attribute name="field_order" type="xs:string" />
+    <xs:attribute name="refs" type="xs:string" />
+    <xs:attribute name="is_avc" type="xs:string" />
+    <xs:attribute name="nal_length_size" type="xs:string" />
+    <xs:attribute name="r_frame_rate" type="xs:string" />
+    <xs:attribute name="avg_frame_rate" type="xs:string" />
+    <xs:attribute name="time_base" type="xs:string" />
+    <xs:attribute name="start_pts" type="xs:string" />
+    <xs:attribute name="start_time" type="xs:string" />
+    <xs:attribute name="bits_per_raw_sample" type="xs:string" />
+    <xs:attribute name="sample_fmt" type="xs:string" />
+    <xs:attribute name="sample_rate" type="xs:string" />
+    <xs:attribute name="channels" type="xs:string" />
+    <xs:attribute name="channel_layout" type="xs:string" />
+    <xs:attribute name="bits_per_sample" type="xs:string" />
+    <xs:attribute name="dmix_mode" type="xs:string" />
+    <xs:attribute name="ltrt_cmixlev" type="xs:string" />
+    <xs:attribute name="ltrt_surmixlev" type="xs:string" />
+    <xs:attribute name="loro_cmixlev" type="xs:string" />
+    <xs:attribute name="loro_surmixlev" type="xs:string" />
+    <xs:attribute name="bit_rate" type="xs:string" />
+    <xs:attribute name="duration_ts" type="xs:string" />
+    <xs:attribute name="duration" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="Disposition">
+    <xs:attribute name="default" type="xs:string" />
+    <xs:attribute name="dub" type="xs:string" />
+    <xs:attribute name="original" type="xs:string" />
+    <xs:attribute name="comment" type="xs:string" />
+    <xs:attribute name="lyrics" type="xs:string" />
+    <xs:attribute name="karaoke" type="xs:string" />
+    <xs:attribute name="forced" type="xs:string" />
+    <xs:attribute name="hearing_impaired" type="xs:string" />
+    <xs:attribute name="visual_impaired" type="xs:string" />
+    <xs:attribute name="clean_effects" type="xs:string" />
+    <xs:attribute name="attached_pic" type="xs:string" />
+    <xs:attribute name="timed_thumbnails" type="xs:string" />
+  </xs:complexType>
+
+</xs:schema>
