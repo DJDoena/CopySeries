@@ -23,7 +23,7 @@
 
         private static String CompleteSeriesFile { get; }
 
-        private static Int64 TenGibiByte { get; }
+        private static UInt64 TenGibiByte { get; }
 
         private static String DirFile { get; }
 
@@ -39,7 +39,7 @@
 
             CompleteSeriesFile = "CompleteSeriesList.txt";
 
-            TenGibiByte = 10L * ((Int64)(Math.Pow(2, 30)));
+            TenGibiByte = 10L * ((UInt64)(Math.Pow(2, 30)));
 
             DirFile = Path.Combine(StickDrive, "dir.txt");
         }
@@ -98,17 +98,13 @@
         {
             episodes.Sort();
 
-            Int32 padSeriesName;
-            Int32 padEpisodeID;
-            Int32 padEpisodeName;
-            Int32 padAddInfo;
-            CalculatePadding(episodes, out padSeriesName, out padEpisodeID, out padEpisodeName, out padAddInfo);
+            CalculatePadding(episodes, out Int32 padSeriesName, out Int32 padEpisodeID, out Int32 padEpisodeName, out Int32 padAddInfo);
 
             StringBuilder email = new StringBuilder();
 
             email.AppendLine();
 
-            Int64 fileSize = 0;
+            UInt64 fileSize = 0;
 
             foreach (EpisodeData episode in episodes)
             {
@@ -235,7 +231,7 @@
             , Int32 padSeasonID
             , Int32 padEpisodeName
             , Int32 padAddInfo
-            , Int64 fileSize
+            , UInt64 fileSize
             , StringBuilder email)
         {
             Int32 padding = padSeriesName + padSeasonID + padEpisodeName + padAddInfo + 5;

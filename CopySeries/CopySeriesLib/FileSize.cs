@@ -7,19 +7,19 @@
     {
         private String FileSizeFormatted { get; }
 
-        private Int64 FileSizeInBytes { get; }
+        private UInt64 FileSizeInBytes { get; }
 
-        public Int64 InBytes
+        public UInt64 InBytes
             => (FileSizeInBytes);
 
-        public FileSize(Int64 fileSize)
+        public FileSize(UInt64 fileSize)
         {
             FileSizeInBytes = fileSize;
 
             FileSizeFormatted = FormatFileSize(fileSize, 0);
         }
 
-        private static String FormatFileSize(Int64 fileSize
+        private static String FormatFileSize(UInt64 fileSize
             , Int32 numberPadding)
         {
             String bytesPower;

@@ -35,7 +35,7 @@
             , out List<EpisodeData> episodeList
             , out RecentFiles recentFiles)
         {
-            Int64 bytes;
+            UInt64 bytes;
             Boolean abort;
             List<FileInfo> fis;
             do
@@ -64,7 +64,7 @@
 
                 foreach (FileInfo fi in fis)
                 {
-                    bytes += fi.Length;
+                    bytes += (UInt64)(fi.Length);
 
                     Match match = NameRegex.Match(fi.Name);
 
@@ -111,11 +111,13 @@
 
             DriveInfo driveInfo = new DriveInfo(targetDir.Substring(0, 1));
 
-            if (driveInfo.AvailableFreeSpace <= bytes)
+            UInt64 availableFreeSpace = (UInt64)(driveInfo.AvailableFreeSpace);
+
+            if (availableFreeSpace <= bytes)
             {
                 FileSize bytesSize = new FileSize(bytes);
 
-                FileSize spaceSize = new FileSize(driveInfo.AvailableFreeSpace);
+                FileSize spaceSize = new FileSize(availableFreeSpace);
 
                 Console.WriteLine($"Drive if full!{Environment.NewLine}Available: {spaceSize}{Environment.NewLine}Needed: {bytesSize}");
 
@@ -202,7 +204,7 @@
 
             String episodeName = File.Exists(titleFile) ? GetEpisodeName(titleFile) : match.Groups["EpisodeName"].Value;
 
-            FileSize fileSize = new FileSize(fi.Length);
+            FileSize fileSize = new FileSize((UInt64)(fi.Length));
 
             EpisodeData episodeData = new EpisodeData(name, seasonNumber, episodeNumber, isDateShow, episodeName, addInfo, fileSize);
 

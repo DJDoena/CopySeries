@@ -9,13 +9,13 @@
     {
         IEnumerable<String> Entries { get; }
 
-        Int64 Size { get; }
+        UInt64 Size { get; }
 
         Boolean PreserveSubFolders { get; set; }
 
         Boolean IgnoreResolutionFolders { get; set; }
 
-        Int64 ProgressValue { get; }
+        UInt64 ProgressValue { get; }
 
         event EventHandler<EventArgs<TimeSpan>> CopyPaused;
 

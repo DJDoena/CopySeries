@@ -12,7 +12,7 @@
     {
         #region Fields
 
-        private Nullable<Int64> m_Size;
+        private Nullable<UInt64> m_Size;
 
         #endregion
 
@@ -76,7 +76,7 @@
             }
         }
 
-        public Int64 Size
+        public UInt64 Size
         {
             get
             {
@@ -89,7 +89,7 @@
             }
         }
 
-        public Int64 ProgressValue { get; private set; }
+        public UInt64 ProgressValue { get; private set; }
 
         #endregion
 
@@ -193,7 +193,7 @@
             {
                 if (IOServices.Folder.Exists(entry))
                 {
-                    String[] files = IOServices.Folder.GetFiles(entry, searchOption: System.IO.SearchOption.AllDirectories);
+                    IEnumerable<String> files = IOServices.Folder.GetFiles(entry, searchOption: System.IO.SearchOption.AllDirectories);
 
                     fileInfos.AddRange(files.Select(file => new SourceTarget(IOServices.GetFileInfo(file))));
                 }
@@ -553,9 +553,9 @@
 
         #region CalculateSize
 
-        private Int64 CalculateSize()
+        private UInt64 CalculateSize()
         {
-            Int64 size = 0;
+            UInt64 size = 0;
 
             foreach (String entry in Entries)
             {
@@ -566,7 +566,7 @@
         }
 
         private void GetEntrySize(String entry
-            , ref Int64 size)
+            , ref UInt64 size)
         {
             if (IOServices.Folder.Exists(entry))
             {
@@ -579,9 +579,9 @@
         }
 
         private void GetFolderSize(String folder
-            , ref Int64 size)
+            , ref UInt64 size)
         {
-            String[] files = IOServices.Folder.GetFiles(folder, searchOption: System.IO.SearchOption.AllDirectories);
+            IEnumerable<String> files = IOServices.Folder.GetFiles(folder, searchOption: System.IO.SearchOption.AllDirectories);
 
             foreach (String file in files)
             {
@@ -590,7 +590,7 @@
         }
 
         private void GetFileSize(String file
-            , ref Int64 bytes)
+            , ref UInt64 bytes)
         {
             IFileInfo fi = IOServices.GetFileInfo(file);
 

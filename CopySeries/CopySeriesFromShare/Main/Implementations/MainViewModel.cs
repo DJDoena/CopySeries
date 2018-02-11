@@ -65,11 +65,11 @@
 
         private String LastFolder { get; set; }
 
-        private Int64 Divider
+        private UInt64 Divider
         {
             get
             {
-                Int64 divider = 1;
+                UInt64 divider = 1;
 
                 if (Model.Size >= Math.Pow(2, 40) * 2)
                 {
@@ -489,7 +489,7 @@
             {
                 if (m_CopyCommand == null)
                 {
-                    m_CopyCommand = new CancelableCommandAsync(Copy, CanCopy);
+                    m_CopyCommand = new CancelableRelayCommandAsync(Copy, CanCopy);
                 }
 
                 return (m_CopyCommand);
