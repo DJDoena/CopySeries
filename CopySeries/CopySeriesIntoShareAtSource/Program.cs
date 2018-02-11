@@ -13,6 +13,8 @@
 
     public static class Program
     {
+        private const String CopySuggestionsFolder = "_CopySuggestions";
+
         private const String NewLine = "%0D%0A";
 
         private static readonly String TargetDir;
@@ -57,21 +59,7 @@
                     return;
                 }
 
-                const String CopySuggestionsFolder = "_CopySuggestions";
-
-                EnsureCopySuggestionsFolder(CopySuggestionsFolder);
-
-                String copySuggestionsFile = Helper.GetNewFileName("RecentFiles", "txt", TargetDir, CopySuggestionsFolder);
-
-                using (StreamWriter sw = new StreamWriter(copySuggestionsFile, false, Encoding.GetEncoding(1252)))
-                {
-                    foreach (String fileName in recentFiles.Files)
-                    {
-                        String file = Path.Combine(TargetDir, fileName);
-
-                        sw.WriteLine(file);
-                    }
-                }
+                CreateCopySuggestions(recentFiles);
 
                 EnrichAudioInfo(recentFiles.Files, episodeList);
 
@@ -94,9 +82,26 @@
             }
         }
 
-        private static void EnsureCopySuggestionsFolder(String subTargetDir)
+        private static void CreateCopySuggestions(RecentFiles recentFiles)
         {
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(TargetDir, subTargetDir));
+            EnsureCopySuggestionsFolder();
+
+            String copySuggestionsFile = Helper.GetNewFileName("RecentFiles", "txt", TargetDir, CopySuggestionsFolder);
+
+            using (StreamWriter sw = new StreamWriter(copySuggestionsFile, false, Encoding.GetEncoding(1252)))
+            {
+                foreach (String fileName in recentFiles.Files)
+                {
+                    String file = Path.Combine(TargetDir, fileName);
+
+                    sw.WriteLine(file);
+                }
+            }
+        }
+
+        private static void EnsureCopySuggestionsFolder()
+        {
+            DirectoryInfo di = new DirectoryInfo(Path.Combine(TargetDir, CopySuggestionsFolder));
 
             if (di.Exists == false)
             {
