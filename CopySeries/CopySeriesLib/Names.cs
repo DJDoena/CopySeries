@@ -58,5 +58,7 @@
         [XmlIgnore]
         public Boolean LocalizedNameSpecified
             => (String.IsNullOrEmpty(m_LocalizedName) == false);
+
+        public String OriginalLanguage;
     }
 }

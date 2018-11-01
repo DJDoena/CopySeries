@@ -28,5 +28,11 @@
 
         [XmlIgnore]
         public Boolean NewSeriesSpecified;
+
+        [XmlAttribute]
+        public Boolean NewSeason;
+
+        [XmlIgnore]
+        public Boolean NewSeasonSpecified;
     }
 }

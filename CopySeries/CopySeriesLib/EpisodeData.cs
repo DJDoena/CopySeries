@@ -38,6 +38,9 @@
         public Boolean IsPilot
             => ((IsDateShow == false) && (SeasonNumber == "1") && (IsFirstOfSeason));
 
+        public String OriginalLanguage
+            => (Name.OriginalLanguage);
+
         private List<String> Languages { get; }
 
         public EpisodeData(Name name

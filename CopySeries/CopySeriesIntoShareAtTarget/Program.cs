@@ -154,8 +154,7 @@
 
             Outlook.MailItem mail = (Outlook.MailItem)(outlook.CreateItem(Outlook.OlItemType.olMailItem));
 
-            String addInfo;
-            Boolean newSeries = AddNewSeasonInfo(episodes, mail, out addInfo);
+            Boolean newSeries = AddNewSeasonInfo(episodes, mail, out String addInfo);
 
             mail.BodyFormat = Outlook.OlBodyFormat.olFormatHTML;
 
@@ -199,13 +198,9 @@
             {
                 HashSet<String> names;
 
-                mail.Subject = "Share Update (with Info)";
-
                 names = new HashSet<String>();
 
-                IEnumerable<EpisodeData> pilots;
-                IEnumerable<EpisodeData> nonPilots;
-                newSeason.Split(episode => episode.IsPilot, out pilots, out nonPilots);
+                newSeason.Split(episode => episode.IsPilot, out IEnumerable<EpisodeData> pilots, out IEnumerable<EpisodeData> nonPilots);
 
                 foreach (EpisodeData pilot in pilots)
                 {
@@ -219,9 +214,16 @@
                     AddInfo(ref addInfo, names, nonPilot, "Season");
                 }
             }
-            else
+
+            mail.Subject = "Share Update";
+
+            if (newSeries)
             {
-                mail.Subject = "Share Update";
+                mail.Subject += " (neue Serie)";
+            }
+            else if (newSeason.Any())
+            {
+                mail.Subject += " (neue Season)";
             }
 
             return (newSeries);

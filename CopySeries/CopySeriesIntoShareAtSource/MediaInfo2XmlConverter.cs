@@ -18,8 +18,7 @@
         internal static String GetLanguage(this IEnumerable<Xml.Tag> tags)
             => tags?.FirstOrDefault(tag => tag.key == "language")?.value;
 
-        internal static Xml.VideoInfo Convert(Xml.FFProbe ffprobe
-            , String fileName)
+        internal static Xml.VideoInfo Convert(Xml.FFProbe ffprobe)
         {
             Xml.VideoInfo info = new Xml.VideoInfo()
             {

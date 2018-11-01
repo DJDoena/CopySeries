@@ -14,6 +14,7 @@
       <xs:extension base="xs:string">
         <xs:attribute name="DayOfWeek" type="xs:boolean" use="optional" />
         <xs:attribute name="NewSeries" type="xs:boolean" use="optional" />
+        <xs:attribute name="NewSeason" type="xs:boolean" use="optional" />
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>

@@ -35,6 +35,10 @@
             , out List<EpisodeData> episodeList
             , out RecentFiles recentFiles)
         {
+            DateShows dateShows = Serializer<DateShows>.Deserialize(Path.Combine(namesDir, "DateShows.xml"));
+
+            IEnumerable<String> dateShowShortNames = dateShows.ShortNameList ?? Enumerable.Empty<String>();
+
             UInt64 bytes;
             Boolean abort;
             List<FileInfo> fis;
@@ -76,7 +80,9 @@
 
                         if ((GetName(seriesName, namesDir, mismatches, out Name name)) && (GetResolution(fi, out String resolution)))
                         {
-                            CheckSeries(targetDir, mismatches, name.LongName, seasonNumber, resolution, ref abort);
+                            CheckSeries(targetDir, name.LongName, seasonNumber, resolution, mismatches, ref abort);
+
+                            CheckTitle(fi, match.Groups["EpisodeName"].Value, dateShowShortNames.Contains(name.ShortName), mismatches, ref abort);
                         }
                         else
                         {
@@ -135,10 +141,6 @@
 
             episodeList = new List<EpisodeData>(fis.Count);
 
-            DateShows dateShows = Serializer<DateShows>.Deserialize(Path.Combine(namesDir, "DateShows.xml"));
-
-            IEnumerable<String> dateShowShortNames = dateShows.ShortNameList ?? Enumerable.Empty<String>();
-
             for (Int32 i = 0; i < fis.Count; i++)
             {
                 FileInfo fi = fis[i];
@@ -190,6 +192,35 @@
             return (true);
         }
 
+        private static void CheckTitle(FileInfo fi, String episodeName, Boolean isDateShow, Dictionary<String, Boolean> mismatches, ref Boolean abort)
+        {
+            if (isDateShow == false)
+            {
+                return;
+            }
+
+            String titleFile = fi.FullName + ".title";
+
+            if (File.Exists(titleFile))
+            {
+                episodeName = GetEpisodeName(titleFile, false);
+            }
+
+            if (DateTime.TryParseExact(episodeName.Substring(0, 10), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out DateTime date) == false)
+            {
+                String output = $"No Match: {episodeName}";
+
+                if (mismatches.ContainsKey(output) == false)
+                {
+                    mismatches.Add(output, true);
+
+                    Console.WriteLine(output);
+                }
+
+                abort = true;
+            }
+        }
+
         private static EpisodeData GetEpisodeData(Name name
             , String seasonNumber
             , FileInfo fi
@@ -211,7 +242,7 @@
             return (episodeData);
         }
 
-        private static String GetEpisodeName(String titleFile)
+        private static String GetEpisodeName(String titleFile, Boolean delete = true)
         {
             String title;
             using (StreamReader sr = new StreamReader(titleFile, Encoding.UTF8))
@@ -219,7 +250,10 @@
                 title = sr.ReadLine();
             }
 
-            File.Delete(titleFile);
+            if (delete)
+            {
+                File.Delete(titleFile);
+            }
 
             return (title);
         }
@@ -227,7 +261,7 @@
         private static Boolean GetResolution(FileInfo fi
             , out String resolution)
         {
-            if ((fi.Name.EndsWith(".480.mkv")) || (fi.Name.EndsWith(".480.mp4")))
+            if ((fi.Name.EndsWith(".480.mkv")) || (fi.Name.EndsWith(".480.mp4")) || (fi.Name.EndsWith(".480.avi")))
             {
                 resolution = "SD";
             }
@@ -325,7 +359,7 @@
         private static String GetResultionExtension(FileInfo fi)
         {
             String addInfo;
-            if ((fi.Name.EndsWith(".480.mkv")) || (fi.Name.EndsWith(".480.mp4")))
+            if ((fi.Name.EndsWith(".480.mkv")) || (fi.Name.EndsWith(".480.mp4")) || (fi.Name.EndsWith(".480.avi")))
             {
                 addInfo = "SD"; //".480" + fi.Extension;
             }
@@ -372,10 +406,10 @@
         }
 
         private static void CheckSeries(String targetDir
-            , Dictionary<String, Boolean> mismatches
             , String seriesName
             , String seasonNumber
             , String resolution
+            , Dictionary<String, Boolean> mismatches
             , ref Boolean abort)
         {
             String folderInQuestion = $"{targetDir}{seriesName}";
