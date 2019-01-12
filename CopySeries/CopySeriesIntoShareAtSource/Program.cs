@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
+    using System.Threading;
     using System.Windows.Forms;
     using NReco.VideoInfo;
     using ToolBox.Extensions;
@@ -15,27 +16,26 @@
 
     public static class Program
     {
-        //private const String CopySuggestionsFolder = "_CopySuggestions";
+        private static readonly string _targetDir;
 
-        private static readonly String NewLine = Environment.NewLine;
-        //private const String NewLine = "%0D%0A";
+        private static readonly string _namesDir;
 
-        private static readonly String TargetDir;
+        private static readonly string _toolsDir;
 
-        private static readonly String StickDir;
-
-        private static readonly String ToolsDir;
+        private static readonly ulong _tenGibiByte;
 
         static Program()
         {
-            TargetDir = CopySeriesIntoShareAtSourceSettings.Default.TargetDir;
+            _targetDir = CopySeriesIntoShareAtSourceSettings.Default.TargetDir;
 
-            StickDir = CopySeriesIntoShareAtSourceSettings.Default.StickDrive;
+            _namesDir = CopySeriesIntoShareAtSourceSettings.Default.StickDrive;
 
-            ToolsDir = CopySeriesIntoShareAtSourceSettings.Default.ToolsDir;
+            _toolsDir = CopySeriesIntoShareAtSourceSettings.Default.ToolsDir;
+
+            _tenGibiByte = 10L * ((ulong)(Math.Pow(2, 30)));
         }
 
-        public static void Main(String[] args)
+        public static void Main(string[] args)
         {
             if (Process.GetProcessesByName("CopySeriesIntoShareAtSource").Length > 1)
             {
@@ -44,7 +44,7 @@
 
             if (Process.GetProcessesByName("vlc").Length > 0)
             {
-                if (MessageBox.Show("VLC is running. Continue?", String.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (MessageBox.Show("VLC is running. Continue?", string.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 {
                     return;
                 }
@@ -52,24 +52,18 @@
 
             try
             {
-                DirectoryInfo di = new DirectoryInfo(CopySeriesIntoShareAtSourceSettings.Default.SourceDir);
+                var di = new DirectoryInfo(CopySeriesIntoShareAtSourceSettings.Default.SourceDir);
 
-                SearchOption searchOption = WithoutSubFolder(args) ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
+                var searchOption = WithoutSubFolder(args) ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
 
-                if (Helper.CopySeriesIntoShare(di, searchOption, TargetDir, false, null, StickDir, out List<EpisodeData> episodeList, out RecentFiles recentFiles) == false)
+                if (Helper.CopySeriesIntoShare(di, searchOption, _targetDir, false, null, _namesDir, out var episodeList, out var recentFiles) == false)
                 {
                     return;
                 }
 
-                //CreateCopySuggestions(recentFiles);
-
                 EnrichAudioInfo(recentFiles.Files, episodeList);
 
                 WriteEmail(episodeList);
-
-                //Helper.CleanFolder("RecentFiles", "txt", 1, TargetDir, CopySuggestionsFolder);
-
-                //DirAtSource();
             }
             catch (Exception ex)
             {
@@ -84,55 +78,26 @@
             }
         }
 
-        //private static void CreateCopySuggestions(RecentFiles recentFiles)
-        //{
-        //    EnsureCopySuggestionsFolder();
-
-        //    String copySuggestionsFile = Helper.GetNewFileName("RecentFiles", "txt", TargetDir, CopySuggestionsFolder);
-
-        //    using (StreamWriter sw = new StreamWriter(copySuggestionsFile, false, Encoding.GetEncoding(1252)))
-        //    {
-        //        foreach (String fileName in recentFiles.Files)
-        //        {
-        //            String file = Path.Combine(TargetDir, fileName);
-
-        //            sw.WriteLine(file);
-        //        }
-        //    }
-        //}
-
-        //private static void EnsureCopySuggestionsFolder()
-        //{
-        //    DirectoryInfo di = new DirectoryInfo(Path.Combine(TargetDir, CopySuggestionsFolder));
-
-        //    if (di.Exists == false)
-        //    {
-        //        di.Create();
-        //    }
-        //}
-
-        private static void EnrichAudioInfo(String[] files
-            , List<EpisodeData> episodes)
+        private static void EnrichAudioInfo(string[] files, List<EpisodeData> episodes)
         {
-            for (Int32 i = 0; i < files.Length; i++)
+            for (var fileIndex = 0; fileIndex < files.Length; fileIndex++)
             {
-                if (files[i].EndsWith(".nfo") == false)
+                if (files[fileIndex].EndsWith(".nfo") == false)
                 {
-                    EnrichAudioInfo(files[i], episodes[i]);
+                    EnrichAudioInfo(files[fileIndex], episodes[fileIndex]);
                 }
             }
         }
 
-        private static void EnrichAudioInfo(String file
-            , EpisodeData episode)
+        private static void EnrichAudioInfo(string file, EpisodeData episode)
         {
-            FileInfo fi = new FileInfo(Path.Combine(TargetDir, file));
+            var fi = new FileInfo(Path.Combine(_targetDir, file));
 
-            Xml.FFProbe mediaInfo = GetMediaInfo(fi);
+            var mediaInfo = GetMediaInfo(fi);
 
             if (mediaInfo != null)
             {
-                Xml.VideoInfo xmlInfo = MediaInfo2XmlConverter.Convert(mediaInfo);
+                var xmlInfo = MediaInfo2XmlConverter.Convert(mediaInfo, episode.OriginalLanguage);
 
                 xmlInfo.Episode = new Xml.Episode()
                 {
@@ -144,105 +109,167 @@
                 XmlWriter.Write(fi, xmlInfo);
             }
 
-            IEnumerable<Xml.Stream> streams = mediaInfo?.streams?.Where(stream => stream.codec_type == "audio") ?? Enumerable.Empty<Xml.Stream>();
+            var audioStreams = mediaInfo?.streams?.Where(stream => stream.codec_type == "audio") ?? Enumerable.Empty<Xml.Stream>();
 
-            IEnumerable<Xml.Stream> undefinedStreams = streams.Where(LanguageIsUndefined);
+            var audioLanguages = audioStreams.Select(stream => stream.tag.GetLanguage() ?? episode.OriginalLanguage).Distinct();
 
-            IEnumerable<String> undefinedLanguages = undefinedStreams.Select(us => episode.OriginalLanguage);
-
-            IEnumerable<Xml.Stream> definedStreams = streams.Except(undefinedStreams);
-
-            IEnumerable<String> definedLanguages = definedStreams.Select(stream => stream.tag.GetLanguage());
-
-            IEnumerable<String> languages = undefinedLanguages.Union(definedLanguages).Distinct();
-
-            languages.ForEach(language => episode.AddLanguage(language));
+            audioLanguages.ForEach(languages => episode.AddLanguage(languages));
         }
 
         private static Xml.FFProbe GetMediaInfo(FileInfo fi)
         {
             try
             {
-                MediaInfo mediaInfo = (new FFProbe()).GetMediaInfo(fi.FullName);
+                var mediaInfo = (new FFProbe()).GetMediaInfo(fi.FullName);
 
-                String xml = mediaInfo.Result.CreateNavigator().OuterXml;
+                var xml = mediaInfo.Result.CreateNavigator().OuterXml;
 
-                Xml.FFProbe ffprobe = Serializer<Xml.FFProbe>.FromString(xml);
+                var ffprobe = Serializer<Xml.FFProbe>.FromString(xml);
 
-                return (ffprobe);
+                return ffprobe;
             }
             catch
             {
-                return (null);
+                return null;
             }
         }
-
-        private static Boolean LanguageIsUndefined(Xml.Stream stream)
-            => stream?.tag.GetLanguage() == "und";
 
         private static void WriteEmail(List<EpisodeData> episodes)
         {
             episodes.Sort();
 
-            StringBuilder email = new StringBuilder();
+            CalculatePadding(episodes, out int padSeriesName, out var padEpisodeID, out var padEpisodeName, out var padAddInfo);
 
-            //email.Append("mailto:?bcc=");
+            var mailTextBuilder = new StringBuilder();
 
-            AddNewSeasonInfo(episodes, out String subject, out String addInfo, out Boolean newSeries, out Boolean newSeason);
+            AddNewSeasonInfo(episodes, out var subject, out var addInfo, out var newSeries, out var newSeason);
 
-            String bcc = GetBcc(newSeries, newSeason);
+            mailTextBuilder.AppendLine();
 
-            //email.Append(bcc);
-            //email.Append("&subject=");
-            //email.Append(subject);
-            //email.Append("&body=");
+            ulong fileSize = 0;
 
-            Console.WriteLine();
-
-            if (String.IsNullOrEmpty(addInfo) == false)
+            foreach (var episode in episodes)
             {
-                email.Append(addInfo);
-                //email.Append(Uri.EscapeDataString(addInfo));
-                email.Append(NewLine);
+                AppendEpisode(episode, padSeriesName, padEpisodeID, padEpisodeName, padAddInfo, mailTextBuilder);
 
-                Console.Write(addInfo);
-                Console.WriteLine();
+                fileSize += episode.FileSize.InBytes;
             }
 
-            String previous = null;
+            AddSummarySize(padSeriesName, padEpisodeID, padEpisodeName, padAddInfo, fileSize, mailTextBuilder);
 
-            foreach (EpisodeData episode in episodes)
+            var recipients = GetRecipients(newSeries, newSeason);
+
+            var success = false;
+
+            do
             {
-                String name = episode.ToString();
-
-                if ((previous != null) && (previous != episode.SeriesName))
+                try
                 {
-                    email.Append(NewLine);
+                    CreateOutlookMail(recipients, subject, addInfo, mailTextBuilder.ToString());
 
+                    success = true;
+                }
+                catch (Exception ex)
+                {
                     Console.WriteLine();
+                    Console.WriteLine(ex.Message);
+
+                    Thread.Sleep(30000);
+                }
+            } while (success == false);
+        }
+
+        private static void CalculatePadding(List<EpisodeData> episodes, out int padSeriesName, out int padEpisodeID, out int padEpisodeName, out int padAddInfo)
+        {
+            padSeriesName = 1;
+            padEpisodeID = 1;
+            padEpisodeName = 1;
+            padAddInfo = 1;
+
+            foreach (var episode in episodes)
+            {
+                if (episode.DisplayName.Length > padSeriesName)
+                {
+                    padSeriesName = episode.DisplayName.Length;
                 }
 
-                email.Append(name);
-                //email.Append(Uri.EscapeDataString(name));
-                email.Append(NewLine);
+                if (episode.EpisodeID.Length > padEpisodeID)
+                {
+                    padEpisodeID = episode.EpisodeID.Length;
+                }
 
-                Console.Write(name);
-                Console.WriteLine();
+                if (episode.EpisodeName.Length > padEpisodeName)
+                {
+                    padEpisodeName = episode.EpisodeName.Length;
+                }
 
-                previous = episode.SeriesName;
+                if (episode.AddInfo.Length > padAddInfo)
+                {
+                    padAddInfo = episode.AddInfo.Length;
+                }
+            }
+        }
+
+        private static void AppendEpisode(EpisodeData data, int padSeriesName, int padEpisodeID, int padEpisodeName, int padAddInfo, StringBuilder mailTextBuilder)
+        {
+            mailTextBuilder.Append(data.DisplayName.PadRight(padSeriesName + 1));
+            mailTextBuilder.Append(data.EpisodeID.PadLeft(padEpisodeID));
+            mailTextBuilder.Append(" \"");
+
+            var episodeName = data.EpisodeName + "\"";
+
+            episodeName = episodeName.PadRight(padEpisodeName + 1);
+
+            mailTextBuilder.Append(episodeName);
+            mailTextBuilder.Append(" ");
+            mailTextBuilder.Append(data.AddInfo.PadRight(padAddInfo));
+            mailTextBuilder.Append(" (");
+            mailTextBuilder.Append(data.FileSize.ToString(3));
+            mailTextBuilder.AppendLine(")\t");
+        }
+
+        private static void AddSummarySize(int padSeriesName, int padSeasonID, int padEpisodeName, int padAddInfo, ulong fileSize, StringBuilder mailTextBuilder)
+        {
+            var padding = padSeriesName + padSeasonID + padEpisodeName + padAddInfo + 5;
+
+            mailTextBuilder.AppendLine("".PadLeft(padding + 12, '-'));
+
+            if (fileSize >= _tenGibiByte)
+            {
+                mailTextBuilder.Append("".PadLeft(padding - 1, ' '));
+            }
+            else
+            {
+                mailTextBuilder.Append("".PadLeft(padding, ' '));
             }
 
-            Outlook.Application outlook = new Outlook.Application();
+            mailTextBuilder.Append(" (");
+            mailTextBuilder.Append((new FileSize(fileSize)).ToString());
+            mailTextBuilder.AppendLine(")");
+        }
 
-            Outlook.MailItem mail = (Outlook.MailItem)(outlook.CreateItem(Outlook.OlItemType.olMailItem));
+        private static string CreateOutlookMail(string recipients, string subject, string addInfo, string mailText)
+        {
+            var outlook = new Outlook.Application();
+
+            var mail = (Outlook.MailItem)(outlook.CreateItem(Outlook.OlItemType.olMailItem));
 
             mail.Subject = subject;
 
-            mail.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
+            mail.BodyFormat = Outlook.OlBodyFormat.olFormatHTML;
 
-            mail.Body = email.ToString();
+            var bodyTextBuilder = new StringBuilder("<pre>");
 
-            mail.BCC = bcc;
+            if (string.IsNullOrEmpty(addInfo) == false)
+            {
+                bodyTextBuilder.Append(System.Web.HttpUtility.HtmlEncode(addInfo));
+            }
+
+            bodyTextBuilder.Append(System.Web.HttpUtility.HtmlEncode(mailText) + "</pre>");
+
+            mail.HTMLBody = bodyTextBuilder.ToString();
+
+            mail.BCC = recipients;
 
             mail.Display(false);
 
@@ -252,44 +279,29 @@
             Marshal.ReleaseComObject(outlook);
             outlook = null;
 
-            //Process process = new Process()
-            //{
-            //    StartInfo = new ProcessStartInfo()
-            //    {
-            //        FileName = email.ToString()
-            //    }
-            //};
-
-            //process.Start();
+            return recipients;
         }
 
-        private static String GetBcc(Boolean newSeries, Boolean newSeason)
+        private static string GetRecipients(bool newSeries, bool newSeason)
         {
-            Recipients recipients = Serializer<Recipients>.Deserialize(Path.Combine(StickDir, "Recipients.xml"));
+            var recipients = Serializer<Recipients>.Deserialize(Path.Combine(_namesDir, "Recipients.xml"));
 
             if (recipients?.RecipientList?.Length > 0)
             {
-                IEnumerable<String> bcc = GetBcc(recipients.RecipientList, newSeries, newSeason);
+                var bcc = GetBcc(recipients.RecipientList, newSeries, newSeason);
 
-                return (String.Join(";", bcc.ToArray()));
+                return string.Join(";", bcc.ToArray());
             }
 
-            return (String.Empty);
+            return string.Empty;
         }
 
-        private static IEnumerable<String> GetBcc(IEnumerable<Recipient> recipients
-            , Boolean newSeries
-            , Boolean newSeason)
+        private static IEnumerable<string> GetBcc(IEnumerable<Recipient> recipients, bool newSeries, bool newSeason)
         {
-            DayOfWeek today = DateTime.Now.DayOfWeek;
+            var today = DateTime.Now.DayOfWeek;
 
-            foreach (Recipient recipient in recipients)
+            foreach (var recipient in recipients)
             {
-                if ((recipient.DayOfWeekSpecified) && (today != recipient.DayOfWeek))
-                {
-                    continue;
-                }
-
                 if ((recipient.NewSeriesSpecified) && (recipient.NewSeries) && (newSeries == false))
                 {
                     continue;
@@ -300,63 +312,48 @@
                     continue;
                 }
 
-                yield return (recipient.Value);
+                if ((recipient.DayOfWeekSpecified) && (today != recipient.DayOfWeek))
+                {
+                    continue;
+                }
+
+                yield return recipient.Value;
             }
         }
 
-        private static Boolean WithoutSubFolder(String[] args)
-            => ((args?.Length > 0) && (args[0].ToLower() == "/withoutsubfolders"));
+        private static bool WithoutSubFolder(string[] args)
+            => (args?.Length > 0) && (args[0].ToLower() == "/withoutsubfolders");
 
-        //private static void DirAtSource()
-        //{
-        //    Process process = new Process()
-        //    {
-        //        StartInfo = new ProcessStartInfo()
-        //        {
-        //            FileName = "DirAtSource.exe",
-        //            WorkingDirectory = ToolsDir
-        //        }
-        //    };
-
-        //    process.Start();
-        //    process.WaitForExit();
-        //}
-
-        private static void AddNewSeasonInfo(List<EpisodeData> episodes
-            , out String subject
-            , out String addInfo
-            , out Boolean newSeries
-            , out Boolean newSeason)
+        private static void AddNewSeasonInfo(List<EpisodeData> episodes, out string subject, out string addInfo, out bool newSeries, out bool newSeason)
         {
             newSeries = false;
 
-            IEnumerable<EpisodeData> newSeasons = episodes.Where(episode => episode.IsFirstOfSeason);
+            var newSeasons = episodes.Where(episode => episode.IsFirstOfSeason);
 
-            addInfo = String.Empty;
+            var addInfoBuilder = new StringBuilder();
 
             newSeason = newSeasons.Any();
 
-            //subject = newSeason ? "Share Update (with Info)" : "Share Update";
-            //subject = newSeason ? Uri.EscapeDataString("Share Update (with Info)") : Uri.EscapeDataString("Share Update");
-
             if (newSeason)
             {
-                HashSet<String> names = new HashSet<String>();
+                var names = new HashSet<string>();
 
-                newSeasons.Split(episode => episode.IsPilot, out IEnumerable<EpisodeData> pilots, out IEnumerable<EpisodeData> nonPilots);
+                newSeasons.Split(episode => episode.IsPilot, out var pilots, out var nonPilots);
 
-                foreach (EpisodeData pilot in pilots)
+                foreach (var pilot in pilots)
                 {
                     newSeries = true;
 
-                    AddInfo(ref addInfo, names, pilot, "Serie");
+                    AddInfo(addInfoBuilder, names, pilot, "Serie");
                 }
 
-                foreach (EpisodeData nonPilot in nonPilots)
+                foreach (var nonPilot in nonPilots)
                 {
-                    AddInfo(ref addInfo, names, nonPilot, "Season");
+                    AddInfo(addInfoBuilder, names, nonPilot, "Season");
                 }
             }
+
+            addInfo = addInfoBuilder.ToString();
 
             subject = "Share Update";
 
@@ -370,14 +367,12 @@
             }
         }
 
-        private static void AddInfo(ref String addInfo
-            , HashSet<String> names
-            , EpisodeData episode
-            , String text)
+        private static void AddInfo(StringBuilder addInfoBuilder, HashSet<string> names, EpisodeData episode, string text)
         {
             if (names.Contains(episode.SeriesName) == false)
             {
-                addInfo += $"Neue  {text}: {episode.DisplayName}{Environment.NewLine}{Environment.NewLine}";
+                addInfoBuilder.AppendLine($"Neue  {text}: {episode.DisplayName}");
+                addInfoBuilder.AppendLine();
 
                 names.Add(episode.SeriesName);
             }

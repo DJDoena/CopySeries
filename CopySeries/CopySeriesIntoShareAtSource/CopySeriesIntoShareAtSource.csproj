@@ -34,6 +34,7 @@
       <HintPath>..\..\packages\NReco.VideoInfo.1.1.0\lib\net35\NReco.VideoInfo.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -84,7 +85,6 @@
   <ItemGroup>
     <None Include="Recipients.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

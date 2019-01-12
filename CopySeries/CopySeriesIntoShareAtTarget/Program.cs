@@ -58,10 +58,7 @@
                     Console.WriteLine("Press <Enter> to retry.");
                     Console.ReadLine();
                 }
-
-                List<EpisodeData> episodes;
-                RecentFiles recentFiles;
-                if (Helper.CopySeriesIntoShare(di, SearchOption.AllDirectories, TargetDir, true, RemoteDir, StickDrive, out episodes, out recentFiles))
+                if (Helper.CopySeriesIntoShare(di, SearchOption.AllDirectories, TargetDir, true, RemoteDir, StickDrive, out List<EpisodeData> episodes, out RecentFiles recentFiles))
                 {
                     const String SubDir = "_RecentFiles";
 

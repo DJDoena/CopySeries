@@ -8,19 +8,37 @@
 
     internal static class MediaInfo2XmlConverter
     {
-        static readonly CultureInfo CultureInfo;
+        private static readonly CultureInfo _cultureInfo;
+
+        private static string _originalLanguage;
 
         static MediaInfo2XmlConverter()
         {
-            CultureInfo = CultureInfo.GetCultureInfo("en-US");
+            _cultureInfo = CultureInfo.GetCultureInfo("en-US");
         }
 
-        internal static String GetLanguage(this IEnumerable<Xml.Tag> tags)
-            => tags?.FirstOrDefault(tag => tag.key == "language")?.value;
+        internal static string GetLanguage(this IEnumerable<Xml.Tag> tags)
+            => tags?.FirstOrDefault(tag => tag.key == "language")?.value ?? _originalLanguage;
 
-        internal static Xml.VideoInfo Convert(Xml.FFProbe ffprobe)
+        internal static Xml.VideoInfo Convert(Xml.FFProbe ffprobe, string originalLanguage)
         {
-            Xml.VideoInfo info = new Xml.VideoInfo()
+            _originalLanguage = originalLanguage;
+
+            try
+            {
+                var info = TryConvert(ffprobe);
+
+                return info;
+            }
+            finally
+            {
+                _originalLanguage = null;
+            }
+        }
+
+        private static Xml.VideoInfo TryConvert(Xml.FFProbe ffprobe)
+        {
+            var info = new Xml.VideoInfo()
             {
                 Duration = ConvertDuration(ffprobe.format?.duration),
                 Video = ffprobe.streams?.Where(IsVideo).Select(GetXmlVideo).ToArray(),
@@ -45,10 +63,10 @@
                 info.Subtitle = null;
             }
 
-            return (info);
+            return info;
         }
 
-        private static Boolean IsSubtile(Xml.Stream stream)
+        private static bool IsSubtile(Xml.Stream stream)
             => stream?.codec_type == "subtitle";
 
         private static Xml.Subtitle GetXmlSubtitle(Xml.Stream stream)
@@ -60,7 +78,7 @@
                 Title = stream.tag.GetTitle()
             };
 
-        private static Boolean IsAudio(Xml.Stream stream)
+        private static bool IsAudio(Xml.Stream stream)
             => stream?.codec_type == "audio";
 
         private static Xml.Audio GetXmlAudio(Xml.Stream stream)
@@ -75,7 +93,7 @@
                 Title = stream.tag.GetTitle(),
             };
 
-        private static Boolean IsVideo(Xml.Stream stream)
+        private static bool IsVideo(Xml.Stream stream)
             => stream?.codec_type == "video";
 
         private static Xml.Video GetXmlVideo(Xml.Stream stream)
@@ -90,7 +108,7 @@
 
         private static Xml.AspectRatio GetAspectRatio(Xml.Stream stream)
         {
-            Xml.AspectRatio ratio = new Xml.AspectRatio
+            var ratio = new Xml.AspectRatio()
             {
                 Width = stream.width,
                 Height = stream.height,
@@ -109,68 +127,68 @@
 
             ratio.RatioSpecified = ratio.Ratio > 0;
 
-            return (ratio);
+            return ratio;
         }
 
-        private static UInt32 ConvertDuration(String duration)
+        private static uint ConvertDuration(string duration)
         {
             if (duration.IsEmpty())
             {
-                return (0);
+                return 0;
             }
-            else if (TryParseDouble(duration, out Double seconds))
+            else if (TryParseDouble(duration, out var seconds))
             {
-                return ((UInt32)(seconds));
+                return (uint)(seconds);
             }
-            else if (TryParseTimeSpan(duration, out TimeSpan timeSpan))
+            else if (TryParseTimeSpan(duration, out var timeSpan))
             {
-                return ((UInt32)(timeSpan.TotalSeconds));
+                return (uint)(timeSpan.TotalSeconds);
             }
 
-            return (0);
+            return 0;
         }
 
-        private static Decimal GetAspectRatio(String aspectRatio)
+        private static decimal GetAspectRatio(string aspectRatio)
         {
             if (aspectRatio.IsEmpty())
             {
-                return (0);
+                return 0;
             }
 
-            String[] split = aspectRatio.Split(':');
+            var split = aspectRatio.Split(':');
 
             if (split.Length != 2)
             {
-                return (0);
+                return 0;
             }
-            else if ((UInt32.TryParse(split[0], out UInt32 width)) && (UInt32.TryParse(split[1], out UInt32 height)) && (height > 0))
+            else if ((uint.TryParse(split[0], out var width)) && (uint.TryParse(split[1], out var height)) && (height > 0))
             {
-                Decimal ratio = CalulateRatio(width, height);
+                var ratio = CalulateRatio(width, height);
 
-                return (ratio);
+                return ratio;
             }
 
-            return (0);
+            return 0;
         }
 
-        private static Decimal CalulateRatio(Decimal width, Decimal height)
+        private static decimal CalulateRatio(decimal width, decimal height)
             => Math.Round(width / height, 2, MidpointRounding.AwayFromZero);
 
-        private static Boolean TryParseTimeSpan(String duration, out TimeSpan timeSpan)
+        private static bool TryParseTimeSpan(string duration, out TimeSpan timeSpan)
         {
-            Int32 indexOf = duration.IndexOf('.');
+            var indexOf = duration.IndexOf('.');
 
-            String reduced = indexOf > 0 ? duration.Substring(0, indexOf) : duration;
+            var reduced = indexOf > 0 ? duration.Substring(0, indexOf) : duration;
 
-            Boolean success = TimeSpan.TryParse(reduced, CultureInfo, out timeSpan);
+            var success = TimeSpan.TryParse(reduced, _cultureInfo, out timeSpan);
 
-            return (success);
+            return success;
         }
 
-        private static Boolean TryParseDouble(String duration, out Double seconds)
-            => Double.TryParse(duration, NumberStyles.AllowDecimalPoint, CultureInfo, out seconds);
+        private static bool TryParseDouble(string duration, out double seconds)
+            => double.TryParse(duration, NumberStyles.AllowDecimalPoint, _cultureInfo, out seconds);
 
-        private static String GetTitle(this IEnumerable<Xml.Tag> tags)
+        private static string GetTitle(this IEnumerable<Xml.Tag> tags)
             => tags?.FirstOrDefault(tag => tag.key == "title")?.value;
     }
 }

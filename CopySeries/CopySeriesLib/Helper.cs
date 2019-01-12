@@ -12,73 +12,66 @@
     {
         private static Regex NameRegex { get; }
 
-        private static Dictionary<String, Name> Names { get; set; }
+        private static Dictionary<string, Name> Names { get; set; }
 
         static Helper()
         {
-            const String SeriesName = "(?'SeriesName'[A-Za-z0-9&-_]+?)";
-            const String SeasonNumber = "(?'SeasonNumber'[0-9]+?)";
-            const String EpisodeNumber = "(?'EpisodeNumber'[0-9a-z]+)";
-            const String EpisodeName = "(?'EpisodeName'.+?)";
+            const string SeriesName = "(?'SeriesName'[A-Za-z0-9&-_]+?)";
+            const string SeasonNumber = "(?'SeasonNumber'[0-9]+?)";
+            const string EpisodeNumber = "(?'EpisodeNumber'[0-9a-z]+)";
+            const string EpisodeName = "(?'EpisodeName'.+?)";
 
             NameRegex = new Regex("^" + SeriesName + " " + SeasonNumber + "x" + EpisodeNumber + @" \[ " + EpisodeName + @" \]\.");
 
             Names = null;
         }
 
-        public static Boolean CopySeriesIntoShare(DirectoryInfo sourceDir
-            , SearchOption searchOption
-            , String targetDir
-            , Boolean copy
-            , String remoteDir
-            , String namesDir
-            , out List<EpisodeData> episodeList
-            , out RecentFiles recentFiles)
+        public static bool CopySeriesIntoShare(DirectoryInfo sourceDir, SearchOption searchOption, string targetDir, bool copy, string remoteDir, string namesDir, out List<EpisodeData> episodeList, out RecentFiles recentFiles)
         {
-            DateShows dateShows = Serializer<DateShows>.Deserialize(Path.Combine(namesDir, "DateShows.xml"));
+            var dateShows = Serializer<DateShows>.Deserialize(Path.Combine(namesDir, "DateShows.xml"));
 
-            IEnumerable<String> dateShowShortNames = dateShows.ShortNameList ?? Enumerable.Empty<String>();
+            var dateShowShortNames = dateShows.ShortNameList ?? Enumerable.Empty<string>();
 
-            UInt64 bytes;
-            Boolean abort;
+            ulong bytes;
+            bool abort;
             List<FileInfo> fis;
             do
             {
-                Dictionary<String, Boolean> mismatches = new Dictionary<String, Boolean>();
+                var mismatches = new Dictionary<string, bool>();
 
                 fis = new List<FileInfo>(sourceDir.GetFiles("*.*", searchOption));
 
-                for (Int32 i = fis.Count - 1; i >= 0; i--)
+                for (int fileIndex = fis.Count - 1; fileIndex >= 0; fileIndex--)
                 {
-                    String name = fis[i].Name.ToLower();
+                    string name = fis[fileIndex].Name.ToLower();
 
                     if ((name == "thumbs.db") || (name.EndsWith(".lnk")) || (name.EndsWith(".title")))
                     {
-                        fis.RemoveAt(i);
+                        fis.RemoveAt(fileIndex);
 
                         continue;
                     }
                 }
 
-                fis.Sort((left, right) => (left.Name.CompareTo(right.Name)));
+                fis.Sort((left, right) => left.Name.CompareTo(right.Name));
 
                 bytes = 0;
 
                 abort = false;
 
-                foreach (FileInfo fi in fis)
+                foreach (var fi in fis)
                 {
-                    bytes += (UInt64)(fi.Length);
+                    bytes += (ulong)(fi.Length);
 
-                    Match match = NameRegex.Match(fi.Name);
+                    var match = NameRegex.Match(fi.Name);
 
                     if (match.Success)
                     {
-                        String seriesName = match.Groups["SeriesName"].Value;
+                        var seriesName = match.Groups["SeriesName"].Value;
 
-                        String seasonNumber = match.Groups["SeasonNumber"].Value;
+                        var seasonNumber = match.Groups["SeasonNumber"].Value;
 
-                        if ((GetName(seriesName, namesDir, mismatches, out Name name)) && (GetResolution(fi, out String resolution)))
+                        if ((GetName(seriesName, namesDir, mismatches, out var name)) && (GetResolution(fi, out var resolution)))
                         {
                             CheckSeries(targetDir, name.LongName, seasonNumber, resolution, mismatches, ref abort);
 
@@ -91,7 +84,7 @@
                     }
                     else
                     {
-                        String output = $"No Match: {fi.Name}";
+                        var output = $"No Match: {fi.Name}";
 
                         if (mismatches.ContainsKey(output) == false)
                         {
@@ -115,15 +108,15 @@
                 }
             } while (abort == true);
 
-            DriveInfo driveInfo = new DriveInfo(targetDir.Substring(0, 1));
+            var driveInfo = new DriveInfo(targetDir.Substring(0, 1));
 
-            UInt64 availableFreeSpace = (UInt64)(driveInfo.AvailableFreeSpace);
+            var availableFreeSpace = (ulong)(driveInfo.AvailableFreeSpace);
 
             if (availableFreeSpace <= bytes)
             {
-                FileSize bytesSize = new FileSize(bytes);
+                var bytesSize = new FileSize(bytes);
 
-                FileSize spaceSize = new FileSize(availableFreeSpace);
+                var spaceSize = new FileSize(availableFreeSpace);
 
                 Console.WriteLine($"Drive if full!{Environment.NewLine}Available: {spaceSize}{Environment.NewLine}Needed: {bytesSize}");
 
@@ -131,31 +124,31 @@
 
                 recentFiles = null;
 
-                return (false);
+                return false;
             }
 
             recentFiles = new RecentFiles()
             {
-                Files = new String[fis.Count]
+                Files = new string[fis.Count]
             };
 
             episodeList = new List<EpisodeData>(fis.Count);
 
-            for (Int32 i = 0; i < fis.Count; i++)
+            for (var fileIndex = 0; fileIndex < fis.Count; fileIndex++)
             {
-                FileInfo fi = fis[i];
+                var fi = fis[fileIndex];
 
-                Match match = NameRegex.Match(fi.Name);
+                var match = NameRegex.Match(fi.Name);
 
-                String seriesName = match.Groups["SeriesName"].Value;
+                var seriesName = match.Groups["SeriesName"].Value;
 
-                String seasonNumber = match.Groups["SeasonNumber"].Value;
+                var seasonNumber = match.Groups["SeasonNumber"].Value;
 
-                GetName(seriesName, namesDir, null, out Name name);
+                GetName(seriesName, namesDir, null, out var name);
 
-                GetResolution(fi, out String resolution);
+                GetResolution(fi, out var resolution);
 
-                String targetFile = $@"{targetDir}{name.LongName}\Season {seasonNumber}\{resolution}\{fi.Name}";
+                var targetFile = $@"{targetDir}{name.LongName}\Season {seasonNumber}\{resolution}\{fi.Name}";
 
                 if (File.Exists(targetFile))
                 {
@@ -180,9 +173,9 @@
 
                 File.SetAttributes(targetFile, FileAttributes.Archive | FileAttributes.ReadOnly);
 
-                recentFiles.Files[i] = targetFile.Replace(targetDir, remoteDir);
+                recentFiles.Files[fileIndex] = targetFile.Replace(targetDir, remoteDir);
 
-                EpisodeData episodeData = GetEpisodeData(name, seasonNumber, fi, match, dateShowShortNames.Contains(name.ShortName));
+                var episodeData = GetEpisodeData(name, seasonNumber, fi, match, dateShowShortNames.Contains(name.ShortName));
 
                 episodeList.Add(episodeData);
 
@@ -192,23 +185,23 @@
             return (true);
         }
 
-        private static void CheckTitle(FileInfo fi, String episodeName, Boolean isDateShow, Dictionary<String, Boolean> mismatches, ref Boolean abort)
+        private static void CheckTitle(FileInfo fi, string episodeName, bool isDateShow, Dictionary<string, bool> mismatches, ref bool abort)
         {
             if (isDateShow == false)
             {
                 return;
             }
 
-            String titleFile = fi.FullName + ".title";
+            var titleFile = fi.FullName + ".title";
 
             if (File.Exists(titleFile))
             {
                 episodeName = GetEpisodeName(titleFile, false);
             }
 
-            if (DateTime.TryParseExact(episodeName.Substring(0, 10), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out DateTime date) == false)
+            if (DateTime.TryParseExact(episodeName.Substring(0, 10), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var date) == false)
             {
-                String output = $"No Match: {episodeName}";
+                var output = $"No Match: {episodeName}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
@@ -221,30 +214,26 @@
             }
         }
 
-        private static EpisodeData GetEpisodeData(Name name
-            , String seasonNumber
-            , FileInfo fi
-            , Match match
-            , Boolean isDateShow)
+        private static EpisodeData GetEpisodeData(Name name, string seasonNumber, FileInfo fi, Match match, bool isDateShow)
         {
-            String addInfo = GetAddInfo(fi);
+            var addInfo = GetAddInfo(fi);
 
-            String episodeNumber = match.Groups["EpisodeNumber"].Value;
+            var episodeNumber = match.Groups["EpisodeNumber"].Value;
 
-            String titleFile = fi.FullName + ".title";
+            var titleFile = fi.FullName + ".title";
 
-            String episodeName = File.Exists(titleFile) ? GetEpisodeName(titleFile) : match.Groups["EpisodeName"].Value;
+            var episodeName = File.Exists(titleFile) ? GetEpisodeName(titleFile) : match.Groups["EpisodeName"].Value;
 
-            FileSize fileSize = new FileSize((UInt64)(fi.Length));
+            var fileSize = new FileSize((ulong)(fi.Length));
 
-            EpisodeData episodeData = new EpisodeData(name, seasonNumber, episodeNumber, isDateShow, episodeName, addInfo, fileSize);
+            var episodeData = new EpisodeData(name, seasonNumber, episodeNumber, isDateShow, episodeName, addInfo, fileSize);
 
-            return (episodeData);
+            return episodeData;
         }
 
-        private static String GetEpisodeName(String titleFile, Boolean delete = true)
+        private static string GetEpisodeName(string titleFile, bool delete = true)
         {
-            String title;
+            string title;
             using (StreamReader sr = new StreamReader(titleFile, Encoding.UTF8))
             {
                 title = sr.ReadLine();
@@ -255,11 +244,10 @@
                 File.Delete(titleFile);
             }
 
-            return (title);
+            return title;
         }
 
-        private static Boolean GetResolution(FileInfo fi
-            , out String resolution)
+        private static bool GetResolution(FileInfo fi, out string resolution)
         {
             if ((fi.Name.EndsWith(".480.mkv")) || (fi.Name.EndsWith(".480.mp4")) || (fi.Name.EndsWith(".480.avi")))
             {
@@ -284,21 +272,18 @@
                 resolution = "SD";
             }
 
-            return (true);
+            return true;
         }
 
-        public static String GetNewFileName(String fileName
-           , String extension
-           , String baseTargetDir
-           , String subTargetDir)
+        public static string GetNewFileName(string fileName, string extension, string baseTargetDir, string subTargetDir)
         {
-            DateTime today = DateTime.Now;
+            var today = DateTime.Now;
 
-            String appendix = $"{today.Year}_{today.Month:00}_{today.Day:00}";
+            var appendix = $"{today.Year}_{today.Month:00}_{today.Day:00}";
 
-            String newFileName = $"{fileName}.{appendix}.{extension}";
+            var newFileName = $"{fileName}.{appendix}.{extension}";
 
-            UInt16 index = 1;
+            ushort index = 1;
 
             while (File.Exists(Path.Combine(baseTargetDir, subTargetDir, newFileName)))
             {
@@ -309,22 +294,18 @@
 
             newFileName = Path.Combine(baseTargetDir, subTargetDir, newFileName);
 
-            return (newFileName);
+            return newFileName;
         }
 
-        public static void CleanFolder(String fileNamePattern
-            , String extensionPattern
-            , Int32 weekOffset
-            , String baseTargetDir
-            , String subTargetDir)
+        public static void CleanFolder(string fileNamePattern, string extensionPattern, int weekOffset, string baseTargetDir, string subTargetDir)
         {
-            DateTime dateTime = DateTime.Now.AddDays(weekOffset * 7 * -1);
+            var dateTime = DateTime.Now.AddDays(weekOffset * 7 * -1);
 
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(baseTargetDir, subTargetDir));
+            var di = new DirectoryInfo(Path.Combine(baseTargetDir, subTargetDir));
 
-            List<FileInfo> fis = new List<FileInfo>(di.GetFiles(fileNamePattern + ".*." + extensionPattern, SearchOption.TopDirectoryOnly));
+            var fis = new List<FileInfo>(di.GetFiles(fileNamePattern + ".*." + extensionPattern, SearchOption.TopDirectoryOnly));
 
-            foreach (FileInfo fi in fis)
+            foreach (var fi in fis)
             {
                 if (fi.LastWriteTime < dateTime)
                 {
@@ -333,9 +314,9 @@
             }
         }
 
-        private static String GetAddInfo(FileInfo fi)
+        private static string GetAddInfo(FileInfo fi)
         {
-            String addinfo;
+            string addinfo;
             if (fi.Extension == ".srt")
             {
                 addinfo = GetSubtitleAddInfo(fi);
@@ -353,12 +334,12 @@
                 addinfo = fi.Extension.Substring(1);
             }
 
-            return (addinfo);
+            return addinfo;
         }
 
-        private static String GetResultionExtension(FileInfo fi)
+        private static string GetResultionExtension(FileInfo fi)
         {
-            String addInfo;
+            string addInfo;
             if ((fi.Name.EndsWith(".480.mkv")) || (fi.Name.EndsWith(".480.mp4")) || (fi.Name.EndsWith(".480.avi")))
             {
                 addInfo = "SD"; //".480" + fi.Extension;
@@ -376,43 +357,38 @@
                 addInfo = fi.Extension.Substring(1);
             }
 
-            return (addInfo);
+            return addInfo;
         }
 
-        private static String GetSubtitleAddInfo(FileInfo fi)
+        private static string GetSubtitleAddInfo(FileInfo fi)
         {
-            String addInfo = "Subtitle, ";
+            var addInfo = "Subtitle, ";
 
-            String newFileName = fi.Name.Substring(0, fi.Name.Length - 4);
+            var newFileName = fi.Name.Substring(0, fi.Name.Length - 4);
 
-            FileInfo newFileInfo = new FileInfo(newFileName);
+            var newFileInfo = new FileInfo(newFileName);
+
+            addInfo += GetResultionExtension(newFileInfo);
+
+            return addInfo;
+        }
+
+        private static string GetNfoAddInfo(FileInfo fi)
+        {
+            var addInfo = "NFO, ";
+
+            var newFileName = fi.Name.Substring(0, fi.Name.Length - 4);
+
+            var newFileInfo = new FileInfo(newFileName);
 
             addInfo += GetResultionExtension(newFileInfo);
 
             return (addInfo);
         }
 
-        private static String GetNfoAddInfo(FileInfo fi)
+        private static void CheckSeries(string targetDir, string seriesName, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, ref bool abort)
         {
-            String addInfo = "NFO, ";
-
-            String newFileName = fi.Name.Substring(0, fi.Name.Length - 4);
-
-            FileInfo newFileInfo = new FileInfo(newFileName);
-
-            addInfo += GetResultionExtension(newFileInfo);
-
-            return (addInfo);
-        }
-
-        private static void CheckSeries(String targetDir
-            , String seriesName
-            , String seasonNumber
-            , String resolution
-            , Dictionary<String, Boolean> mismatches
-            , ref Boolean abort)
-        {
-            String folderInQuestion = $"{targetDir}{seriesName}";
+            var folderInQuestion = $"{targetDir}{seriesName}";
 
             if (Directory.Exists(folderInQuestion))
             {
@@ -420,7 +396,7 @@
             }
             else
             {
-                String output = $"No Match: {folderInQuestion}";
+                var output = $"No Match: {folderInQuestion}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
@@ -428,7 +404,7 @@
 
                     Console.Write("Create? ");
 
-                    String input = Console.ReadLine();
+                    var input = Console.ReadLine();
 
                     input = input.ToLower();
 
@@ -452,13 +428,9 @@
             }
         }
 
-        private static void CheckSeason(String targetDir
-            , String seasonNumber
-            , String resolution
-            , Dictionary<String, Boolean> mismatches
-            , ref Boolean abort)
+        private static void CheckSeason(string targetDir, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, ref bool abort)
         {
-            String folderInQuestion = $@"{targetDir}\Season {seasonNumber}";
+            var folderInQuestion = $@"{targetDir}\Season {seasonNumber}";
 
             if (Directory.Exists(folderInQuestion))
             {
@@ -466,17 +438,15 @@
             }
             else
             {
-                String output = $"No Match: {folderInQuestion}";
+                var output = $"No Match: {folderInQuestion}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
-                    String input;
-
                     Console.WriteLine(output);
 
                     Console.Write("Create? ");
 
-                    input = Console.ReadLine();
+                    var input = Console.ReadLine();
                     input = input.ToLower();
 
                     if ((input == "y") || (input == "yes"))
@@ -499,16 +469,13 @@
             }
         }
 
-        private static void CheckResolution(String targetDir
-            , String resolution
-            , Dictionary<String, Boolean> mismatches
-            , ref Boolean abort)
+        private static void CheckResolution(string targetDir, string resolution, Dictionary<string, bool> mismatches, ref bool abort)
         {
-            String folderInQuestion = $@"{targetDir}\{resolution}";
+            var folderInQuestion = $@"{targetDir}\{resolution}";
 
             if (Directory.Exists(folderInQuestion) == false)
             {
-                String output = $"No Match: {folderInQuestion}";
+                var output = $"No Match: {folderInQuestion}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
@@ -516,7 +483,7 @@
 
                     Console.Write("Create? ");
 
-                    String input = Console.ReadLine().ToLower();
+                    var input = Console.ReadLine().ToLower();
 
                     if ((input == "y") || (input == "yes"))
                     {
@@ -536,31 +503,28 @@
             }
         }
 
-        private static Boolean GetName(String shortName
-            , String targetDir
-            , Dictionary<String, Boolean> mismatches
-            , out Name name)
+        private static bool GetName(string shortName, string targetDir, Dictionary<string, bool> mismatches, out Name name)
         {
             if (Names == null)
             {
-                Names nameList = Serializer<Names>.Deserialize(Path.Combine(targetDir, "Names.xml"));
+                var nameList = Serializer<Names>.Deserialize(Path.Combine(targetDir, "Names.xml"));
 
-                Names = new Dictionary<String, Name>();
+                Names = new Dictionary<string, Name>();
 
                 if (nameList.NameList?.Length > 0)
                 {
-                    foreach (Name item in nameList.NameList)
+                    foreach (var item in nameList.NameList)
                     {
                         Names.Add(item.ShortName, item);
                     }
                 }
             }
 
-            Boolean success = Names.TryGetValue(shortName, out name);
+            bool success = Names.TryGetValue(shortName, out name);
 
             if (success == false)
             {
-                String output = $"No Match: {shortName}";
+                var output = $"No Match: {shortName}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
@@ -570,7 +534,7 @@
                 }
             }
 
-            return (success);
+            return success;
         }
     }
 }
