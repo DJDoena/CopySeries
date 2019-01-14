@@ -133,7 +133,7 @@
             {
                 sb.Append(": ");
 
-                sb.Append(String.Join(", ", Languages));
+                sb.Append(GetLanguages());
             }
 
             return (sb.ToString());
@@ -145,6 +145,16 @@
             {
                 Languages.Add(language);
             }
+        }
+
+        public string GetLanguages()
+        {
+            if (Languages.Count > 0)
+            {
+                return String.Join(", ", Languages);
+            }
+
+            return string.Empty;
         }
     }
 }

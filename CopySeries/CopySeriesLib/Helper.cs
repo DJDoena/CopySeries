@@ -41,7 +41,7 @@
 
                 fis = new List<FileInfo>(sourceDir.GetFiles("*.*", searchOption));
 
-                for (int fileIndex = fis.Count - 1; fileIndex >= 0; fileIndex--)
+                for (var fileIndex = fis.Count - 1; fileIndex >= 0; fileIndex--)
                 {
                     string name = fis[fileIndex].Name.ToLower();
 
