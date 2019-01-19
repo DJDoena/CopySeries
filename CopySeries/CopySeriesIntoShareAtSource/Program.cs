@@ -381,7 +381,7 @@
         {
             if (names.Contains(episode.SeriesName) == false)
             {
-                addInfoBuilder.AppendLine($"Neue  {text}: {episode.DisplayName}");
+                addInfoBuilder.AppendLine($"Neue {text}: {episode.DisplayName}");
                 addInfoBuilder.AppendLine();
 
                 names.Add(episode.SeriesName);

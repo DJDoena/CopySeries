@@ -84,7 +84,7 @@
                     }
                     else
                     {
-                        var output = $"No Match: {fi.Name}";
+                        var output = $"NameRegex fail: {fi.Name}";
 
                         if (mismatches.ContainsKey(output) == false)
                         {
@@ -201,7 +201,7 @@
 
             if (DateTime.TryParseExact(episodeName.Substring(0, 10), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var date) == false)
             {
-                var output = $"No Match: {episodeName}";
+                var output = $"Title DateTime fail: {episodeName}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
@@ -261,7 +261,7 @@
             }
             else if ((fi.Name.EndsWith(".mkv")) || (fi.Name.EndsWith(".mp4")))
             {
-                Console.WriteLine($"{fi.Extension} is not a valid file extension: {fi.Name}");
+                Console.WriteLine($"{fi.Name} does not contain a resolution: {fi.Extension}");
 
                 resolution = null;
 
@@ -350,7 +350,7 @@
             }
             else if ((fi.Name.EndsWith(".1080.mkv")) || (fi.Name.EndsWith(".1080.mp4")))
             {
-                addInfo = "HD";//".1080" + fi.Extension;
+                addInfo = "FullHD"; //".1080" + fi.Extension;
             }
             else
             {
@@ -396,7 +396,7 @@
             }
             else
             {
-                var output = $"No Match: {folderInQuestion}";
+                var output = $"Folder missing fail: {folderInQuestion}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
@@ -438,7 +438,7 @@
             }
             else
             {
-                var output = $"No Match: {folderInQuestion}";
+                var output = $"Folder missing fail: {folderInQuestion}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
@@ -475,7 +475,7 @@
 
             if (Directory.Exists(folderInQuestion) == false)
             {
-                var output = $"No Match: {folderInQuestion}";
+                var output = $"Folder missing fail: {folderInQuestion}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
@@ -524,7 +524,7 @@
 
             if (success == false)
             {
-                var output = $"No Match: {shortName}";
+                var output = $"Names.xml fail: {shortName}";
 
                 if (mismatches.ContainsKey(output) == false)
                 {
