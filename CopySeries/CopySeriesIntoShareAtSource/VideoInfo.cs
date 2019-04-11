@@ -1,8 +1,18 @@
 ﻿namespace DoenaSoft.CopySeries.Xml
 {
-    using System;
     using System.Diagnostics;
+    using System.Xml;
     using System.Xml.Serialization;
+
+    [XmlRoot("doc")]
+    public sealed class Doc
+    {
+        [XmlElement]
+        public VideoInfo VideoInfo;
+
+        [XmlAnyElement]
+        public XmlElement[] Any;
+    }
 
     [XmlRoot]
     public sealed class VideoInfo
@@ -20,23 +30,23 @@
         public Subtitle[] Subtitle;
 
         [XmlAttribute]
-        public UInt32 Duration { get; set; }
+        public uint Duration { get; set; }
 
         [XmlIgnore]
-        public Boolean DurationSpecified { get; set; }
+        public bool DurationSpecified { get; set; }
     }
 
     [DebuggerDisplay("Series: {SeriesName}, Episode: {EpisodeName}")]
     public sealed class Episode
     {
         [XmlAttribute]
-        public String SeriesName;
+        public string SeriesName;
 
         [XmlAttribute]
-        public String EpisodeNumber;
+        public string EpisodeNumber;
 
         [XmlAttribute]
-        public String EpisodeName;
+        public string EpisodeName;
 
         public override string ToString()
             => ($"{SeriesName} {EpisodeNumber} {EpisodeName}");
@@ -44,23 +54,23 @@
 
     public abstract class StreamBase
     {
-        private String m_Language;
+        private string m_Language;
 
         [XmlAttribute]
-        public String CodecName;
+        public string CodecName;
 
         [XmlAttribute]
-        public String CodecLongName;
+        public string CodecLongName;
 
         [XmlAttribute]
-        public String Language
+        public string Language
         {
-            get => m_Language == "und" ? null : m_Language;
+            get => (m_Language == "und" || m_Language == "null") ? null : m_Language;
             set => m_Language = value;
         }
 
         [XmlAttribute]
-        public String Title;
+        public string Title;
     }
 
     [DebuggerDisplay("Codec: {CodecName}, Language: {Language}")]
@@ -74,41 +84,41 @@
     public sealed class AspectRatio
     {
         [XmlAttribute]
-        public UInt16 Width;
+        public ushort Width;
 
         [XmlAttribute]
-        public UInt16 Height;
+        public ushort Height;
 
         [XmlAttribute]
-        public UInt16 CodedWidth;
+        public ushort CodedWidth;
 
         [XmlIgnore]
-        public Boolean CodedWidthSpecified;
+        public bool CodedWidthSpecified;
 
         [XmlAttribute]
-        public UInt16 CodedHeight;
+        public ushort CodedHeight;
 
         [XmlIgnore]
-        public Boolean CodedHeightSpecified;
+        public bool CodedHeightSpecified;
 
         [XmlAttribute]
-        public Decimal Ratio;
+        public decimal Ratio;
 
         [XmlIgnore]
-        public Boolean RatioSpecified;
+        public bool RatioSpecified;
     }
 
     [DebuggerDisplay("Channels: {ChannelLayout}, Language: {Language}")]
     public sealed class Audio : StreamBase
     {
         [XmlAttribute]
-        public UInt16 SampleRate;
+        public ushort SampleRate;
 
         [XmlAttribute]
-        public Byte Channels;
+        public byte Channels;
 
         [XmlAttribute]
-        public String ChannelLayout;
+        public string ChannelLayout;
     }
 
     [DebuggerDisplay("Language: {Language}")]

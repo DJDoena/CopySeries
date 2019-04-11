@@ -73,7 +73,7 @@
 
                         if ((GetName(seriesName, namesDir, mismatches, out var name)) && (GetResolution(fi, out var resolution)))
                         {
-                            CheckSeries(targetDir, name.LongName, seasonNumber, resolution, mismatches, ref abort);
+                            CheckSeries(targetDir, name, seasonNumber, resolution, mismatches, ref abort);
 
                             CheckTitle(fi, match.Groups["EpisodeName"].Value, dateShowShortNames.Contains(name.ShortName), mismatches, ref abort);
                         }
@@ -386,12 +386,14 @@
             return (addInfo);
         }
 
-        private static void CheckSeries(string targetDir, string seriesName, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, ref bool abort)
+        private static void CheckSeries(string targetDir, Name name, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, ref bool abort)
         {
-            var folderInQuestion = $"{targetDir}{seriesName}";
+            var folderInQuestion = $"{targetDir}{name.LongName}";
 
             if (Directory.Exists(folderInQuestion))
             {
+                CheckNfo(folderInQuestion, name.Link);
+
                 CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, ref abort);
             }
             else
@@ -412,6 +414,8 @@
                     {
                         Directory.CreateDirectory(folderInQuestion);
 
+                        CheckNfo(folderInQuestion, name.Link);
+
                         CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, ref abort);
                     }
                     else
@@ -425,6 +429,26 @@
                 {
                     abort = true;
                 }
+            }
+        }
+
+        private static void CheckNfo(string seriesFolder, string link)
+        {
+            if (string.IsNullOrEmpty(link))
+            {
+                return;
+            }
+
+            var fileName = Path.Combine(seriesFolder, "tvshow.nfo");
+
+            if (File.Exists(fileName))
+            {
+                return;
+            }
+
+            using (var sw = new StreamWriter(fileName, false, Encoding.UTF8))
+            {
+                sw.WriteLine(link);
             }
         }
 
@@ -518,6 +542,13 @@
                         Names.Add(item.ShortName, item);
                     }
                 }
+
+                nameList = new Names()
+                {
+                    NameList = Names.Values.OrderBy(n => n, Comparer<Name>.Create((left, right) => left.SortName.CompareTo(right.SortName))).ToArray(),
+                };
+
+                Serializer<Names>.Serialize(Path.Combine(targetDir, "Names.xml"), nameList);
             }
 
             bool success = Names.TryGetValue(shortName, out name);

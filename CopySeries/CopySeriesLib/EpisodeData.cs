@@ -41,6 +41,9 @@
         public String OriginalLanguage
             => (Name.OriginalLanguage);
 
+        public String Link
+            => (Name.Link);
+
         private List<String> Languages { get; }
 
         public EpisodeData(Name name

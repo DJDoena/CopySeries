@@ -1,0 +1,157 @@
+﻿	<xsl:stylesheet id="stylesheet" version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+		<xsl:template name="PrintTextCell">
+			<xsl:param name="attribute" />
+			<td>
+				<xsl:choose>
+					<xsl:when test="$attribute != ''">
+						<xsl:value-of select="$attribute" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>&#160;</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</td>
+		</xsl:template>
+		<xsl:template match="/">
+			<html>
+				<style type="text/css">
+					body {
+						font-family: Verdana, Geneva, sans-serif;
+						font-size: 14px;
+					}
+				</style>
+				<head>
+					<title>Video Info</title>
+				</head>
+				<body>
+					<xsl:if test="//doc/VideoInfo/Episode">
+						<h1>
+							<xsl:if test="//doc/VideoInfo/Episode/@SeriesName">
+								<xsl:value-of select="//doc/VideoInfo/Episode/@SeriesName" />
+								<xsl:if test="//doc/VideoInfo/Episode/@EpisodeNumber">
+									<xsl:text> </xsl:text>
+								</xsl:if>
+							</xsl:if>
+							<xsl:if test="//doc/VideoInfo/Episode/@EpisodeNumber">
+								<em>
+									<xsl:value-of select="//doc/VideoInfo/Episode/@EpisodeNumber" />
+								</em>
+								<xsl:if test="//doc/VideoInfo/Episode/@EpisodeName">
+									<xsl:text> </xsl:text>
+								</xsl:if>
+							</xsl:if>
+							<xsl:if test="//doc/VideoInfo/Episode/@EpisodeName">
+								<xsl:value-of select="//doc/VideoInfo/Episode/@EpisodeName" />
+							</xsl:if>
+						</h1>
+					</xsl:if>
+					<xsl:if test="//doc/VideoInfo/@Duration">
+						<h2>Running Time</h2>
+						<xsl:variable name="duration" select="//doc/VideoInfo/@Duration" />
+						<xsl:variable name="hours" select="floor($duration div 3600)" />
+						<xsl:variable name="durationWithoutHours" select="$duration - ($hours * 3600)" />
+						<xsl:variable name="minutes" select="floor($durationWithoutHours div 60)" />
+						<xsl:variable name="seconds" select="$durationWithoutHours - ($minutes * 60)" />
+						<p>
+							<xsl:if test="$hours > 0">
+								<xsl:value-of select="$hours" />
+								<xsl:text>h </xsl:text>
+							</xsl:if>
+							<xsl:if test="$minutes > 0">
+								<xsl:value-of select="$minutes" />
+								<xsl:text>m </xsl:text>
+							</xsl:if>
+							<xsl:if test="$seconds > 0">
+								<xsl:value-of select="$seconds" />
+								<xsl:text>s</xsl:text>
+							</xsl:if>
+						</p>
+					</xsl:if>
+					<xsl:if test="//doc/VideoInfo/Video">
+						<h2>Video</h2>
+						<table border="1" cellpadding="3" cellspacing="0">
+							<tr>
+								<th>Ratio</th>
+								<th>Width</th>
+								<th>Height</th>
+								<th>Codec Name</th>
+								<th>Title</th>
+							</tr>
+							<xsl:for-each select="//doc/VideoInfo/Video">
+								<tr>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="AspectRatio/@Ratio" />
+									</xsl:call-template>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="AspectRatio/@Width" />
+									</xsl:call-template>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="AspectRatio/@Height" />
+									</xsl:call-template>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="@CodecName" />
+									</xsl:call-template>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="@Title" />
+									</xsl:call-template>
+								</tr>
+							</xsl:for-each>
+						</table>
+					</xsl:if>
+					<br/>
+					<xsl:if test="//doc/VideoInfo/Audio">
+						<h2>Audio</h2>
+						<table border="1" cellpadding="3" cellspacing="0">
+							<tr>
+								<th>Language</th>
+								<th>Channel Layout</th>
+								<th>Codec Name</th>
+								<th>Title</th>
+							</tr>
+							<xsl:for-each select="//doc/VideoInfo/Audio">
+								<tr>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="@Language" />
+									</xsl:call-template>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="@ChannelLayout" />
+									</xsl:call-template>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="@CodecName" />
+									</xsl:call-template>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="@Title" />
+									</xsl:call-template>
+								</tr>
+							</xsl:for-each>
+						</table>
+					</xsl:if>
+					<br/>
+					<xsl:if test="//doc/VideoInfo/Subtitle">
+						<h2>Subtitles</h2>
+						<table border="1" cellpadding="3" cellspacing="0">
+							<tr>
+								<th>Language</th>
+								<th>Codec Name</th>
+								<th>Title</th>
+							</tr>
+							<xsl:for-each select="//doc/VideoInfo/Subtitle">
+								<tr>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="@Language" />
+									</xsl:call-template>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="@CodecName" />
+									</xsl:call-template>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="@Title" />
+									</xsl:call-template>
+								</tr>
+							</xsl:for-each>
+						</table>
+					</xsl:if>
+				</body>
+			</html>
+		</xsl:template>
+	</xsl:stylesheet>
+</doc>

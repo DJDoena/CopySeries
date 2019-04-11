@@ -232,7 +232,7 @@
             mailTextBuilder.Append(" ");
             mailTextBuilder.Append(episode.AddInfo.PadRight(padAddInfo));
             mailTextBuilder.Append(" ");
-            mailTextBuilder.Append(episode.GetLanguages());
+            mailTextBuilder.Append(episode.GetLanguages().PadRight(padLanguages));
             mailTextBuilder.Append(" (");
             mailTextBuilder.Append(episode.FileSize.ToString(3));
             mailTextBuilder.AppendLine(")\t");
@@ -382,6 +382,12 @@
             if (names.Contains(episode.SeriesName) == false)
             {
                 addInfoBuilder.AppendLine($"Neue {text}: {episode.DisplayName}");
+
+                if(!string.IsNullOrWhiteSpace(episode.Link))
+                {
+                    addInfoBuilder.AppendLine(episode.Link);
+                }
+
                 addInfoBuilder.AppendLine();
 
                 names.Add(episode.SeriesName);

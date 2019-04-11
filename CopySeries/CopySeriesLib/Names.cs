@@ -13,17 +13,17 @@
     [DebuggerDisplay("ShortName: {ShortName}, DisplayName: {DisplayName}")]
     public class Name
     {
-        private String m_SortName;
+        private string m_SortName;
 
-        private String m_DisplayName;
+        private string m_DisplayName;
 
-        private String m_LocalizedName;
+        private string m_LocalizedName;
 
-        public String ShortName;
+        public string ShortName;
 
-        public String LongName;
+        public string LongName;
 
-        public String SortName
+        public string SortName
         {
             get => (SortNameSpecified ? m_SortName : LongName);
             set => m_SortName = value;
@@ -31,9 +31,9 @@
 
         [XmlIgnore]
         public Boolean SortNameSpecified
-            => (String.IsNullOrEmpty(m_SortName) == false);
+            => (string.IsNullOrEmpty(m_SortName) == false);
 
-        public String DisplayName
+        public string DisplayName
         {
             get => (DisplayNameSpecified ? m_DisplayName : LongName);
             set => m_DisplayName = value;
@@ -41,24 +41,26 @@
 
         [XmlIgnore]
         public Boolean DisplayNameSpecified
-            => (String.IsNullOrEmpty(m_DisplayName) == false);
+            => (string.IsNullOrEmpty(m_DisplayName) == false);
 
-        public UInt16 Year;
+        public ushort Year;
 
         [XmlIgnore]
-        public Boolean YearSpecified
+        public bool YearSpecified
             => (Year > 0);
 
-        public String LocalizedName
+        public string LocalizedName
         {
             get => (LocalizedNameSpecified ? m_LocalizedName : DisplayName);
             set => m_LocalizedName = value;
         }
 
         [XmlIgnore]
-        public Boolean LocalizedNameSpecified
-            => (String.IsNullOrEmpty(m_LocalizedName) == false);
+        public bool LocalizedNameSpecified
+            => (string.IsNullOrEmpty(m_LocalizedName) == false);
 
-        public String OriginalLanguage;
+        public string OriginalLanguage;
+
+        public string Link;
     }
 }
