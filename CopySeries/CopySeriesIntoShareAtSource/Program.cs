@@ -9,9 +9,10 @@
     using System.Text;
     using System.Threading;
     using System.Windows.Forms;
+    using DoenaSoft.MediaInfoHelper;
     using NReco.VideoInfo;
     using ToolBox.Extensions;
-    using ToolBox.Generics;
+    using FF = MediaInfoHelper.FFProbe;
     using Outlook = Microsoft.Office.Interop.Outlook;
 
     public static class Program
@@ -99,7 +100,7 @@
             {
                 var xmlInfo = MediaInfo2XmlConverter.Convert(mediaInfo, episode.OriginalLanguage);
 
-                xmlInfo.Episode = new Xml.Episode()
+                xmlInfo.Episode = new Episode()
                 {
                     SeriesName = episode.DisplayName,
                     EpisodeNumber = episode.EpisodeID,
@@ -109,14 +110,14 @@
                 XmlWriter.Write(fi, xmlInfo);
             }
 
-            var audioStreams = mediaInfo?.streams?.Where(stream => stream.codec_type == "audio") ?? Enumerable.Empty<Xml.Stream>();
+            var audioStreams = mediaInfo?.streams?.Where(stream => stream.codec_type == "audio") ?? Enumerable.Empty<FF.Stream>();
 
             var audioLanguages = audioStreams.Select(stream => stream.tag.GetLanguage() ?? episode.OriginalLanguage).Distinct();
 
             audioLanguages.ForEach(languages => episode.AddLanguage(languages));
         }
 
-        private static Xml.FFProbe GetMediaInfo(FileInfo fi)
+        private static FF.FFProbe GetMediaInfo(FileInfo fi)
         {
             try
             {
@@ -124,7 +125,7 @@
 
                 var xml = mediaInfo.Result.CreateNavigator().OuterXml;
 
-                var ffprobe = Serializer<Xml.FFProbe>.FromString(xml);
+                var ffprobe = MediaInfoHelper.Serializer<FF.FFProbe>.FromString(xml);
 
                 return ffprobe;
             }
@@ -294,7 +295,7 @@
 
         private static string GetRecipients(bool newSeries, bool newSeason)
         {
-            var recipients = Serializer<Recipients>.Deserialize(Path.Combine(_namesDir, "Recipients.xml"));
+            var recipients = MediaInfoHelper.Serializer<Recipients>.Deserialize(Path.Combine(_namesDir, "Recipients.xml"));
 
             if (recipients?.RecipientList?.Length > 0)
             {
@@ -383,7 +384,7 @@
             {
                 addInfoBuilder.AppendLine($"Neue {text}: {episode.DisplayName}");
 
-                if(!string.IsNullOrWhiteSpace(episode.Link))
+                if (!string.IsNullOrWhiteSpace(episode.Link))
                 {
                     addInfoBuilder.AppendLine(episode.Link);
                 }

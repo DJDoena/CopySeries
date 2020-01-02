@@ -27,11 +27,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\packages\Microsoft.Office.Interop.Outlook.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\Microsoft.Office.Interop.Outlook.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Outlook.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NReco.VideoInfo, Version=1.1.0.0, Culture=neutral, PublicKeyToken=8f59ee36d2987295, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NReco.VideoInfo.1.1.0\lib\net35\NReco.VideoInfo.dll</HintPath>
+    <Reference Include="NReco.VideoInfo, Version=1.1.1.0, Culture=neutral, PublicKeyToken=8f59ee36d2987295, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\NReco.VideoInfo.1.1.1\lib\net35\NReco.VideoInfo.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web" />
@@ -45,19 +45,15 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>CopySeriesIntoShareAtSourceSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="FFProbe.cs">
-      <DependentUpon>FFProbe.xsd</DependentUpon>
-    </Compile>
     <Compile Include="XmlWriter.cs" />
-    <Compile Include="MediaInfo2XmlConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VideoInfo.cs">
-      <DependentUpon>VideoInfo.xsd</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\MediaInfoHelper\MediaInfoHelper\MediaInfoHelper.csproj">
+      <Project>{b6f830c3-6f73-4096-aebe-07814018814b}</Project>
+      <Name>MediaInfoHelper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ToolBox\ToolBox\ToolBox.csproj">
       <Project>{4782E10E-B5CC-4C2D-9D7F-D132CB5A50A0}</Project>
       <Name>ToolBox</Name>
@@ -77,10 +73,6 @@
       <LastGenOutput>CopySeriesIntoShareAtSourceSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
-    <None Include="FFProbe.xsd" />
-    <None Include="VideoInfo.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Recipients.xml">

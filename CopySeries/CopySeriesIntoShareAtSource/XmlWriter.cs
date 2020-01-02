@@ -5,7 +5,7 @@
     using System.Text;
     using System.Xml;
     using System.Xml.Serialization;
-    using ToolBox.Generics;
+    using DoenaSoft.MediaInfoHelper;
 
     internal static class XmlWriter
     {
@@ -13,7 +13,7 @@
 
         private static string _suffix;
 
-        internal static void Write(FileInfo fileInfo, Xml.VideoInfo instance)
+        internal static void Write(FileInfo fileInfo, VideoInfo instance)
         {
             var xmlFI = GetXmlFileName(fileInfo);
 
@@ -58,7 +58,7 @@
             return xmlFI;
         }
 
-        private static string Serialize(Xml.VideoInfo instance)
+        private static string Serialize(VideoInfo instance)
         {
             using (var ms = new MemoryStream())
             {
@@ -74,7 +74,7 @@
 
                 using (var writer = System.Xml.XmlWriter.Create(ms, settings))
                 {
-                    Serializer<Xml.VideoInfo>.XmlSerializer.Serialize(writer, instance, new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
+                    Serializer<VideoInfo>.XmlSerializer.Serialize(writer, instance, new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
 
                     var xml = encoding.GetString(ms.ToArray());
 
