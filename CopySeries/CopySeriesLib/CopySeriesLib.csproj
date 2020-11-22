@@ -24,6 +24,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +41,9 @@
     <Compile Include="IgnoreDirectories.cs">
       <DependentUpon>IgnoreDirectories.xsd</DependentUpon>
     </Compile>
+    <Compile Include="KodiTVShow.cs">
+      <DependentUpon>KodiTVShow.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Names.cs">
       <DependentUpon>Names.xsd</DependentUpon>
     </Compile>
@@ -55,6 +59,9 @@
     <None Include="DateShows.xsd" />
     <None Include="FileTypes.xsd" />
     <None Include="IgnoreDirectories.xsd" />
+    <None Include="KodiTVShow.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Names.xsd" />
     <None Include="RecentFiles.xsd" />
     <None Include="Recipients.xsd" />

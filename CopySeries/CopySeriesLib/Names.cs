@@ -62,5 +62,7 @@
         public string OriginalLanguage;
 
         public string Link;
+
+        public string EpisodeNamesLink;
     }
 }

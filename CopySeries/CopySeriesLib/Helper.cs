@@ -6,11 +6,12 @@
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Web;
     using ToolBox.Generics;
 
     public static class Helper
     {
-        private static Regex NameRegex { get; }
+        public static Regex NameRegex { get; }
 
         private static Dictionary<string, Name> Names { get; set; }
 
@@ -175,11 +176,14 @@
 
                 recentFiles.Files[fileIndex] = targetFile.Replace(targetDir, remoteDir);
 
-                var episodeData = GetEpisodeData(name, seasonNumber, fi, match, dateShowShortNames.Contains(name.ShortName));
+                if (!targetFile.EndsWith(".nfo"))
+                {
+                    var episodeData = GetEpisodeData(name, seasonNumber, fi, match, dateShowShortNames.Contains(name.ShortName));
 
-                episodeList.Add(episodeData);
+                    episodeList.Add(episodeData);
 
-                Console.WriteLine(episodeData.ToString());
+                    Console.WriteLine(episodeData.ToString());
+                }
             }
 
             return (true);
@@ -392,7 +396,7 @@
 
             if (Directory.Exists(folderInQuestion))
             {
-                CheckNfo(folderInQuestion, name.Link);
+                CheckNfo(folderInQuestion, name);
 
                 CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, ref abort);
             }
@@ -414,7 +418,7 @@
                     {
                         Directory.CreateDirectory(folderInQuestion);
 
-                        CheckNfo(folderInQuestion, name.Link);
+                        CheckNfo(folderInQuestion, name);
 
                         CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, ref abort);
                     }
@@ -432,13 +436,8 @@
             }
         }
 
-        private static void CheckNfo(string seriesFolder, string link)
+        private static void CheckNfo(string seriesFolder, Name name)
         {
-            if (string.IsNullOrEmpty(link))
-            {
-                return;
-            }
-
             var fileName = Path.Combine(seriesFolder, "tvshow.nfo");
 
             if (File.Exists(fileName))
@@ -446,10 +445,68 @@
                 return;
             }
 
-            using (var sw = new StreamWriter(fileName, false, Encoding.UTF8))
+            string tvdbId = null;
+
+            if (!string.IsNullOrEmpty(name.Link))
             {
-                sw.WriteLine(link);
+                var tvdbUriBuilder = new UriBuilder(name.Link);
+
+                var tvdbQuery = HttpUtility.ParseQueryString(tvdbUriBuilder.Query);
+
+                tvdbId = tvdbQuery["id"];
             }
+
+            var homeId = name.YearSpecified ? $"{name.ShortName}_{name.Year}" : name.ShortName;
+
+            UniqueId[] uniqueIds;
+            if (string.IsNullOrEmpty(tvdbId))
+            {
+                uniqueIds = new[]
+                {
+                    new UniqueId()
+                    {
+                        type = "home",
+                        @default = true,
+                        Value = homeId,
+                    },
+                };
+            }
+            else
+            {
+                uniqueIds = new[]
+                {
+                    new UniqueId()
+                    {
+                        type = "tvdb",
+                        @default = true,
+                        Value = tvdbId,
+                    },
+                    new UniqueId()
+                    {
+                        type = "home",
+                        @default = false,
+                        Value = homeId,
+                    },
+                };
+            }
+
+            var kodi = new KodiTVShow()
+            {
+                title = name.LocalizedNameSpecified ? name.LocalizedName : name.DisplayName,
+                originaltitle = name.LocalizedNameSpecified ? name.DisplayName : null,
+                premiered = name.YearSpecified ? name.Year : (ushort)0,
+                premieredSpecified = name.YearSpecified,
+                sorttitle = name.SortName,
+                uniqueid = uniqueIds,
+            };
+
+            if (name.YearSpecified)
+            {
+                kodi.title += $" ({name.Year})";
+                kodi.sorttitle += $" ({name.Year})";
+            }
+
+            Serializer<KodiTVShow>.Serialize(fileName, kodi);
         }
 
         private static void CheckSeason(string targetDir, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, ref bool abort)
