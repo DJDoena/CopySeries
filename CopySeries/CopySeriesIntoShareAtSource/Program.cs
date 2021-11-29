@@ -83,9 +83,11 @@
         {
             for (var fileIndex = 0; fileIndex < files.Length; fileIndex++)
             {
-                if (files[fileIndex].EndsWith(".nfo") == false)
+                var episodeInfo = episodes[fileIndex];
+
+                if (episodeInfo != null)
                 {
-                    EnrichAudioInfo(files[fileIndex], episodes[fileIndex]);
+                    EnrichAudioInfo(files[fileIndex], episodeInfo);
                 }
             }
         }
@@ -114,7 +116,13 @@
 
             var audioLanguages = audioStreams.Select(stream => stream.tag.GetLanguage() ?? episode.OriginalLanguage).Distinct();
 
-            audioLanguages.ForEach(languages => episode.AddLanguage(languages));
+            audioLanguages.ForEach(language => episode.AddAudio(language));
+
+            var subtitleStreams = mediaInfo?.streams?.Where(stream => stream.codec_type == "subtitle") ?? Enumerable.Empty<FF.Stream>();
+
+            var subtitleLanguages = subtitleStreams.Select(stream => stream.tag.GetLanguage() ?? episode.OriginalLanguage).Distinct();
+
+            subtitleLanguages.ForEach(language => episode.AddSubtitle(language));
         }
 
         private static FF.FFProbe GetMediaInfo(FileInfo fi)
@@ -125,7 +133,7 @@
 
                 var xml = mediaInfo.Result.CreateNavigator().OuterXml;
 
-                var ffprobe = MediaInfoHelper.Serializer<FF.FFProbe>.FromString(xml);
+                var ffprobe = Serializer<FF.FFProbe>.FromString(xml);
 
                 return ffprobe;
             }
@@ -137,9 +145,11 @@
 
         private static void WriteEmail(List<EpisodeData> episodes)
         {
+            episodes = episodes.Where(e => e != null).ToList();
+
             episodes.Sort();
 
-            CalculatePadding(episodes, out int padSeriesName, out var padEpisodeID, out var padEpisodeName, out var padAddInfo, out var padLanguages);
+            CalculatePadding(episodes, out int padSeriesName, out var padEpisodeID, out var padEpisodeName, out var padAddInfo);
 
             var mailTextBuilder = new StringBuilder();
 
@@ -151,12 +161,12 @@
 
             foreach (var episode in episodes)
             {
-                AppendEpisode(episode, padSeriesName, padEpisodeID, padEpisodeName, padAddInfo, padLanguages, mailTextBuilder);
+                AppendEpisode(episode, padSeriesName, padEpisodeID, padEpisodeName, padAddInfo, mailTextBuilder);
 
                 fileSize += episode.FileSize.InBytes;
             }
 
-            AddSummarySize(padSeriesName, padEpisodeID, padEpisodeName, padAddInfo, padLanguages, fileSize, mailTextBuilder);
+            AddSummarySize(padSeriesName, padEpisodeID, padEpisodeName, padAddInfo, fileSize, mailTextBuilder);
 
             var recipients = GetRecipients(newSeries, newSeason);
 
@@ -180,13 +190,13 @@
             } while (success == false);
         }
 
-        private static void CalculatePadding(List<EpisodeData> episodes, out int padSeriesName, out int padEpisodeID, out int padEpisodeName, out int padAddInfo, out int padLanguages)
+        private static void CalculatePadding(List<EpisodeData> episodes, out int padSeriesName, out int padEpisodeID, out int padEpisodeName, out int padAddInfo)
         {
             padSeriesName = 1;
             padEpisodeID = 1;
             padEpisodeName = 1;
             padAddInfo = 1;
-            padLanguages = 1;
+            //padLanguages = 1;
 
             foreach (var episode in episodes)
             {
@@ -210,16 +220,16 @@
                     padAddInfo = episode.AddInfo.Length;
                 }
 
-                var languages = episode.GetLanguages();
+                //var languages = episode.GetAudio();
 
-                if (languages.Length > padLanguages)
-                {
-                    padLanguages = languages.Length;
-                }
+                //if (languages.Length > padLanguages)
+                //{
+                //    padLanguages = languages.Length;
+                //}
             }
         }
 
-        private static void AppendEpisode(EpisodeData episode, int padSeriesName, int padEpisodeID, int padEpisodeName, int padAddInfo, int padLanguages, StringBuilder mailTextBuilder)
+        private static void AppendEpisode(EpisodeData episode, int padSeriesName, int padEpisodeID, int padEpisodeName, int padAddInfo, StringBuilder mailTextBuilder)
         {
             mailTextBuilder.Append(episode.DisplayName.PadRight(padSeriesName + 1));
             mailTextBuilder.Append(episode.EpisodeID.PadLeft(padEpisodeID));
@@ -232,16 +242,29 @@
             mailTextBuilder.Append(episodeName);
             mailTextBuilder.Append(" ");
             mailTextBuilder.Append(episode.AddInfo.PadRight(padAddInfo));
-            mailTextBuilder.Append(" ");
-            mailTextBuilder.Append(episode.GetLanguages().PadRight(padLanguages));
             mailTextBuilder.Append(" (");
             mailTextBuilder.Append(episode.FileSize.ToString(3));
             mailTextBuilder.AppendLine(")\t");
+
+            var audio = episode.GetAudio();
+
+            var subtitles = episode.GetSubtitles();
+
+
+            if (!string.IsNullOrEmpty(audio))
+            {
+                mailTextBuilder.AppendLine($"\t\t\tAudio: {audio}");
+            }
+
+            if (!string.IsNullOrEmpty(subtitles))
+            {
+                mailTextBuilder.AppendLine($"\t\t\tSubtitles: {subtitles}");
+            }
         }
 
-        private static void AddSummarySize(int padSeriesName, int padSeasonID, int padEpisodeName, int padAddInfo, int padLanguages, ulong fileSize, StringBuilder mailTextBuilder)
+        private static void AddSummarySize(int padSeriesName, int padSeasonID, int padEpisodeName, int padAddInfo, ulong fileSize, StringBuilder mailTextBuilder)
         {
-            var padding = padSeriesName + padSeasonID + padEpisodeName + padAddInfo + padLanguages + 6;
+            var padding = padSeriesName + padSeasonID + padEpisodeName + padAddInfo + 5;
 
             mailTextBuilder.AppendLine("".PadLeft(padding + 12, '-'));
 

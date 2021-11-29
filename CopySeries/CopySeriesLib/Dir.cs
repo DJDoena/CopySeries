@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.CopySeries
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
@@ -8,17 +7,16 @@
 
     public static class Dir
     {
-        public static void CreateFileList(String stickDrive
-            , String targetDir)
+        public static void CreateFileList(string stickDrive, string targetDir)
         {
-            IgnoreDirectories ignoreDirectories = Serializer<IgnoreDirectories>.Deserialize(stickDrive + "IgnoreDirectories.xml");
+            var ignoreDirectories = Serializer<IgnoreDirectories>.Deserialize(stickDrive + "IgnoreDirectories.xml");
 
-            Dictionary<String, Boolean> ignoreDirectoriesDict;
+            Dictionary<string, bool> ignoreDirectoriesDict;
             if (ignoreDirectories.IgnoreDirectoryList != null)
             {
-                ignoreDirectoriesDict = new Dictionary<String, Boolean>(ignoreDirectories.IgnoreDirectoryList.Length);
+                ignoreDirectoriesDict = new Dictionary<string, bool>(ignoreDirectories.IgnoreDirectoryList.Length);
 
-                foreach (String dir in ignoreDirectories.IgnoreDirectoryList)
+                foreach (var dir in ignoreDirectories.IgnoreDirectoryList)
                 {
                     if (Directory.Exists(dir))
                     {
@@ -28,35 +26,33 @@
             }
             else
             {
-                ignoreDirectoriesDict = new Dictionary<String, Boolean>(0);
+                ignoreDirectoriesDict = new Dictionary<string, bool>(0);
             }
 
-            FileTypes fileTypes = Serializer<FileTypes>.Deserialize(stickDrive + "FileTypes.xml");
+            var fileTypes = Serializer<FileTypes>.Deserialize(stickDrive + "FileTypes.xml");
 
-            List<String> allFiles = new List<String>(2500);
+            var allFiles = new List<string>(2500);
 
             if (fileTypes.FileTypeList?.Length > 0)
             {
-                List<String> directories;
+                var directories = new List<string>(Directory.GetDirectories(targetDir, "*.*", SearchOption.AllDirectories));
 
-                directories = new List<String>(Directory.GetDirectories(targetDir, "*.*", SearchOption.AllDirectories));
-
-                for (Int32 i = directories.Count - 1; i >= 0; i--)
+                for (var directoryIndex = directories.Count - 1; directoryIndex >= 0; directoryIndex--)
                 {
-                    foreach (String key in ignoreDirectoriesDict.Keys)
+                    foreach (var key in ignoreDirectoriesDict.Keys)
                     {
-                        if (directories[i].StartsWith(key))
+                        if (directories[directoryIndex].StartsWith(key))
                         {
-                            directories.RemoveAt(i);
+                            directories.RemoveAt(directoryIndex);
 
                             break;
                         }
                     }
                 }
 
-                foreach (String directory in directories)
+                foreach (var directory in directories)
                 {
-                    foreach (String fileType in fileTypes.FileTypeList)
+                    foreach (var fileType in fileTypes.FileTypeList)
                     {
                         allFiles.AddRange(Directory.GetFiles(directory, "*." + fileType, SearchOption.TopDirectoryOnly));
                     }
@@ -65,15 +61,15 @@
 
             allFiles.Sort();
 
-            String dirFile = Path.Combine(stickDrive, "dir.txt");
+            var dirFile = Path.Combine(stickDrive, "dir.txt");
 
-            using (FileStream fs = new FileStream(dirFile, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (var fs = new FileStream(dirFile, FileMode.Create, FileAccess.Write, FileShare.None))
             {
-                using (StreamWriter sw = new StreamWriter(fs, Encoding.GetEncoding(1252)))
+                using (var sw = new StreamWriter(fs, Encoding.GetEncoding(1252)))
                 {
-                    foreach (String file in allFiles)
+                    foreach (string file in allFiles)
                     {
-                        sw.WriteLine($"{file.Replace(targetDir, String.Empty)};{(new FileInfo(file)).Length}");
+                        sw.WriteLine($"{file.Replace(targetDir, string.Empty)};{(new FileInfo(file)).Length}");
                     }
                 }
             }

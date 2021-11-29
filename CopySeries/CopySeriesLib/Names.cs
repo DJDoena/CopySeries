@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.CopySeries
 {
-    using System;
     using System.Diagnostics;
     using System.Xml.Serialization;
 
@@ -25,13 +24,12 @@
 
         public string SortName
         {
-            get => (SortNameSpecified ? m_SortName : LongName);
+            get => SortNameSpecified ? m_SortName : LongName;
             set => m_SortName = value;
         }
 
         [XmlIgnore]
-        public Boolean SortNameSpecified
-            => (string.IsNullOrEmpty(m_SortName) == false);
+        public bool SortNameSpecified => string.IsNullOrEmpty(m_SortName) == false;
 
         public string DisplayName
         {
@@ -40,24 +38,21 @@
         }
 
         [XmlIgnore]
-        public Boolean DisplayNameSpecified
-            => (string.IsNullOrEmpty(m_DisplayName) == false);
+        public bool DisplayNameSpecified => string.IsNullOrEmpty(m_DisplayName) == false;
 
         public ushort Year;
 
         [XmlIgnore]
-        public bool YearSpecified
-            => (Year > 0);
+        public bool YearSpecified => (Year > 0);
 
         public string LocalizedName
         {
-            get => (LocalizedNameSpecified ? m_LocalizedName : DisplayName);
+            get => LocalizedNameSpecified ? m_LocalizedName : DisplayName;
             set => m_LocalizedName = value;
         }
 
         [XmlIgnore]
-        public bool LocalizedNameSpecified
-            => (string.IsNullOrEmpty(m_LocalizedName) == false);
+        public bool LocalizedNameSpecified => (string.IsNullOrEmpty(m_LocalizedName) == false);
 
         public string OriginalLanguage;
 

@@ -18,21 +18,21 @@
         public DayOfWeek DayOfWeek;
 
         [XmlAttribute]
-        public Boolean DayOfWeekSpecified;
+        public bool DayOfWeekSpecified;
 
         [XmlText]
-        public String Value;
+        public string Value;
 
         [XmlAttribute]
-        public Boolean NewSeries;
+        public bool NewSeries;
 
         [XmlIgnore]
-        public Boolean NewSeriesSpecified;
+        public bool NewSeriesSpecified;
 
         [XmlAttribute]
-        public Boolean NewSeason;
+        public bool NewSeason;
 
         [XmlIgnore]
-        public Boolean NewSeasonSpecified;
+        public bool NewSeasonSpecified;
     }
 }

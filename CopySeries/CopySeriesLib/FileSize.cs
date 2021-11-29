@@ -5,26 +5,23 @@
 
     public class FileSize
     {
-        private String FileSizeFormatted { get; }
+        private string FileSizeFormatted { get; }
 
-        private UInt64 FileSizeInBytes { get; }
+        private ulong FileSizeInBytes { get; }
 
-        public UInt64 InBytes
-            => (FileSizeInBytes);
+        public ulong InBytes => FileSizeInBytes;
 
-        public FileSize(UInt64 fileSize)
+        public FileSize(ulong fileSize)
         {
             FileSizeInBytes = fileSize;
 
             FileSizeFormatted = FormatFileSize(fileSize, 0);
         }
 
-        private static String FormatFileSize(UInt64 fileSize
-            , Int32 numberPadding)
+        private static string FormatFileSize(ulong fileSize, int numberPadding)
         {
-            String bytesPower;
-            Decimal roundBytes;
-            if (CheckOrderOfMagnitude(fileSize, 40, 1, out roundBytes))
+            string bytesPower;
+            if (CheckOrderOfMagnitude(fileSize, 40, 1, out var roundBytes))
             {
                 bytesPower = " TiB";
             }
@@ -47,29 +44,24 @@
                 bytesPower = " Byte";
             }
 
-            String formatted = roundBytes.ToString(CultureInfo.GetCultureInfo("de-DE")).PadLeft(numberPadding) + bytesPower;
+            string formatted = roundBytes.ToString(CultureInfo.GetCultureInfo("de-DE")).PadLeft(numberPadding) + bytesPower;
 
-            return (formatted);
+            return formatted;
         }
 
-        private static Boolean CheckOrderOfMagnitude(Decimal fileSize
-            , Double exponent
-            , Int32 decimals
-            , out Decimal roundBytes)
+        private static bool CheckOrderOfMagnitude(decimal fileSize, double exponent, int decimals, out decimal roundBytes)
         {
-            Decimal pow = (Decimal)(Math.Pow(2, exponent));
+            decimal pow = (decimal)(Math.Pow(2, exponent));
 
-            Decimal quotient = fileSize / pow;
+            decimal quotient = fileSize / pow;
 
             roundBytes = Math.Round(quotient, decimals, MidpointRounding.AwayFromZero);
 
-            return (roundBytes >= 1);
+            return roundBytes >= 1;
         }
 
-        public override String ToString()
-            => (FileSizeFormatted);
+        public override string ToString() => FileSizeFormatted;
 
-        public String ToString(Int32 numberPadding)
-            => (FormatFileSize(FileSizeInBytes, numberPadding));
+        public string ToString(int numberPadding) => FormatFileSize(FileSizeInBytes, numberPadding);
     }
 }

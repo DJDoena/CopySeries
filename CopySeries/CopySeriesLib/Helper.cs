@@ -74,7 +74,7 @@
 
                         if ((GetName(seriesName, namesDir, mismatches, out var name)) && (GetResolution(fi, out var resolution)))
                         {
-                            CheckSeries(targetDir, name, seasonNumber, resolution, mismatches, ref abort);
+                            CheckSeries(targetDir, name, seasonNumber, resolution, mismatches, fi.Name, ref abort);
 
                             CheckTitle(fi, match.Groups["EpisodeName"].Value, dateShowShortNames.Contains(name.ShortName), mismatches, ref abort);
                         }
@@ -176,7 +176,7 @@
 
                 recentFiles.Files[fileIndex] = targetFile.Replace(targetDir, remoteDir);
 
-                if (!targetFile.EndsWith(".nfo"))
+                if (!targetFile.EndsWith(".nfo") && !targetDir.EndsWith(".srt"))
                 {
                     var episodeData = GetEpisodeData(name, seasonNumber, fi, match, dateShowShortNames.Contains(name.ShortName));
 
@@ -184,9 +184,13 @@
 
                     Console.WriteLine(episodeData.ToString());
                 }
+                else
+                {
+                    episodeList.Add(null);
+                }
             }
 
-            return (true);
+            return true;
         }
 
         private static void CheckTitle(FileInfo fi, string episodeName, bool isDateShow, Dictionary<string, bool> mismatches, ref bool abort)
@@ -238,7 +242,7 @@
         private static string GetEpisodeName(string titleFile, bool delete = true)
         {
             string title;
-            using (StreamReader sr = new StreamReader(titleFile, Encoding.UTF8))
+            using (var sr = new StreamReader(titleFile, Encoding.UTF8))
             {
                 title = sr.ReadLine();
             }
@@ -325,7 +329,7 @@
             {
                 addinfo = GetSubtitleAddInfo(fi);
             }
-            if (fi.Extension == ".nfo")
+            else if (fi.Extension == ".nfo")
             {
                 addinfo = GetNfoAddInfo(fi);
             }
@@ -390,7 +394,7 @@
             return (addInfo);
         }
 
-        private static void CheckSeries(string targetDir, Name name, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, ref bool abort)
+        private static void CheckSeries(string targetDir, Name name, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, string fileName, ref bool abort)
         {
             var folderInQuestion = $"{targetDir}{name.LongName}";
 
@@ -398,7 +402,7 @@
             {
                 CheckNfo(folderInQuestion, name);
 
-                CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, ref abort);
+                CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, fileName, ref abort);
             }
             else
             {
@@ -420,7 +424,7 @@
 
                         CheckNfo(folderInQuestion, name);
 
-                        CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, ref abort);
+                        CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, fileName, ref abort);
                     }
                     else
                     {
@@ -509,9 +513,13 @@
             Serializer<KodiTVShow>.Serialize(fileName, kodi);
         }
 
-        private static void CheckSeason(string targetDir, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, ref bool abort)
+        private static void CheckSeason(string targetDir, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, string fileName, ref bool abort)
         {
-            var folderInQuestion = $@"{targetDir}\Season {seasonNumber}";
+            var seasonFolderName = fileName.Contains("].de")
+                ? "Staffel"
+                : "Season";
+
+            var folderInQuestion = $@"{targetDir}\{seasonFolderName} {seasonNumber}";
 
             if (Directory.Exists(folderInQuestion))
             {

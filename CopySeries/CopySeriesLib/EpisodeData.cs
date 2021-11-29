@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using ToolBox.Extensions;
 
@@ -9,50 +10,39 @@
     {
         private Name Name { get; }
 
-        private String SeasonNumber { get; }
+        private string SeasonNumber { get; }
 
-        private String EpisodeNumber { get; }
+        private string EpisodeNumber { get; }
 
-        private Boolean IsDateShow { get; }
+        private bool IsDateShow { get; }
 
-        public String EpisodeID { get; }
+        public string EpisodeID { get; }
 
-        public String EpisodeName { get; }
+        public string EpisodeName { get; }
 
-        public String AddInfo { get; }
+        public string AddInfo { get; }
 
         public FileSize FileSize { get; }
 
-        public String SeriesName
-            => (Name.LongName);
+        public string SeriesName => Name.LongName;
 
-        private String SortName
-            => (Name.SortName);
+        private string SortName => Name.SortName;
 
-        public String DisplayName
-            => (Name.DisplayName + (Name.YearSpecified ? $" ({Name.Year})" : String.Empty));
+        public string DisplayName => Name.DisplayName + (Name.YearSpecified ? $" ({Name.Year})" : string.Empty);
 
-        public Boolean IsFirstOfSeason
-            => ((IsDateShow == false) && (EpisodeNumber.StartsWith("01")));
+        public bool IsFirstOfSeason => IsDateShow == false && EpisodeNumber.StartsWith("01");
 
-        public Boolean IsPilot
-            => ((IsDateShow == false) && (SeasonNumber == "1") && (IsFirstOfSeason));
+        public bool IsPilot => (IsDateShow == false) && (SeasonNumber == "1") && IsFirstOfSeason;
 
-        public String OriginalLanguage
-            => (Name.OriginalLanguage);
+        public string OriginalLanguage => Name.OriginalLanguage;
 
-        public String Link
-            => (Name.Link);
+        public string Link => Name.Link;
 
-        private List<String> Languages { get; }
+        private List<string> Audio { get; }
 
-        public EpisodeData(Name name
-            , String seasonNumber
-            , String episodeNumber
-            , Boolean isDateShow
-            , String episodeName
-            , String addInfo
-            , FileSize fileSize)
+        private List<string> Subtitles { get; }
+
+        public EpisodeData(Name name, string seasonNumber, string episodeNumber, bool isDateShow, string episodeName, string addInfo, FileSize fileSize)
         {
             Name = name;
 
@@ -70,19 +60,21 @@
 
             FileSize = fileSize;
 
-            Languages = new List<String>();
+            Audio = new List<string>();
+
+            Subtitles = new List<string>();
         }
 
         #region IComparable<EpisodeData>
 
-        Int32 IComparable<EpisodeData>.CompareTo(EpisodeData other)
+        int IComparable<EpisodeData>.CompareTo(EpisodeData other)
         {
             if (other == null)
             {
-                return (1);
+                return 1;
             }
 
-            Int32 compare = SortName.CompareTo(other.SortName);
+            var compare = SortName.CompareTo(other.SortName);
 
             if (compare == 0)
             {
@@ -99,26 +91,22 @@
                 compare = AddInfo.CompareTo(other.AddInfo);
             }
 
-            return (compare);
+            return compare;
         }
 
         #endregion
 
-        private String GetEpisodeName(String episodeName)
-            => (IsDateShow ? (episodeName.Substring(11)) : episodeName);
+        private string GetEpisodeName(string episodeName) => IsDateShow ? episodeName.Substring(11) : episodeName;
 
-        private String GetEpisodeID(String episodeName)
-            => (IsDateShow ? GetDateShowID(episodeName) : GetSeasonShowID());
+        private string GetEpisodeID(string episodeName) => IsDateShow ? GetDateShowID(episodeName) : GetSeasonShowID();
 
-        private String GetDateShowID(String episodeName)
-            => (DateTime.Parse(episodeName.Substring(0, 10)).ToShortDateString());
+        private string GetDateShowID(string episodeName) => DateTime.Parse(episodeName.Substring(0, 10)).ToShortDateString();
 
-        private String GetSeasonShowID()
-            => ($"{SeasonNumber}x{EpisodeNumber}");
+        private string GetSeasonShowID() => $"{SeasonNumber}x{EpisodeNumber}";
 
-        public override String ToString()
+        public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.Append(DisplayName);
             sb.Append(" ");
@@ -132,29 +120,49 @@
             sb.Append(FileSize.ToString());
             sb.Append(")");
 
-            if (Languages.Count > 0)
+            if (Audio.Count > 0)
             {
                 sb.Append(": ");
 
-                sb.Append(GetLanguages());
+                sb.Append(GetAudio());
             }
 
-            return (sb.ToString());
+            return sb.ToString();
         }
 
-        public void AddLanguage(String language)
+        public void AddAudio(string language)
         {
             if (language.IsNotEmpty())
             {
-                Languages.Add(language);
+                Audio.Add(language);
             }
         }
 
-        public string GetLanguages()
+        public string GetAudio()
         {
-            if (Languages.Count > 0)
+            if (Audio.Count > 0)
             {
-                return String.Join(", ", Languages);
+                return string.Join(", ", Audio);
+            }
+
+            return string.Empty;
+        }
+
+        public void AddSubtitle(string language)
+        {
+            if (language.IsNotEmpty())
+            {
+                Subtitles.Add(language);
+            }
+        }
+
+        public string GetSubtitles()
+        {
+            if (Subtitles.Count > 0)
+            {
+                var filtered = Subtitles.Select(s => s.ToLower()).Where(s => s == "eng" || s == "ger" || s == "deu" || s == "ara" || s == "spa").Distinct();
+
+                return string.Join(", ", filtered);
             }
 
             return string.Empty;

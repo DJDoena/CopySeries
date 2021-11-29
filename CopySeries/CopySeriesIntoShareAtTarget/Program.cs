@@ -13,19 +13,19 @@
 
     public static class Program
     {
-        private static String StickDrive { get; }
+        private static string StickDrive { get; }
 
-        private static String SourceDir { get; }
+        private static string SourceDir { get; }
 
-        private static String TargetDir { get; }
+        private static string TargetDir { get; }
 
-        private static String RemoteDir { get; }
+        private static string RemoteDir { get; }
 
-        private static String CompleteSeriesFile { get; }
+        private static string CompleteSeriesFile { get; }
 
-        private static UInt64 TenGibiByte { get; }
+        private static ulong TenGibiByte { get; }
 
-        private static String DirFile { get; }
+        private static string DirFile { get; }
 
         static Program()
         {
@@ -45,11 +45,13 @@
         }
 
         [STAThread]
-        public static void Main(String[] args)
+        public static void Main(string[] args)
         {
             try
             {
-                DirectoryInfo di = ((args == null) || (args.Length == 0)) ? (new DirectoryInfo(SourceDir)) : (new DirectoryInfo(args[0]));
+                var di = ((args == null) || (args.Length == 0))
+                    ? (new DirectoryInfo(SourceDir))
+                    : (new DirectoryInfo(args[0]));
 
                 while (File.Exists(DirFile) == false)
                 {
@@ -60,11 +62,11 @@
                 }
                 if (Helper.CopySeriesIntoShare(di, SearchOption.AllDirectories, TargetDir, true, RemoteDir, StickDrive, out List<EpisodeData> episodes, out RecentFiles recentFiles))
                 {
-                    const String SubDir = "_RecentFiles";
+                    const string SubDir = "_RecentFiles";
 
                     Serializer<RecentFiles>.Serialize(Path.Combine(TargetDir, SubDir, "RecentFiles.xml"), recentFiles);
 
-                    String newFileName = Helper.GetNewFileName("RecentFiles", "xml", TargetDir, SubDir);
+                    var newFileName = Helper.GetNewFileName("RecentFiles", "xml", TargetDir, SubDir);
 
                     Serializer<RecentFiles>.Serialize(newFileName, recentFiles);
 
@@ -90,20 +92,19 @@
             }
         }
 
-        private static void WriteEmail(List<EpisodeData> episodes
-            , String fileName)
+        private static void WriteEmail(List<EpisodeData> episodes, string fileName)
         {
             episodes.Sort();
 
-            CalculatePadding(episodes, out Int32 padSeriesName, out Int32 padEpisodeID, out Int32 padEpisodeName, out Int32 padAddInfo);
+            CalculatePadding(episodes, out int padSeriesName, out int padEpisodeID, out int padEpisodeName, out int padAddInfo);
 
-            StringBuilder email = new StringBuilder();
+            var email = new StringBuilder();
 
             email.AppendLine();
 
-            UInt64 fileSize = 0;
+            ulong fileSize = 0;
 
-            foreach (EpisodeData episode in episodes)
+            foreach (var episode in episodes)
             {
                 AppendEpisode(episode, padSeriesName, padEpisodeID, padEpisodeName, padAddInfo, email);
 
@@ -112,7 +113,7 @@
 
             AddSummarySize(padSeriesName, padEpisodeID, padEpisodeName, padAddInfo, fileSize, email);
 
-            String emailText = email.ToString();
+            var emailText = email.ToString();
 
             Console.WriteLine();
             Console.WriteLine();
@@ -120,13 +121,12 @@
             Console.WriteLine(emailText);
             Console.WriteLine(GetPlainTextAppendix(fileName));
 
-            Boolean success = false;
-
+            var success = false;
             do
             {
                 try
                 {
-                    String bcc = TryCreateOutlookMail(episodes, fileName, emailText);
+                    var bcc = TryCreateOutlookMail(episodes, fileName, emailText);
 
                     Console.WriteLine();
                     Console.WriteLine(bcc);
@@ -143,21 +143,19 @@
             } while (success == false);
         }
 
-        private static String TryCreateOutlookMail(List<EpisodeData> episodes
-            , String fileName
-            , String emailText)
+        private static string TryCreateOutlookMail(List<EpisodeData> episodes, string fileName, string emailText)
         {
-            Outlook.Application outlook = new Outlook.Application();
+            var outlook = new Outlook.Application();
 
-            Outlook.MailItem mail = (Outlook.MailItem)(outlook.CreateItem(Outlook.OlItemType.olMailItem));
+            var mail = (Outlook.MailItem)(outlook.CreateItem(Outlook.OlItemType.olMailItem));
 
-            Boolean newSeries = AddNewSeasonInfo(episodes, mail, out String addInfo);
+            var newSeries = AddNewSeasonInfo(episodes, mail, out string addInfo);
 
             mail.BodyFormat = Outlook.OlBodyFormat.olFormatHTML;
 
-            String bodyText = "<pre>";
+            var bodyText = "<pre>";
 
-            if (String.IsNullOrEmpty(addInfo) == false)
+            if (string.IsNullOrEmpty(addInfo) == false)
             {
                 bodyText += addInfo;
             }
@@ -166,7 +164,7 @@
 
             mail.HTMLBody = bodyText;
 
-            String bcc = GetBcc(newSeries);
+            var bcc = GetBcc(newSeries);
 
             mail.BCC = bcc;
 
@@ -178,35 +176,31 @@
             Marshal.ReleaseComObject(outlook);
             outlook = null;
 
-            return (bcc);
+            return bcc;
         }
 
-        private static Boolean AddNewSeasonInfo(List<EpisodeData> episodes
-            , Outlook.MailItem mail
-            , out String addInfo)
+        private static bool AddNewSeasonInfo(List<EpisodeData> episodes, Outlook.MailItem mail, out string addInfo)
         {
-            Boolean newSeries = false;
+            var newSeries = false;
 
-            IEnumerable<EpisodeData> newSeason = episodes.Where(episode => episode.IsFirstOfSeason);
+            var newSeason = episodes.Where(episode => episode.IsFirstOfSeason);
 
-            addInfo = String.Empty;
+            addInfo = string.Empty;
 
             if (newSeason.Any())
             {
-                HashSet<String> names;
-
-                names = new HashSet<String>();
+                var names = new HashSet<string>();
 
                 newSeason.Split(episode => episode.IsPilot, out IEnumerable<EpisodeData> pilots, out IEnumerable<EpisodeData> nonPilots);
 
-                foreach (EpisodeData pilot in pilots)
+                foreach (var pilot in pilots)
                 {
                     newSeries = true;
 
                     AddInfo(ref addInfo, names, pilot, "Series");
                 }
 
-                foreach (EpisodeData nonPilot in nonPilots)
+                foreach (var nonPilot in nonPilots)
                 {
                     AddInfo(ref addInfo, names, nonPilot, "Season");
                 }
@@ -223,17 +217,12 @@
                 mail.Subject += " (neue Season)";
             }
 
-            return (newSeries);
+            return newSeries;
         }
 
-        private static void AddSummarySize(Int32 padSeriesName
-            , Int32 padSeasonID
-            , Int32 padEpisodeName
-            , Int32 padAddInfo
-            , UInt64 fileSize
-            , StringBuilder email)
+        private static void AddSummarySize(int padSeriesName, int padSeasonID, int padEpisodeName, int padAddInfo, ulong fileSize, StringBuilder email)
         {
-            Int32 padding = padSeriesName + padSeasonID + padEpisodeName + padAddInfo + 5;
+            var padding = padSeriesName + padSeasonID + padEpisodeName + padAddInfo + 5;
 
             email.AppendLine("".PadLeft(padding + 12, '-'));
 
@@ -251,17 +240,17 @@
             email.AppendLine(")");
         }
 
-        private static String GetBcc(Boolean newSeries)
+        private static string GetBcc(bool newSeries)
         {
-            Recipients recipients = Serializer<Recipients>.Deserialize(Path.Combine(TargetDir, "Recipients.xml"));
+            var recipients = Serializer<Recipients>.Deserialize(Path.Combine(TargetDir, "Recipients.xml"));
 
-            StringBuilder bcc = new StringBuilder();
+            var bcc = new StringBuilder();
 
             if (recipients?.RecipientList?.Length > 0)
             {
-                DayOfWeek today = DateTime.Now.DayOfWeek;
+                var today = DateTime.Now.DayOfWeek;
 
-                foreach (Recipient recipient in recipients.RecipientList)
+                foreach (var recipient in recipients.RecipientList)
                 {
                     if ((recipient.DayOfWeekSpecified) && (today != recipient.DayOfWeek))
                     {
@@ -278,21 +267,16 @@
                 }
             }
 
-            return (bcc.ToString());
+            return bcc.ToString();
         }
 
-        private static void AppendEpisode(EpisodeData data
-            , Int32 padSeriesName
-            , Int32 padEpisodeID
-            , Int32 padEpisodeName
-            , Int32 padAddInfo
-            , StringBuilder email)
+        private static void AppendEpisode(EpisodeData data, int padSeriesName, int padEpisodeID, int padEpisodeName, int padAddInfo, StringBuilder email)
         {
             email.Append(data.DisplayName.PadRight(padSeriesName + 1));
             email.Append(data.EpisodeID.PadLeft(padEpisodeID));
             email.Append(" \"");
 
-            String episodeName = data.EpisodeName + "\"";
+            var episodeName = data.EpisodeName + "\"";
 
             episodeName = episodeName.PadRight(padEpisodeName + 1);
 
@@ -304,11 +288,7 @@
             email.AppendLine(")\t");
         }
 
-        private static void CalculatePadding(List<EpisodeData> list
-            , out Int32 padSeriesName
-            , out Int32 padEpisodeID
-            , out Int32 padEpisodeName
-            , out Int32 padAddInfo)
+        private static void CalculatePadding(List<EpisodeData> list, out int padSeriesName, out int padEpisodeID, out int padEpisodeName, out int padAddInfo)
         {
             padSeriesName = 1;
             padEpisodeID = 1;
@@ -339,10 +319,7 @@
             }
         }
 
-        private static void AddInfo(ref String addInfo
-            , HashSet<String> names
-            , EpisodeData episode
-            , String text)
+        private static void AddInfo(ref string addInfo, HashSet<string> names, EpisodeData episode, string text)
         {
             if (names.Contains(episode.SeriesName) == false)
             {
@@ -352,9 +329,9 @@
             }
         }
 
-        private static String GetPlainTextAppendix(String newFileName)
+        private static string GetPlainTextAppendix(string newFileName)
         {
-            StringBuilder email = new StringBuilder();
+            var email = new StringBuilder();
 
             email.AppendLine(@"<" + RemoteDir + "CopySeriesFromShare.exe>");
             email.AppendLine();
@@ -364,12 +341,12 @@
             email.AppendLine();
             email.AppendLine(@"<" + RemoteDir + ">");
 
-            return (email.ToString());
+            return email.ToString();
         }
 
-        private static String GetHtmlAppendix(String newFileName)
+        private static string GetHtmlAppendix(string newFileName)
         {
-            StringBuilder email = new StringBuilder();
+            var email = new StringBuilder();
 
             email.AppendLine("<p style=\"font-family: monospace;\">");
 
@@ -381,11 +358,10 @@
 
             AppendFooter(email, RemoteDir);
 
-            return (email.ToString());
+            return email.ToString();
         }
 
-        private static void AppendFooter(StringBuilder email
-            , String path)
+        private static void AppendFooter(StringBuilder email, string path)
         {
             email.AppendLine("&lt;<a href=\"" + path + "\">" + path + "</a>&gt;<br /><br />");
             email.AppendLine();
