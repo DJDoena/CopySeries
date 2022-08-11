@@ -137,9 +137,9 @@
 
             for (var fileIndex = 0; fileIndex < fis.Count; fileIndex++)
             {
-                var fi = fis[fileIndex];
+                var fileName = fis[fileIndex];
 
-                var match = NameRegex.Match(fi.Name);
+                var match = NameRegex.Match(fileName.Name);
 
                 var seriesName = match.Groups["SeriesName"].Value;
 
@@ -147,9 +147,13 @@
 
                 GetName(seriesName, namesDir, null, out var name);
 
-                GetResolution(fi, out var resolution);
+                GetResolution(fileName, out var resolution);
 
-                var targetFile = $@"{targetDir}{name.LongName}\Season {seasonNumber}\{resolution}\{fi.Name}";
+                var seasonFolderName = fileName.Name.Contains("].de")
+                    ? "Staffel"
+                    : "Season";
+
+                var targetFile = $@"{targetDir}{name.LongName}\{seasonFolderName} {seasonNumber}\{resolution}\{fileName.Name}";
 
                 if (File.Exists(targetFile))
                 {
@@ -160,7 +164,7 @@
 
                 if (copy)
                 {
-                    File.Copy(fi.FullName, targetFile, true);
+                    File.Copy(fileName.FullName, targetFile, true);
                 }
                 else
                 {
@@ -169,16 +173,19 @@
                         File.Delete(targetFile);
                     }
 
-                    File.Move(fi.FullName, targetFile);
+                    File.Move(fileName.FullName, targetFile);
                 }
 
                 File.SetAttributes(targetFile, FileAttributes.Archive | FileAttributes.ReadOnly);
 
                 recentFiles.Files[fileIndex] = targetFile.Replace(targetDir, remoteDir);
 
-                if (!targetFile.EndsWith(".nfo") && !targetDir.EndsWith(".srt"))
+                if (!targetFile.EndsWith(".nfo")
+                    && !targetFile.EndsWith(".srt")
+                    && !targetFile.EndsWith(".sub")
+                    && !targetFile.EndsWith(".idx"))
                 {
-                    var episodeData = GetEpisodeData(name, seasonNumber, fi, match, dateShowShortNames.Contains(name.ShortName));
+                    var episodeData = GetEpisodeData(name, seasonNumber, fileName, match, dateShowShortNames.Contains(name.ShortName));
 
                     episodeList.Add(episodeData);
 
@@ -257,23 +264,21 @@
 
         private static bool GetResolution(FileInfo fi, out string resolution)
         {
-            if ((fi.Name.EndsWith(".480.mkv")) || (fi.Name.EndsWith(".480.mp4")) || (fi.Name.EndsWith(".480.avi")))
+            if (fi.Name.Contains(".480."))
             {
                 resolution = "SD";
             }
-            else if ((fi.Name.EndsWith(".720.mkv")) || (fi.Name.EndsWith(".1080.mkv"))
-                || (fi.Name.EndsWith(".720.mp4")) || (fi.Name.EndsWith(".1080.mp4"))
-                || (fi.Name.EndsWith(".720.nfo")) || (fi.Name.EndsWith(".1080.nfo")))
+            else if (fi.Name.Contains(".720.") || fi.Name.Contains(".1080."))
             {
                 resolution = "HD";
             }
-            else if ((fi.Name.EndsWith(".mkv")) || (fi.Name.EndsWith(".mp4")))
+            else if (fi.Name.EndsWith(".mkv") || fi.Name.EndsWith(".mp4"))
             {
                 Console.WriteLine($"{fi.Name} does not contain a resolution: {fi.Extension}");
 
                 resolution = null;
 
-                return (false);
+                return false;
             }
             else
             {
@@ -518,6 +523,8 @@
             var seasonFolderName = fileName.Contains("].de")
                 ? "Staffel"
                 : "Season";
+
+            //System.Diagnostics.Debugger.Launch();
 
             var folderInQuestion = $@"{targetDir}\{seasonFolderName} {seasonNumber}";
 

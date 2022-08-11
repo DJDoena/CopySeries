@@ -153,9 +153,18 @@
 
             var mailTextBuilder = new StringBuilder();
 
-            AddNewSeasonInfo(episodes, out var subject, out var addInfo, out var newSeries, out var newSeason);
+            var shows = episodes.Select(e => e.DisplayName).Distinct().ToList();
+
+            mailTextBuilder.AppendLine("Serien in diesem Update:");
+
+            foreach (var show in shows)
+            {
+                mailTextBuilder.AppendLine(show);
+            }
 
             mailTextBuilder.AppendLine();
+
+            AddNewSeasonInfo(episodes, out var subject, out var addInfo, out var newSeries, out var newSeason);
 
             ulong fileSize = 0;
 

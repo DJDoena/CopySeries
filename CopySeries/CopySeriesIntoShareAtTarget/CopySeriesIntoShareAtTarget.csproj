@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DoenaSoft.CopySeries</RootNamespace>
     <AssemblyName>CopySeriesIntoShareAtTarget</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>DJDSOFT.ICO</ApplicationIcon>
     <FileUpgradeFlags>

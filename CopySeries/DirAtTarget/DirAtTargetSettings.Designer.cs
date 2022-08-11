@@ -12,7 +12,7 @@ namespace DoenaSoft.CopySeries {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
     internal sealed partial class DirAtTargetSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static DirAtTargetSettings defaultInstance = ((DirAtTargetSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new DirAtTargetSettings())));

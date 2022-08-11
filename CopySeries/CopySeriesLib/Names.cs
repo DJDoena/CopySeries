@@ -12,52 +12,52 @@
     [DebuggerDisplay("ShortName: {ShortName}, DisplayName: {DisplayName}")]
     public class Name
     {
-        private string m_SortName;
+        private string _sortName;
 
-        private string m_DisplayName;
+        private string _displayName;
 
-        private string m_LocalizedName;
+        private string _localizedName;
 
-        public string ShortName;
+        public string ShortName { get; set; }
 
-        public string LongName;
+        public string LongName { get; set; }
 
         public string SortName
         {
-            get => SortNameSpecified ? m_SortName : LongName;
-            set => m_SortName = value;
+            get => this.SortNameSpecified ? _sortName : this.LongName;
+            set => _sortName = value;
         }
 
         [XmlIgnore]
-        public bool SortNameSpecified => string.IsNullOrEmpty(m_SortName) == false;
+        public bool SortNameSpecified => !string.IsNullOrEmpty(_sortName);
 
         public string DisplayName
         {
-            get => (DisplayNameSpecified ? m_DisplayName : LongName);
-            set => m_DisplayName = value;
+            get => this.DisplayNameSpecified ? _displayName : this.LongName;
+            set => _displayName = value;
         }
 
         [XmlIgnore]
-        public bool DisplayNameSpecified => string.IsNullOrEmpty(m_DisplayName) == false;
+        public bool DisplayNameSpecified => !string.IsNullOrEmpty(_displayName);
 
-        public ushort Year;
+        public ushort Year { get; set; }
 
         [XmlIgnore]
-        public bool YearSpecified => (Year > 0);
+        public bool YearSpecified => Year > 0;
 
         public string LocalizedName
         {
-            get => LocalizedNameSpecified ? m_LocalizedName : DisplayName;
-            set => m_LocalizedName = value;
+            get => this.LocalizedNameSpecified ? _localizedName : this.DisplayName;
+            set => _localizedName = value;
         }
 
         [XmlIgnore]
-        public bool LocalizedNameSpecified => (string.IsNullOrEmpty(m_LocalizedName) == false);
+        public bool LocalizedNameSpecified => !string.IsNullOrEmpty(_localizedName);
 
-        public string OriginalLanguage;
+        public string OriginalLanguage { get; set; }
 
-        public string Link;
+        public string Link { get; set; }
 
-        public string EpisodeNamesLink;
+        public string EpisodeNamesLink { get; set; }
     }
 }

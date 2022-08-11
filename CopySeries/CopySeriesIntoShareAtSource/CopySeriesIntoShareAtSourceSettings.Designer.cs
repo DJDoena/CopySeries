@@ -12,7 +12,7 @@ namespace DoenaSoft.CopySeries {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
     internal sealed partial class CopySeriesIntoShareAtSourceSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static CopySeriesIntoShareAtSourceSettings defaultInstance = ((CopySeriesIntoShareAtSourceSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new CopySeriesIntoShareAtSourceSettings())));
@@ -41,6 +41,15 @@ namespace DoenaSoft.CopySeries {
             }
         }
         
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\Tools")]
+        public string ToolsDir {
+            get {
+                return ((string)(this["ToolsDir"]));
+            }
+        }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("S:\\")]
@@ -50,15 +59,6 @@ namespace DoenaSoft.CopySeries {
             }
             set {
                 this["StickDrive"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\Tools")]
-        public string ToolsDir {
-            get {
-                return ((string)(this["ToolsDir"]));
             }
         }
     }

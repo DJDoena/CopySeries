@@ -8,11 +8,11 @@
     <Setting Name="SourceDir" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\Download</Value>
     </Setting>
-    <Setting Name="StickDrive" Type="System.String" Scope="User">
-      <Value Profile="(Default)">S:\</Value>
-    </Setting>
     <Setting Name="ToolsDir" Type="System.String" Scope="Application">
       <Value Profile="(Default)">c:\Tools</Value>
+    </Setting>
+    <Setting Name="StickDrive" Type="System.String" Scope="User">
+      <Value Profile="(Default)">S:\</Value>
     </Setting>
   </Settings>
 </SettingsFile>
