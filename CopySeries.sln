@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 12.0.21005.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Libraries", "_Libraries", "{B2BEF58A-2D11-4288-B54F-18B71F2C8668}"
 EndProject
@@ -114,14 +114,14 @@ Global
 		{5184FACC-8643-40D3-85F2-2F2376835F08}.Source|x64.ActiveCfg = Debug|x64
 		{5184FACC-8643-40D3-85F2-2F2376835F08}.Target|x64.ActiveCfg = Debug|x64
 		{5184FACC-8643-40D3-85F2-2F2376835F08}.Target|x64.Build.0 = Debug|x64
-		{B6F830C3-6F73-4096-AEBE-07814018814B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B6F830C3-6F73-4096-AEBE-07814018814B}.Debug|x64.Build.0 = Debug|Any CPU
-		{B6F830C3-6F73-4096-AEBE-07814018814B}.Release|x64.ActiveCfg = Release|Any CPU
-		{B6F830C3-6F73-4096-AEBE-07814018814B}.Release|x64.Build.0 = Release|Any CPU
-		{B6F830C3-6F73-4096-AEBE-07814018814B}.Source|x64.ActiveCfg = Release|Any CPU
-		{B6F830C3-6F73-4096-AEBE-07814018814B}.Source|x64.Build.0 = Release|Any CPU
-		{B6F830C3-6F73-4096-AEBE-07814018814B}.Target|x64.ActiveCfg = Release|Any CPU
-		{B6F830C3-6F73-4096-AEBE-07814018814B}.Target|x64.Build.0 = Release|Any CPU
+		{B6F830C3-6F73-4096-AEBE-07814018814B}.Debug|x64.ActiveCfg = Debug|x64
+		{B6F830C3-6F73-4096-AEBE-07814018814B}.Debug|x64.Build.0 = Debug|x64
+		{B6F830C3-6F73-4096-AEBE-07814018814B}.Release|x64.ActiveCfg = Release|x64
+		{B6F830C3-6F73-4096-AEBE-07814018814B}.Release|x64.Build.0 = Release|x64
+		{B6F830C3-6F73-4096-AEBE-07814018814B}.Source|x64.ActiveCfg = Debug|x64
+		{B6F830C3-6F73-4096-AEBE-07814018814B}.Source|x64.Build.0 = Debug|x64
+		{B6F830C3-6F73-4096-AEBE-07814018814B}.Target|x64.ActiveCfg = Debug|x64
+		{B6F830C3-6F73-4096-AEBE-07814018814B}.Target|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

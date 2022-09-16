@@ -10,7 +10,6 @@
     using System.Threading;
     using System.Windows.Forms;
     using DoenaSoft.MediaInfoHelper;
-    using NReco.VideoInfo;
     using ToolBox.Extensions;
     using FF = MediaInfoHelper.FFProbe;
     using Outlook = Microsoft.Office.Interop.Outlook;
@@ -96,11 +95,28 @@
         {
             var fi = new FileInfo(Path.Combine(_targetDir, file));
 
-            var mediaInfo = GetMediaInfo(fi);
+            var mediaInfo = MediaInfoHelper.Helper.TryGetMediaInfo(fi, out var additionalSubtitleMediaInfos);
 
             if (mediaInfo != null)
             {
                 var xmlInfo = MediaInfo2XmlConverter.Convert(mediaInfo, episode.OriginalLanguage);
+
+                if (additionalSubtitleMediaInfos?.Count > 0)
+                {
+                    var subtitles = xmlInfo.Subtitle == null
+                          ? new List<Subtitle>()
+                          : new List<Subtitle>(xmlInfo.Subtitle);
+
+                    var additionalSubtitleXmlInfos = additionalSubtitleMediaInfos.Select(mi => MediaInfo2XmlConverter.Convert(mi, episode.OriginalLanguage)).ToList();
+
+                    foreach (var subtitleXmlInfos in additionalSubtitleXmlInfos)
+                    {
+                        if (subtitleXmlInfos?.Subtitle?.Length > 0)
+                        {
+                            subtitles.AddRange(subtitleXmlInfos.Subtitle);
+                        }
+                    }
+                }
 
                 xmlInfo.Episode = new Episode()
                 {
@@ -123,24 +139,6 @@
             var subtitleLanguages = subtitleStreams.Select(stream => stream.tag.GetLanguage() ?? episode.OriginalLanguage).Distinct();
 
             subtitleLanguages.ForEach(language => episode.AddSubtitle(language));
-        }
-
-        private static FF.FFProbe GetMediaInfo(FileInfo fi)
-        {
-            try
-            {
-                var mediaInfo = (new FFProbe()).GetMediaInfo(fi.FullName);
-
-                var xml = mediaInfo.Result.CreateNavigator().OuterXml;
-
-                var ffprobe = Serializer<FF.FFProbe>.FromString(xml);
-
-                return ffprobe;
-            }
-            catch
-            {
-                return null;
-            }
         }
 
         private static void WriteEmail(List<EpisodeData> episodes)
@@ -205,7 +203,6 @@
             padEpisodeID = 1;
             padEpisodeName = 1;
             padAddInfo = 1;
-            //padLanguages = 1;
 
             foreach (var episode in episodes)
             {
@@ -228,13 +225,6 @@
                 {
                     padAddInfo = episode.AddInfo.Length;
                 }
-
-                //var languages = episode.GetAudio();
-
-                //if (languages.Length > padLanguages)
-                //{
-                //    padLanguages = languages.Length;
-                //}
             }
         }
 

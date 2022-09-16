@@ -134,6 +134,7 @@
 								<th>Language</th>
 								<th>Codec Name</th>
 								<th>Title</th>
+								<th>Subtitle File Name</th>
 							</tr>
 							<xsl:for-each select="//doc/VideoInfo/Subtitle">
 								<tr>
@@ -145,6 +146,9 @@
 									</xsl:call-template>
 									<xsl:call-template name="PrintTextCell">
 										<xsl:with-param name="attribute" select="@Title" />
+									</xsl:call-template>
+									<xsl:call-template name="PrintTextCell">
+										<xsl:with-param name="attribute" select="@SubtitleFile" />
 									</xsl:call-template>
 								</tr>
 							</xsl:for-each>

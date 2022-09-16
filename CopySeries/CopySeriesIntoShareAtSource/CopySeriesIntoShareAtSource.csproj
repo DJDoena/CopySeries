@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DoenaSoft.CopySeries</RootNamespace>
     <AssemblyName>CopySeriesIntoShareAtSource</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -25,14 +25,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>$(SolutionDir)\packages\Microsoft.Office.Interop.Outlook.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Outlook.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NReco.VideoInfo, Version=1.1.1.0, Culture=neutral, PublicKeyToken=8f59ee36d2987295, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\NReco.VideoInfo.1.1.1\lib\net35\NReco.VideoInfo.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -59,7 +51,7 @@
       <Name>ToolBox</Name>
     </ProjectReference>
     <ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj">
-      <Project>{1884DE15-E601-47F5-812E-4F6F42AA5D7D}</Project>
+      <Project>{1884de15-e601-47f5-812e-4f6f42aa5d7d}</Project>
       <Name>CopySeriesLib</Name>
     </ProjectReference>
   </ItemGroup>
@@ -72,7 +64,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>CopySeriesIntoShareAtSourceSettings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Recipients.xml">
@@ -86,6 +77,14 @@
     <None Include="XslSuffix.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Office.Interop.Outlook">
+      <Version>15.0.4797.1003</Version>
+    </PackageReference>
+    <PackageReference Include="NReco.VideoInfo">
+      <Version>1.1.0</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -24,19 +24,19 @@
 
         public FileSize FileSize { get; }
 
-        public string SeriesName => Name.LongName;
+        public string SeriesName => this.Name.LongName;
 
-        private string SortName => Name.SortName;
+        private string SortName => this.Name.SortName;
 
-        public string DisplayName => Name.DisplayName + (Name.YearSpecified ? $" ({Name.Year})" : string.Empty);
+        public string DisplayName => this.Name.DisplayName + (this.Name.YearSpecified ? $" ({this.Name.Year})" : string.Empty);
 
-        public bool IsFirstOfSeason => IsDateShow == false && EpisodeNumber.StartsWith("01");
+        public bool IsFirstOfSeason => this.IsDateShow == false && this.EpisodeNumber.StartsWith("01");
 
-        public bool IsPilot => (IsDateShow == false) && (SeasonNumber == "1") && IsFirstOfSeason;
+        public bool IsPilot => (this.IsDateShow == false) && (this.SeasonNumber == "1") && this.IsFirstOfSeason;
 
-        public string OriginalLanguage => Name.OriginalLanguage;
+        public string OriginalLanguage => this.Name.OriginalLanguage;
 
-        public string Link => Name.Link;
+        public string Link => this.Name.Link;
 
         private List<string> Audio { get; }
 
@@ -44,25 +44,25 @@
 
         public EpisodeData(Name name, string seasonNumber, string episodeNumber, bool isDateShow, string episodeName, string addInfo, FileSize fileSize)
         {
-            Name = name;
+            this.Name = name;
 
-            SeasonNumber = seasonNumber;
+            this.SeasonNumber = seasonNumber;
 
-            EpisodeNumber = episodeNumber;
+            this.EpisodeNumber = episodeNumber;
 
-            IsDateShow = isDateShow;
+            this.IsDateShow = isDateShow;
 
-            EpisodeID = GetEpisodeID(episodeName);
+            this.EpisodeID = this.GetEpisodeId(episodeName);
 
-            EpisodeName = GetEpisodeName(episodeName);
+            this.EpisodeName = this.GetEpisodeName(episodeName);
 
-            AddInfo = addInfo;
+            this.AddInfo = addInfo;
 
-            FileSize = fileSize;
+            this.FileSize = fileSize;
 
-            Audio = new List<string>();
+            this.Audio = new List<string>();
 
-            Subtitles = new List<string>();
+            this.Subtitles = new List<string>();
         }
 
         #region IComparable<EpisodeData>
@@ -74,21 +74,21 @@
                 return 1;
             }
 
-            var compare = SortName.CompareTo(other.SortName);
+            var compare = this.SortName.CompareTo(other.SortName);
 
             if (compare == 0)
             {
-                compare = SeasonNumber.PadLeft(2, '0').CompareTo(other.SeasonNumber.PadLeft(2, '0'));
+                compare = this.SeasonNumber.PadLeft(2, '0').CompareTo(other.SeasonNumber.PadLeft(2, '0'));
             }
 
             if (compare == 0)
             {
-                compare = EpisodeNumber.CompareTo(other.EpisodeNumber);
+                compare = this.EpisodeNumber.CompareTo(other.EpisodeNumber);
             }
 
             if (compare == 0)
             {
-                compare = AddInfo.CompareTo(other.AddInfo);
+                compare = this.AddInfo.CompareTo(other.AddInfo);
             }
 
             return compare;
@@ -96,35 +96,35 @@
 
         #endregion
 
-        private string GetEpisodeName(string episodeName) => IsDateShow ? episodeName.Substring(11) : episodeName;
+        private string GetEpisodeName(string episodeName) => this.IsDateShow ? episodeName.Substring(11) : episodeName;
 
-        private string GetEpisodeID(string episodeName) => IsDateShow ? GetDateShowID(episodeName) : GetSeasonShowID();
+        private string GetEpisodeId(string episodeName) => this.IsDateShow ? this.GetDateShowId(episodeName) : this.GetSeasonShowId();
 
-        private string GetDateShowID(string episodeName) => DateTime.Parse(episodeName.Substring(0, 10)).ToShortDateString();
+        private string GetDateShowId(string episodeName) => DateTime.Parse(episodeName.Substring(0, 10)).ToShortDateString();
 
-        private string GetSeasonShowID() => $"{SeasonNumber}x{EpisodeNumber}";
+        private string GetSeasonShowId() => $"{this.SeasonNumber}x{this.EpisodeNumber}";
 
         public override string ToString()
         {
             var sb = new StringBuilder();
 
-            sb.Append(DisplayName);
+            sb.Append(this.DisplayName);
             sb.Append(" ");
-            sb.Append(EpisodeID);
+            sb.Append(this.EpisodeID);
             sb.Append(" \"");
-            sb.Append(EpisodeName);
+            sb.Append(this.EpisodeName);
             sb.Append("\"");
             sb.Append(" ");
-            sb.Append(AddInfo);
+            sb.Append(this.AddInfo);
             sb.Append(" (");
-            sb.Append(FileSize.ToString());
+            sb.Append(this.FileSize.ToString());
             sb.Append(")");
 
-            if (Audio.Count > 0)
+            if (this.Audio.Count > 0)
             {
                 sb.Append(": ");
 
-                sb.Append(GetAudio());
+                sb.Append(this.GetAudio());
             }
 
             return sb.ToString();
@@ -134,15 +134,19 @@
         {
             if (language.IsNotEmpty())
             {
-                Audio.Add(language);
+                this.Audio.Add(language);
             }
         }
 
         public string GetAudio()
         {
-            if (Audio.Count > 0)
+            if (this.Audio.Count > 0)
             {
-                return string.Join(", ", Audio);
+                var audio = this.Audio
+                    .Select(StandardizeLanguage)
+                    .OrderBy(this.GetLanguageWeight);
+
+                return string.Join(", ", audio);
             }
 
             return string.Empty;
@@ -152,20 +156,95 @@
         {
             if (language.IsNotEmpty())
             {
-                Subtitles.Add(language);
+                this.Subtitles.Add(language);
             }
         }
 
         public string GetSubtitles()
         {
-            if (Subtitles.Count > 0)
+            if (this.Subtitles.Count > 0)
             {
-                var filtered = Subtitles.Select(s => s.ToLower()).Where(s => s == "eng" || s == "ger" || s == "deu" || s == "ara" || s == "spa").Distinct();
+                var filtered = this.Subtitles
+                    .Select(s => s.ToLower())
+                    .Select(StandardizeLanguage)
+                    .Where(s => s == "en" || s == "de" || s == "es" || s == "ar")
+                    .Distinct()
+                    .OrderBy(this.GetLanguageWeight);
 
                 return string.Join(", ", filtered);
             }
 
             return string.Empty;
+        }
+
+        private int GetLanguageWeight(string language)
+        {
+            switch (language.ToLower())
+            {
+                case "de":
+                    {
+                        return 1;
+                    }
+                case "en":
+                    {
+                        return 2;
+                    }
+                case "es":
+                    {
+                        return 3;
+                    }
+                case "ar":
+                    {
+                        return 4;
+                    }
+                default:
+                    {
+                        return 5;
+                    }
+            }
+        }
+
+        private static string StandardizeLanguage(string language)
+        {
+            switch (language.ToLower())
+            {
+                case "de":
+                case "deu":
+                case "ger":
+                    {
+                        return "de";
+                    }
+                case "en":
+                case "eng":
+                    {
+                        return "en";
+                    }
+                case "ar":
+                case "ara":
+                    {
+                        return "ar";
+                    }
+                case "es":
+                case "spa":
+                    {
+                        return "es";
+                    }
+                case "ja":
+                case "jap":
+                case "jpn":
+                    {
+                        return "ja";
+                    }
+                case "ko":
+                case "kor":
+                    {
+                        return "ko";
+                    }
+                default:
+                    {
+                        return language.ToLower();
+                    }
+            }
         }
     }
 }
