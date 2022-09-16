@@ -262,12 +262,16 @@
 
             if (!string.IsNullOrEmpty(audio))
             {
-                mailTextBuilder.AppendLine($"\t\t\tAudio: {audio}");
+                mailTextBuilder.Append(string.Empty.PadRight(padSeriesName + 1));
+                mailTextBuilder.Append(string.Empty.PadLeft(padEpisodeID));
+                mailTextBuilder.AppendLine($" Audio: {audio}");
             }
 
             if (!string.IsNullOrEmpty(subtitles))
             {
-                mailTextBuilder.AppendLine($"\t\t\tSubtitles: {subtitles}");
+                mailTextBuilder.Append(string.Empty.PadRight(padSeriesName + 1));
+                mailTextBuilder.Append(string.Empty.PadLeft(padEpisodeID));
+                mailTextBuilder.AppendLine($" Subtitles: {subtitles}");
             }
         }
 

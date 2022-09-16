@@ -407,7 +407,7 @@
             {
                 CheckNfo(folderInQuestion, name);
 
-                CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, fileName, ref abort);
+                CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, fileName, ref abort, false);
             }
             else
             {
@@ -419,17 +419,17 @@
 
                     Console.Write("Create? ");
 
-                    var input = Console.ReadLine();
+                    var input = Console.ReadLine().ToLower();
 
-                    input = input.ToLower();
+                    var createEnabled = input == "y" || input == "yes";
 
-                    if ((input == "y") || (input == "yes"))
+                    if (createEnabled)
                     {
                         Directory.CreateDirectory(folderInQuestion);
 
                         CheckNfo(folderInQuestion, name);
 
-                        CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, fileName, ref abort);
+                        CheckSeason(folderInQuestion, seasonNumber, resolution, mismatches, fileName, ref abort, createEnabled);
                     }
                     else
                     {
@@ -518,7 +518,7 @@
             Serializer<KodiTVShow>.Serialize(fileName, kodi);
         }
 
-        private static void CheckSeason(string targetDir, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, string fileName, ref bool abort)
+        private static void CheckSeason(string targetDir, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, string fileName, ref bool abort, bool createEnabled)
         {
             var seasonFolderName = fileName.Contains("].de")
                 ? "Staffel"
@@ -530,7 +530,7 @@
 
             if (Directory.Exists(folderInQuestion))
             {
-                CheckResolution(folderInQuestion, resolution, mismatches, ref abort);
+                CheckResolution(folderInQuestion, resolution, mismatches, ref abort, createEnabled);
             }
             else
             {
@@ -538,18 +538,22 @@
 
                 if (mismatches.ContainsKey(output) == false)
                 {
-                    Console.WriteLine(output);
+                    if (!createEnabled)
+                    {
+                        Console.WriteLine(output);
 
-                    Console.Write("Create? ");
+                        Console.Write("Create? ");
 
-                    var input = Console.ReadLine();
-                    input = input.ToLower();
+                        var input = Console.ReadLine().ToLower();
 
-                    if ((input == "y") || (input == "yes"))
+                        createEnabled = input == "y" || input == "yes";
+                    }
+
+                    if (createEnabled)
                     {
                         Directory.CreateDirectory(folderInQuestion);
 
-                        CheckResolution(folderInQuestion, resolution, mismatches, ref abort);
+                        CheckResolution(folderInQuestion, resolution, mismatches, ref abort, createEnabled);
                     }
                     else
                     {
@@ -565,7 +569,7 @@
             }
         }
 
-        private static void CheckResolution(string targetDir, string resolution, Dictionary<string, bool> mismatches, ref bool abort)
+        private static void CheckResolution(string targetDir, string resolution, Dictionary<string, bool> mismatches, ref bool abort, bool createEnabled)
         {
             var folderInQuestion = $@"{targetDir}\{resolution}";
 
@@ -575,13 +579,18 @@
 
                 if (mismatches.ContainsKey(output) == false)
                 {
-                    Console.WriteLine(output);
+                    if (!createEnabled)
+                    {
+                        Console.WriteLine(output);
 
-                    Console.Write("Create? ");
+                        Console.Write("Create? ");
 
-                    var input = Console.ReadLine().ToLower();
+                        var input = Console.ReadLine().ToLower();
 
-                    if ((input == "y") || (input == "yes"))
+                        createEnabled = input == "y" || input == "yes";
+                    }
+
+                    if (createEnabled)
                     {
                         Directory.CreateDirectory(folderInQuestion);
                     }

@@ -4,13 +4,13 @@
     using System.Xml.Serialization;
 
     [XmlRoot]
-    public class Names
+    public sealed class Names
     {
         public Name[] NameList;
     }
 
     [DebuggerDisplay("ShortName: {ShortName}, DisplayName: {DisplayName}")]
-    public class Name
+    public sealed class Name
     {
         private string _sortName;
 
@@ -43,7 +43,7 @@
         public ushort Year { get; set; }
 
         [XmlIgnore]
-        public bool YearSpecified => Year > 0;
+        public bool YearSpecified => this.Year > 0;
 
         public string LocalizedName
         {
@@ -59,5 +59,38 @@
         public string Link { get; set; }
 
         public string EpisodeNamesLink { get; set; }
+
+        public override int GetHashCode() => this.ShortName?.GetHashCode() ?? 0;
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Name other))
+            {
+                return false;
+            }
+            else
+            {
+                return this.ShortName == other.ShortName;
+            }
+        }
+
+        public static bool operator ==(Name left, Name right)
+        {
+            if (ReferenceEquals(left, right))
+            {
+                return true;
+            }
+            else if (!ReferenceEquals(left, null))
+            {
+                return left.Equals(right);
+            }
+            else
+            {
+                //left is null, but right is not null
+                return false;
+            }
+        }
+
+        public static bool operator !=(Name left, Name right) => !(left == right);
     }
 }
