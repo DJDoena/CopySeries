@@ -11,7 +11,6 @@
     using System.Windows.Forms;
     using DoenaSoft.MediaInfoHelper;
     using ToolBox.Extensions;
-    using FF = MediaInfoHelper.FFProbe;
     using Outlook = Microsoft.Office.Interop.Outlook;
 
     public static class Program
@@ -97,9 +96,10 @@
 
             var mediaInfo = MediaInfoHelper.Helper.TryGetMediaInfo(fi, out var additionalSubtitleMediaInfos);
 
+            VideoInfo xmlInfo = null;
             if (mediaInfo != null)
             {
-                var xmlInfo = MediaInfo2XmlConverter.Convert(mediaInfo, episode.OriginalLanguage);
+                xmlInfo = MediaInfo2XmlConverter.Convert(mediaInfo, episode.OriginalLanguage);
 
                 if (additionalSubtitleMediaInfos?.Count > 0)
                 {
@@ -116,6 +116,8 @@
                             subtitles.AddRange(subtitleXmlInfos.Subtitle);
                         }
                     }
+
+                    xmlInfo.Subtitle = subtitles.ToArray();
                 }
 
                 xmlInfo.Episode = new Episode()
@@ -128,15 +130,11 @@
                 XmlWriter.Write(fi, xmlInfo);
             }
 
-            var audioStreams = mediaInfo?.streams?.Where(stream => stream.codec_type == "audio") ?? Enumerable.Empty<FF.Stream>();
-
-            var audioLanguages = audioStreams.Select(stream => stream.tag.GetLanguage() ?? episode.OriginalLanguage).Distinct();
+            var audioLanguages = (xmlInfo?.Audio ?? Enumerable.Empty<Audio>()).Select(a => a.Language).Distinct();
 
             audioLanguages.ForEach(language => episode.AddAudio(language));
 
-            var subtitleStreams = mediaInfo?.streams?.Where(stream => stream.codec_type == "subtitle") ?? Enumerable.Empty<FF.Stream>();
-
-            var subtitleLanguages = subtitleStreams.Select(stream => stream.tag.GetLanguage() ?? episode.OriginalLanguage).Distinct();
+            var subtitleLanguages = (xmlInfo?.Subtitle ?? Enumerable.Empty<Subtitle>()).Select(s => s.Language).Distinct();
 
             subtitleLanguages.ForEach(language => episode.AddSubtitle(language));
         }
@@ -254,7 +252,7 @@
             {
                 mailTextBuilder.Append(string.Empty.PadRight(padSeriesName + 1));
                 mailTextBuilder.Append(string.Empty.PadLeft(padEpisodeID));
-                mailTextBuilder.AppendLine($" Audio: {audio}");
+                mailTextBuilder.AppendLine($" Audio:     {audio}");
             }
 
             if (!string.IsNullOrEmpty(subtitles))
