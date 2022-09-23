@@ -159,8 +159,14 @@
             }
 
             mailTextBuilder.AppendLine();
+            mailTextBuilder.AppendLine();
 
             AddNewSeasonInfo(episodes, out var subject, out var addInfo, out var newSeries, out var newSeason);
+
+            if (!string.IsNullOrEmpty(addInfo))
+            {
+                mailTextBuilder.AppendLine(addInfo);
+            }
 
             ulong fileSize = 0;
 
@@ -181,7 +187,7 @@
             {
                 try
                 {
-                    CreateOutlookMail(recipients, subject, addInfo, mailTextBuilder.ToString());
+                    CreateOutlookMail(recipients, subject, mailTextBuilder.ToString());
 
                     success = true;
                 }
@@ -247,7 +253,6 @@
 
             var subtitles = episode.GetSubtitles();
 
-
             if (!string.IsNullOrEmpty(audio))
             {
                 mailTextBuilder.Append(string.Empty.PadRight(padSeriesName + 1));
@@ -283,7 +288,7 @@
             mailTextBuilder.AppendLine(")");
         }
 
-        private static string CreateOutlookMail(string recipients, string subject, string addInfo, string mailText)
+        private static string CreateOutlookMail(string recipients, string subject, string mailText)
         {
             var outlook = new Outlook.Application();
 
@@ -294,11 +299,6 @@
             mail.BodyFormat = Outlook.OlBodyFormat.olFormatHTML;
 
             var bodyTextBuilder = new StringBuilder("<pre>");
-
-            if (string.IsNullOrEmpty(addInfo) == false)
-            {
-                bodyTextBuilder.Append(System.Web.HttpUtility.HtmlEncode(addInfo));
-            }
 
             bodyTextBuilder.Append(System.Web.HttpUtility.HtmlEncode(mailText) + "</pre>");
 
