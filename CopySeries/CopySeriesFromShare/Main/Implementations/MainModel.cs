@@ -193,7 +193,7 @@
             {
                 if (IOServices.Folder.Exists(entry))
                 {
-                    IEnumerable<String> files = IOServices.Folder.GetFiles(entry, searchOption: System.IO.SearchOption.AllDirectories);
+                    IEnumerable<String> files = IOServices.Folder.GetFileNames(entry, searchOption: System.IO.SearchOption.AllDirectories);
 
                     fileInfos.AddRange(files.Select(file => new SourceTarget(IOServices.GetFileInfo(file))));
                 }
@@ -581,7 +581,7 @@
         private void GetFolderSize(String folder
             , ref UInt64 size)
         {
-            IEnumerable<String> files = IOServices.Folder.GetFiles(folder, searchOption: System.IO.SearchOption.AllDirectories);
+            IEnumerable<String> files = IOServices.Folder.GetFileNames(folder, searchOption: System.IO.SearchOption.AllDirectories);
 
             foreach (String file in files)
             {

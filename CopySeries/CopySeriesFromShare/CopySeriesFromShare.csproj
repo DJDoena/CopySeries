@@ -107,22 +107,6 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AbstractionLayer\AbstractionLayer\AbstractionLayer.csproj">
-      <Project>{491b235a-1d56-4732-b491-338a3dd2246d}</Project>
-      <Name>AbstractionLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ToolBox\ToolBox\ToolBox.csproj">
-      <Project>{4782e10e-b5cc-4c2d-9d7f-d132cb5a50a0}</Project>
-      <Name>ToolBox</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Microsoft.WindowsAPICodePack\Core\Core.csproj">
-      <Project>{2e1fb0df-f9bb-4909-9f32-2d9d022a8e57}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Microsoft.WindowsAPICodePack\Shell\Shell.csproj">
-      <Project>{aa0c00cb-8699-4f37-bfae-40ca87acc06d}</Project>
-      <Name>Shell</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj">
       <Project>{1884DE15-E601-47F5-812E-4F6F42AA5D7D}</Project>
       <Name>CopySeriesLib</Name>
@@ -141,6 +125,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DoenaSoft.AbstractionLayer">
+      <Version>2.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="DoenaSoft.ToolBox">
+      <Version>1.0.5</Version>
+    </PackageReference>
+    <PackageReference Include="DoenaSoft.WindowsAPICodePack">
+      <Version>1.1.1</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

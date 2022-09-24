@@ -68,16 +68,15 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ToolBox\ToolBox\ToolBox.csproj">
-      <Project>{4782e10e-b5cc-4c2d-9d7f-d132cb5a50a0}</Project>
-      <Name>ToolBox</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj">
       <Project>{1884DE15-E601-47F5-812E-4F6F42AA5D7D}</Project>
       <Name>CopySeriesLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DoenaSoft.ToolBox">
+      <Version>1.0.5</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Office.Interop.Outlook">
       <Version>15.0.4797.1004</Version>
     </PackageReference>

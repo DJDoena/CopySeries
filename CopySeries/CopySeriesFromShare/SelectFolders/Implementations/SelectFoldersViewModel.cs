@@ -26,7 +26,7 @@
 
         public SelectFoldersViewModel(IIOServices ioServices)
         {
-            Folders = ioServices.Folder.GetFolders(Properties.Settings.Default.SourcePath);
+            Folders = ioServices.Folder.GetFolderNames(Properties.Settings.Default.SourcePath);
 
             Folders = Folders.Select(GetFolderName).Where(NotInExcludeList);
         }

@@ -728,7 +728,7 @@
         {
             IFolderInfo di = IOServices.GetFolderInfo(IOServices.Path.Combine(Properties.Settings.Default.SourcePath, "_RecentFiles"));
 
-            IEnumerable<IFileInfo> fis = di.GetFiles("RecentFiles.*.xml");
+            IEnumerable<IFileInfo> fis = di.GetFileInfos("RecentFiles.*.xml");
 
             DateTime lastUsed = LastUsed.ToUniversalTime();
 

@@ -45,14 +45,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MediaInfoHelper\MediaInfoHelper\MediaInfoHelper.csproj">
-      <Project>{b6f830c3-6f73-4096-aebe-07814018814b}</Project>
-      <Name>MediaInfoHelper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ToolBox\ToolBox\ToolBox.csproj">
-      <Project>{4782e10e-b5cc-4c2d-9d7f-d132cb5a50a0}</Project>
-      <Name>ToolBox</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj">
       <Project>{1884de15-e601-47f5-812e-4f6f42aa5d7d}</Project>
       <Name>CopySeriesLib</Name>
@@ -82,6 +74,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DoenaSoft.MediaInfoHelper">
+      <Version>1.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="DoenaSoft.ToolBox">
+      <Version>1.0.5</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Office.Interop.Outlook">
       <Version>15.0.4797.1004</Version>
     </PackageReference>
