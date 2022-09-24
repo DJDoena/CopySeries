@@ -128,10 +128,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DoenaSoft.AbstractionLayer">
-      <Version>2.0.2</Version>
+      <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="DoenaSoft.ToolBox">
-      <Version>1.0.5</Version>
+      <Version>1.0.6</Version>
     </PackageReference>
     <PackageReference Include="DoenaSoft.WindowsAPICodePack">
       <Version>1.1.1</Version>
