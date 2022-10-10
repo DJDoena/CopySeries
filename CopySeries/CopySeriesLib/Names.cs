@@ -40,11 +40,6 @@
         [XmlIgnore]
         public bool DisplayNameSpecified => !string.IsNullOrEmpty(_displayName);
 
-        public ushort Year { get; set; }
-
-        [XmlIgnore]
-        public bool YearSpecified => this.Year > 0;
-
         public string LocalizedName
         {
             get => this.LocalizedNameSpecified ? _localizedName : this.DisplayName;

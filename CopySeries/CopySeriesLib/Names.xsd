@@ -15,7 +15,6 @@
       <xs:element name="LongName" type="xs:string" minOccurs="1" maxOccurs="1" />
       <xs:element name="SortName" type="xs:string" minOccurs="0" maxOccurs="1" />
       <xs:element name="DisplayName" type="xs:string" minOccurs="0" maxOccurs="1" />
-      <xs:element name="Year" type="xs:unsignedShort" minOccurs="0" maxOccurs="1" />
       <xs:element name="LocalizedName" type="xs:string" minOccurs="0" maxOccurs="1" />
       <xs:element name="OriginalLanguage" type="xs:string" minOccurs="0" maxOccurs="1" />
       <xs:element name="Link" type="xs:string" minOccurs="0" maxOccurs="1" />

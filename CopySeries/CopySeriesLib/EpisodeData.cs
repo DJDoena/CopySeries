@@ -28,7 +28,7 @@
 
         private string SortName => this.Name.SortName;
 
-        public string DisplayName => this.Name.DisplayName + (this.Name.YearSpecified ? $" ({this.Name.Year})" : string.Empty);
+        public string DisplayName => this.Name.DisplayName;
 
         public bool IsFirstOfSeason => this.IsDateShow == false && this.EpisodeNumber.StartsWith("01");
 

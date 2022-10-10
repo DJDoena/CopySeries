@@ -465,7 +465,7 @@
                 tvdbId = tvdbQuery["id"];
             }
 
-            var homeId = name.YearSpecified ? $"{name.ShortName}_{name.Year}" : name.ShortName;
+            var homeId = name.ShortName;
 
             UniqueId[] uniqueIds;
             if (string.IsNullOrEmpty(tvdbId))
@@ -503,17 +503,11 @@
             {
                 title = name.LocalizedNameSpecified ? name.LocalizedName : name.DisplayName,
                 originaltitle = name.LocalizedNameSpecified ? name.DisplayName : null,
-                premiered = name.YearSpecified ? name.Year : (ushort)0,
-                premieredSpecified = name.YearSpecified,
+                premiered = 0,
+                premieredSpecified = false,
                 sorttitle = name.SortName,
                 uniqueid = uniqueIds,
             };
-
-            if (name.YearSpecified)
-            {
-                kodi.title += $" ({name.Year})";
-                kodi.sorttitle += $" ({name.Year})";
-            }
 
             Serializer<KodiTVShow>.Serialize(fileName, kodi);
         }
