@@ -75,16 +75,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DoenaSoft.MediaInfoHelper">
-      <Version>1.0.2</Version>
+      <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="DoenaSoft.ToolBox">
       <Version>1.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Office.Interop.Outlook">
       <Version>15.0.4797.1004</Version>
-    </PackageReference>
-    <PackageReference Include="NReco.VideoInfo">
-      <Version>1.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
