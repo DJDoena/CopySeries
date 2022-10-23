@@ -14,25 +14,10 @@
     [DebuggerDisplay("{Value}")]
     public sealed class Recipient
     {
-        [XmlAttribute]
-        public DayOfWeek DayOfWeek;
-
-        [XmlAttribute]
-        public bool DayOfWeekSpecified;
-
         [XmlText]
         public string Value;
 
         [XmlAttribute]
-        public bool NewSeries;
-
-        [XmlIgnore]
-        public bool NewSeriesSpecified;
-
-        [XmlAttribute]
-        public bool NewSeason;
-
-        [XmlIgnore]
-        public bool NewSeasonSpecified;
+        public string Flags;
     }
 }

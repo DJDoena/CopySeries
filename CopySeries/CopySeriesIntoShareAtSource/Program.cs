@@ -337,19 +337,22 @@
 
             foreach (var recipient in recipients)
             {
-                if ((recipient.NewSeriesSpecified) && (recipient.NewSeries) && (newSeries == false))
+                if (string.IsNullOrEmpty(recipient.Flags))
                 {
                     continue;
                 }
-
-                if ((recipient.NewSeasonSpecified) && (recipient.NewSeason) && (newSeason == false))
+                else
                 {
-                    continue;
-                }
+                    var flags = recipient.Flags.Split(',');
 
-                if ((recipient.DayOfWeekSpecified) && (today != recipient.DayOfWeek))
-                {
-                    continue;
+                    if (!flags.Any(f => f == "TVShows"))
+                    {
+                        continue;
+                    }
+                    else if (!newSeries && flags.Any(f => f == "NewSeries"))
+                    {
+                        continue;
+                    }
                 }
 
                 yield return recipient.Value;

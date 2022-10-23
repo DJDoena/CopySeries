@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- xsd.exe /f /c /l:cs /nologo /n:DoenaSoft.CopySeries FileTypes.xsd -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:element name="FileTypes" type="FileTypes" />

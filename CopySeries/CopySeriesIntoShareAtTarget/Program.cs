@@ -252,14 +252,22 @@
 
                 foreach (var recipient in recipients.RecipientList)
                 {
-                    if ((recipient.DayOfWeekSpecified) && (today != recipient.DayOfWeek))
+                    if (string.IsNullOrEmpty(recipient.Flags))
                     {
                         continue;
                     }
-
-                    if ((recipient.NewSeriesSpecified) && (recipient.NewSeries) && (newSeries == false))
+                    else
                     {
-                        continue;
+                        var flags = recipient.Flags.Split(',');
+
+                        if (!flags.Any(f => f == "TVShows"))
+                        {
+                            continue;
+                        }
+                        else if (!newSeries && flags.Any(f => f == "NewSeries"))
+                        {
+                            continue;
+                        }
                     }
 
                     bcc.Append(";");
