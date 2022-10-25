@@ -244,38 +244,14 @@
         {
             var recipients = Serializer<Recipients>.Deserialize(Path.Combine(TargetDir, "Recipients.xml"));
 
-            var bcc = new StringBuilder();
-
             if (recipients?.RecipientList?.Length > 0)
             {
-                var today = DateTime.Now.DayOfWeek;
+                var bcc = recipients.RecipientList.GetBcc(newSeries, newSeries);
 
-                foreach (var recipient in recipients.RecipientList)
-                {
-                    if (string.IsNullOrEmpty(recipient.Flags))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        var flags = recipient.Flags.Split(',');
-
-                        if (!flags.Any(f => f == "TVShows"))
-                        {
-                            continue;
-                        }
-                        else if (!newSeries && flags.Any(f => f == "NewSeries"))
-                        {
-                            continue;
-                        }
-                    }
-
-                    bcc.Append(";");
-                    bcc.Append(recipient.Value);
-                }
+                return string.Join(";", bcc.ToArray());
             }
 
-            return bcc.ToString();
+            return string.Empty;
         }
 
         private static void AppendEpisode(EpisodeData data, int padSeriesName, int padEpisodeID, int padEpisodeName, int padAddInfo, StringBuilder email)

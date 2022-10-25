@@ -34,6 +34,9 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CopySeriesIntoShareAtSource\RecipientFilter.cs">
+      <Link>RecipientFilter.cs</Link>
+    </Compile>
     <Compile Include="CopySeriesIntoShareAtTargetSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

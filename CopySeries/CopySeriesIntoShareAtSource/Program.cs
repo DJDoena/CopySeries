@@ -319,44 +319,16 @@
 
         private static string GetRecipients(bool newSeries, bool newSeason)
         {
-            var recipients = MediaInfoHelper.Serializer<Recipients>.Deserialize(Path.Combine(_namesDir, "Recipients.xml"));
+            var recipients = Serializer<Recipients>.Deserialize(Path.Combine(_namesDir, "Recipients.xml"));
 
             if (recipients?.RecipientList?.Length > 0)
             {
-                var bcc = GetBcc(recipients.RecipientList, newSeries, newSeason);
+                var bcc = recipients.RecipientList.GetBcc(newSeries, newSeason);
 
                 return string.Join(";", bcc.ToArray());
             }
 
             return string.Empty;
-        }
-
-        private static IEnumerable<string> GetBcc(IEnumerable<Recipient> recipients, bool newSeries, bool newSeason)
-        {
-            var today = DateTime.Now.DayOfWeek;
-
-            foreach (var recipient in recipients)
-            {
-                if (string.IsNullOrEmpty(recipient.Flags))
-                {
-                    continue;
-                }
-                else
-                {
-                    var flags = recipient.Flags.Split(',');
-
-                    if (!flags.Any(f => f == "TVShows"))
-                    {
-                        continue;
-                    }
-                    else if (!newSeries && flags.Any(f => f == "NewSeries"))
-                    {
-                        continue;
-                    }
-                }
-
-                yield return recipient.Value;
-            }
         }
 
         private static bool WithoutSubFolder(string[] args)

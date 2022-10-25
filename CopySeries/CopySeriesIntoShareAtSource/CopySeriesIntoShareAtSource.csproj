@@ -40,6 +40,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>CopySeriesIntoShareAtSourceSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RecipientFilter.cs" />
     <Compile Include="XmlWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
