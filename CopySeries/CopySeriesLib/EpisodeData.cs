@@ -144,7 +144,7 @@
             {
                 var audio = this.Audio
                     .Select(StandardizeLanguage)
-                    .OrderBy(this.GetLanguageWeight);
+                    .OrderBy(GetLanguageWeight);
 
                 return string.Join(", ", audio);
             }
@@ -169,7 +169,7 @@
                     .Select(StandardizeLanguage)
                     .Where(s => s == "en" || s == "de" || s == "es" || s == "ar")
                     .Distinct()
-                    .OrderBy(this.GetLanguageWeight);
+                    .OrderBy(GetLanguageWeight);
 
                 return string.Join(", ", filtered);
             }
@@ -177,7 +177,7 @@
             return string.Empty;
         }
 
-        private int GetLanguageWeight(string language)
+        private static int GetLanguageWeight(string language)
         {
             switch (language.ToLower())
             {
