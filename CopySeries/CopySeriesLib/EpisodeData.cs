@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using DoenaSoft.MediaInfoHelper;
     using ToolBox.Extensions;
 
     public sealed class EpisodeData : IComparable<EpisodeData>
@@ -143,8 +144,8 @@
             if (this.Audio.Count > 0)
             {
                 var audio = this.Audio
-                    .Select(StandardizeLanguage)
-                    .OrderBy(GetLanguageWeight);
+                    .StandardizeLanguage()
+                    .OrderBy(LanguageExtensions.GetLanguageWeight);
 
                 return string.Join(", ", audio);
             }
@@ -165,86 +166,14 @@
             if (this.Subtitles.Count > 0)
             {
                 var filtered = this.Subtitles
-                    .Select(s => s.ToLower())
-                    .Select(StandardizeLanguage)
+                    .StandardizeLanguage()
                     .Where(s => s == "en" || s == "de" || s == "es" || s == "ar")
-                    .Distinct()
-                    .OrderBy(GetLanguageWeight);
+                    .OrderBy(LanguageExtensions.GetLanguageWeight);
 
                 return string.Join(", ", filtered);
             }
 
             return string.Empty;
-        }
-
-        private static int GetLanguageWeight(string language)
-        {
-            switch (language.ToLower())
-            {
-                case "de":
-                    {
-                        return 1;
-                    }
-                case "en":
-                    {
-                        return 2;
-                    }
-                case "es":
-                    {
-                        return 3;
-                    }
-                case "ar":
-                    {
-                        return 4;
-                    }
-                default:
-                    {
-                        return 5;
-                    }
-            }
-        }
-
-        private static string StandardizeLanguage(string language)
-        {
-            switch (language.ToLower())
-            {
-                case "de":
-                case "deu":
-                case "ger":
-                    {
-                        return "de";
-                    }
-                case "en":
-                case "eng":
-                    {
-                        return "en";
-                    }
-                case "ar":
-                case "ara":
-                    {
-                        return "ar";
-                    }
-                case "es":
-                case "spa":
-                    {
-                        return "es";
-                    }
-                case "ja":
-                case "jap":
-                case "jpn":
-                    {
-                        return "ja";
-                    }
-                case "ko":
-                case "kor":
-                    {
-                        return "ko";
-                    }
-                default:
-                    {
-                        return language.ToLower();
-                    }
-            }
         }
     }
 }
