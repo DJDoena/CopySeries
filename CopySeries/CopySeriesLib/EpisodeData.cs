@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using DoenaSoft.MediaInfoHelper;
+    using MediaInfoHelper;
     using ToolBox.Extensions;
 
     public sealed class EpisodeData : IComparable<EpisodeData>
