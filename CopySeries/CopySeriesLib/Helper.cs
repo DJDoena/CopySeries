@@ -72,7 +72,7 @@
 
                         var seasonNumber = match.Groups["SeasonNumber"].Value;
 
-                        if ((GetName(seriesName, namesDir, mismatches, out var name)) && (GetResolution(fi, out var resolution)))
+                        if (GetName(seriesName, namesDir, mismatches, out var name) && GetResolution(fi, out var resolution))
                         {
                             CheckSeries(targetDir, name, seasonNumber, resolution, mismatches, fi.Name, ref abort);
 
@@ -134,6 +134,33 @@
             };
 
             episodeList = new List<EpisodeData>(fis.Count);
+
+            var episodeNames = new HashSet<string>();
+            for (var fileIndex = 0; fileIndex < fis.Count; fileIndex++)
+            {
+                var fileName = fis[fileIndex];
+
+                if (fileName.Extension != ".mkv")
+                {
+                    continue;
+                }
+
+                var match = NameRegex.Match(fileName.Name);
+
+                var episodeName = match.Groups["EpisodeName"].Value;
+
+                if (!episodeNames.Add(episodeName))
+                {
+                    Console.WriteLine($"Episode name '{episodeName}' seems to be a duplicate. Continue?");
+
+                    var duplicateContinue = Console.ReadLine().Trim().ToLower();
+
+                    if (duplicateContinue != "y")
+                    {
+                        return false;
+                    }
+                }
+            }
 
             for (var fileIndex = 0; fileIndex < fis.Count; fileIndex++)
             {
