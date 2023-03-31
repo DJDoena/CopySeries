@@ -9,66 +9,29 @@
 
         public static IEnumerable<Recipient> Filter(this IEnumerable<Recipient> recipients, bool newSeries, bool newSeason) => recipients.Where(r => IsInFilter(r, newSeries, newSeason));
 
-        private static bool IsInFilter(Recipient recipient, bool newSeries, bool newSeason)
+        private static bool IsInFilter(Recipient recipient, bool isNewSeries, bool isNewSeason)
         {
-            if (string.IsNullOrEmpty(recipient.Flags))
-            {
-                //not interested in TV
-                return false;
-            }
-            else
+            var interested = false;
+
+            if (!string.IsNullOrEmpty(recipient.Flags))
             {
                 var flags = recipient.Flags.Split(',');
 
-                if (!flags.Any(f => f == "TVShows"))
+                if (isNewSeries)
                 {
-                    //not interested in TV
-                    return false;
+                    interested = flags.Any(f => f == "TVShows" || f == "NewSeason" || f == "NewSeries");
+                }
+                else if (isNewSeason)
+                {
+                    interested = flags.Any(f => f == "TVShows" || f == "NewSeason");
                 }
                 else
                 {
-                    if (!newSeries)
-                    {
-                        if (!newSeason)
-                        {
-                            if (flags.Any(f => f == "NewSeries" || f == "NewSeason"))
-                            {
-                                //only interested in new shows or new seasons
-                                return false;
-                            }
-                            else
-                            {
-                                //interested in TV
-                                return true;
-                            }
-                        }
-                        else
-                        {
-                            if (flags.Any(f => f == "NewSeason"))
-                            {
-                                //interested in new seasons
-                                return true;
-                            }
-                            else if (flags.Any(f => f == "NewSeries"))
-                            {
-                                //only interested in new shows
-                                return false;
-                            }
-                            else
-                            {
-                                //interested in new seasons
-                                return true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //interested in new shows or new seasons
-                        return true;
-                    }
+                    interested = flags.Any(f => f == "TVShows");
                 }
             }
-        }
 
+            return interested;
+        }
     }
 }
