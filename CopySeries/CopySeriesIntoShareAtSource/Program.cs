@@ -9,7 +9,8 @@
     using System.Text;
     using System.Threading;
     using System.Windows.Forms;
-    using DoenaSoft.MediaInfoHelper;
+    using MediaInfoHelper;
+    using MediaInfoHelper.FFProbeResultXml;
     using ToolBox.Extensions;
     using Outlook = Microsoft.Office.Interop.Outlook;
 
@@ -99,26 +100,7 @@
             VideoInfo xmlInfo = null;
             if (mediaInfo != null)
             {
-                xmlInfo = MediaInfo2XmlConverter.Convert(mediaInfo, episode.OriginalLanguage);
-
-                if (additionalSubtitleMediaInfos?.Count > 0)
-                {
-                    var subtitles = xmlInfo.Subtitle == null
-                          ? new List<Subtitle>()
-                          : new List<Subtitle>(xmlInfo.Subtitle);
-
-                    var additionalSubtitleXmlInfos = additionalSubtitleMediaInfos.Select(mi => MediaInfo2XmlConverter.Convert(mi, episode.OriginalLanguage)).ToList();
-
-                    foreach (var subtitleXmlInfos in additionalSubtitleXmlInfos)
-                    {
-                        if (subtitleXmlInfos?.Subtitle?.Length > 0)
-                        {
-                            subtitles.AddRange(subtitleXmlInfos.Subtitle);
-                        }
-                    }
-
-                    xmlInfo.Subtitle = subtitles.ToArray();
-                }
+                xmlInfo = GetXmlInfo(episode, mediaInfo, additionalSubtitleMediaInfos);
 
                 xmlInfo.Episode = new Episode()
                 {
@@ -137,6 +119,62 @@
             var subtitleLanguages = (xmlInfo?.Subtitle ?? Enumerable.Empty<Subtitle>()).Select(s => s.Language).Distinct();
 
             subtitleLanguages.ForEach(language => episode.AddSubtitle(language));
+        }
+
+        private static VideoInfo GetXmlInfo(EpisodeData episode, FFProbeResult mediaInfo, List<FFProbeResult> additionalSubtitleMediaInfos)
+        {
+            VideoInfo xmlInfo = MediaInfo2XmlConverter.Convert(mediaInfo, episode.OriginalLanguage);
+
+            if (additionalSubtitleMediaInfos?.Count > 0)
+            {
+                var subtitles = xmlInfo.Subtitle == null
+                      ? new List<Subtitle>()
+                      : new List<Subtitle>(xmlInfo.Subtitle);
+
+                var additionalSubtitleXmlInfos = additionalSubtitleMediaInfos.Select(mi => MediaInfo2XmlConverter.Convert(mi, episode.OriginalLanguage)).ToList();
+
+                foreach (var subtitleXmlInfos in additionalSubtitleXmlInfos)
+                {
+                    if (subtitleXmlInfos?.Subtitle?.Length > 0)
+                    {
+                        subtitles.AddRange(subtitleXmlInfos.Subtitle);
+                    }
+                }
+
+                xmlInfo.Subtitle = subtitles.ToArray();
+            }
+
+            if (xmlInfo.Audio?.Any() == true)
+            {
+                xmlInfo.Audio = xmlInfo.Audio
+                    .Where(a => !string.IsNullOrWhiteSpace(a?.Language))
+                    .Select(FixLanguage)
+                    .ToArray();
+            }
+
+            if (xmlInfo.Subtitle?.Any() == true)
+            {
+                xmlInfo.Subtitle = xmlInfo.Subtitle
+                    .Where(s => !string.IsNullOrWhiteSpace(s?.Language))
+                    .Select(FixLanguage)
+                    .ToArray();
+            }
+
+            return xmlInfo;
+        }
+
+        private static Audio FixLanguage(Audio audio)
+        {
+            audio.Language = LanguageExtensions.StandardizeLanguage(audio.Language);
+
+            return audio;
+        }
+
+        private static Subtitle FixLanguage(Subtitle subtitle)
+        {
+            subtitle.Language = LanguageExtensions.StandardizeLanguage(subtitle.Language);
+
+            return subtitle;
         }
 
         private static void WriteEmail(List<EpisodeData> episodes)
