@@ -1,19 +1,22 @@
-﻿namespace DoenaSoft.CopySeries
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Text;
-    using System.Threading;
-    using System.Windows.Forms;
-    using MediaInfoHelper;
-    using MediaInfoHelper.FFProbeResultXml;
-    using ToolBox.Extensions;
-    using Outlook = Microsoft.Office.Interop.Outlook;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using DoenaSoft.MediaInfoHelper.DataObjects.FFProbeMetaXml;
+using DoenaSoft.MediaInfoHelper.DataObjects.VideoMetaXml;
+using DoenaSoft.MediaInfoHelper.Helpers;
+using DoenaSoft.MediaInfoHelper.Reader;
+using DoenaSoft.MediaInfoHelper.Readers;
+using DoenaSoft.ToolBox.Extensions;
+using Outlook = Microsoft.Office.Interop.Outlook;
 
+namespace DoenaSoft.CopySeries
+{
     public static class Program
     {
         private static readonly string _targetDir;
@@ -95,9 +98,9 @@
         {
             var fi = new FileInfo(Path.Combine(_targetDir, file));
 
-            var mediaInfo = MediaInfoHelper.Helper.TryGetMediaInfo(fi, out var additionalSubtitleMediaInfos);
+            var mediaInfo = FFProbeReader.TryGetFFProbe(fi, out var additionalSubtitleMediaInfos);
 
-            VideoInfo xmlInfo = null;
+            VideoMeta xmlInfo = null;
             if (mediaInfo != null)
             {
                 xmlInfo = GetXmlInfo(episode, mediaInfo, additionalSubtitleMediaInfos);
@@ -121,9 +124,9 @@
             subtitleLanguages.ForEach(language => episode.AddSubtitle(language));
         }
 
-        private static VideoInfo GetXmlInfo(EpisodeData episode, FFProbeResult mediaInfo, List<FFProbeResult> additionalSubtitleMediaInfos)
+        private static VideoMeta GetXmlInfo(EpisodeData episode, FFProbeMeta mediaInfo, List<FFProbeMeta> additionalSubtitleMediaInfos)
         {
-            VideoInfo xmlInfo = MediaInfo2XmlConverter.Convert(mediaInfo, episode.OriginalLanguage);
+            var xmlInfo = FFProbeMetaConverter.Convert(mediaInfo, episode.OriginalLanguage);
 
             if (additionalSubtitleMediaInfos?.Count > 0)
             {
@@ -131,7 +134,7 @@
                       ? new List<Subtitle>()
                       : new List<Subtitle>(xmlInfo.Subtitle);
 
-                var additionalSubtitleXmlInfos = additionalSubtitleMediaInfos.Select(mi => MediaInfo2XmlConverter.Convert(mi, episode.OriginalLanguage)).ToList();
+                var additionalSubtitleXmlInfos = additionalSubtitleMediaInfos.Select(mi => FFProbeMetaConverter.Convert(mi, episode.OriginalLanguage)).ToList();
 
                 foreach (var subtitleXmlInfos in additionalSubtitleXmlInfos)
                 {
@@ -357,7 +360,7 @@
 
         private static string GetRecipients(bool newSeries, bool newSeason)
         {
-            var recipients = Serializer<Recipients>.Deserialize(Path.Combine(_namesDir, "Recipients.xml"));
+            var recipients = XmlSerializer<Recipients>.Deserialize(Path.Combine(_namesDir, "Recipients.xml"));
 
             if (recipients?.RecipientList?.Length > 0)
             {

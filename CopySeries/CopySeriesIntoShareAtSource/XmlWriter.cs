@@ -1,19 +1,20 @@
-﻿namespace DoenaSoft.CopySeries
-{
-    using System;
-    using System.IO;
-    using System.Text;
-    using System.Xml;
-    using System.Xml.Serialization;
-    using DoenaSoft.MediaInfoHelper;
+﻿using System;
+using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
+using DoenaSoft.MediaInfoHelper.DataObjects.VideoMetaXml;
+using DoenaSoft.MediaInfoHelper.Helpers;
 
+namespace DoenaSoft.CopySeries
+{
     internal static class XmlWriter
     {
         private static string _prefix;
 
         private static string _suffix;
 
-        internal static void Write(FileInfo fileInfo, VideoInfo instance)
+        internal static void Write(FileInfo fileInfo, VideoMeta instance)
         {
             var xmlFI = GetXmlFileName(fileInfo);
 
@@ -58,7 +59,7 @@
             return xmlFI;
         }
 
-        private static string Serialize(VideoInfo instance)
+        private static string Serialize(VideoMeta instance)
         {
             using (var ms = new MemoryStream())
             {
@@ -74,7 +75,7 @@
 
                 using (var writer = System.Xml.XmlWriter.Create(ms, settings))
                 {
-                    Serializer<VideoInfo>.XmlSerializer.Serialize(writer, instance, new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
+                    XmlSerializer<VideoMeta>.Serializer.Serialize(writer, instance, new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
 
                     var xml = encoding.GetString(ms.ToArray());
 

@@ -1,12 +1,13 @@
-﻿namespace DoenaSoft.CopySeries
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using MediaInfoHelper;
-    using ToolBox.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using DoenaSoft.MediaInfoHelper;
+using DoenaSoft.ToolBox.Extensions;
+using DoenaSoft.MediaInfoHelper.Helpers;
 
+namespace DoenaSoft.CopySeries
+{
     public sealed class EpisodeData : IComparable<EpisodeData>
     {
         private Name Name { get; }
