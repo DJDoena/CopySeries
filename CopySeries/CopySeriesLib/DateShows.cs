@@ -1,7 +1,7 @@
-﻿namespace DoenaSoft.CopySeries
-{
-    using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
+namespace DoenaSoft.CopySeries
+{
     [XmlRoot]
     public sealed class DateShows
     {

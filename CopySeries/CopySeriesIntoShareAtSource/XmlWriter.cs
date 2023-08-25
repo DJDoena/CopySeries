@@ -28,6 +28,8 @@ namespace DoenaSoft.CopySeries
                 sw.WriteLine(xml);
                 sw.Write(GetSuffix());
             }
+
+            File.SetAttributes(fileInfo.FullName, FileAttributes.Archive);
         }
 
         internal static string GetPrefix()

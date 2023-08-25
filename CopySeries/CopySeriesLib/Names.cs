@@ -1,8 +1,8 @@
-﻿namespace DoenaSoft.CopySeries
-{
-    using System.Diagnostics;
-    using System.Xml.Serialization;
+﻿using System.Diagnostics;
+using System.Xml.Serialization;
 
+namespace DoenaSoft.CopySeries
+{
     [XmlRoot]
     public sealed class Names
     {

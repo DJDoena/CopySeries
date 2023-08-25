@@ -203,7 +203,7 @@
                     File.Move(fileName.FullName, targetFile);
                 }
 
-                File.SetAttributes(targetFile, FileAttributes.Archive | FileAttributes.ReadOnly);
+                File.SetAttributes(targetFile, FileAttributes.Archive);
 
                 recentFiles.Files[fileIndex] = targetFile.Replace(targetDir, remoteDir);
 
@@ -537,6 +537,8 @@
             };
 
             Serializer<KodiTVShow>.Serialize(fileName, kodi);
+
+            File.SetAttributes(fileName, FileAttributes.Archive);
         }
 
         private static void CheckSeason(string targetDir, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, string fileName, ref bool abort, bool createEnabled)
