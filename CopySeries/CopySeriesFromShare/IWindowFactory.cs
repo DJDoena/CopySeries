@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.CopySeries
 {
-    using System;
     using System.Collections.Generic;
 
     internal interface IWindowFactory

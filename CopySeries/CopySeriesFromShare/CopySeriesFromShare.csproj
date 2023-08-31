@@ -14,32 +14,32 @@
 	</PropertyGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="call copy.cmd" />
+		<Exec Command="call copy.cmd" />
 	</Target>
 
 	<ItemGroup>
-	  <PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="1.0.2" />
-	  <PackageReference Include="DoenaSoft.AbstractionLayer.WPF" Version="1.1.4" />
-	  <PackageReference Include="DoenaSoft.WindowsAPICodePack" Version="1.1.2" />
+		<PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="1.0.2" />
+		<PackageReference Include="DoenaSoft.AbstractionLayer.WPF" Version="1.1.4" />
+		<PackageReference Include="DoenaSoft.WindowsAPICodePack" Version="1.1.2" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj" />
+		<ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Properties\Settings.Designer.cs">
-	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Settings.settings</DependentUpon>
-	  </Compile>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="Properties\Settings.settings">
-	    <Generator>SettingsSingleFileGenerator</Generator>
-	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-	  </None>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
 	</ItemGroup>
-	
+
 </Project>

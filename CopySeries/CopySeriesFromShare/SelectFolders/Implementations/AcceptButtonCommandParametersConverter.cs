@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Windows.Data;
@@ -16,9 +15,9 @@
             , object parameter
             , CultureInfo culture)
         {
-            ICloseable closeable = (ICloseable)(values[0]);
+            var closeable = (ICloseable)(values[0]);
 
-            IEnumerable<string> selectedFolders = ((IList)(values[1])).Cast<string>();
+            var selectedFolders = ((IList)(values[1])).Cast<string>();
 
             IAcceptButtonCommandParameters parameters = new AcceptButtonCommandParameters(selectedFolders, closeable);
 

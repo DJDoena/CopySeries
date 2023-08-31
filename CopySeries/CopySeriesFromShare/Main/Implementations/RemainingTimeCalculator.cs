@@ -31,13 +31,13 @@
                 return (string.Empty);
             }
 
-            TimeSpan elapsed = DateTime.Now.Subtract(StartTime);
+            var elapsed = DateTime.Now.Subtract(StartTime);
 
-            double complete = (elapsed.TotalSeconds / value) * max;
+            var complete = (elapsed.TotalSeconds / value) * max;
 
-            TimeSpan remaining = TimeSpan.FromSeconds(complete - elapsed.TotalSeconds);
+            var remaining = TimeSpan.FromSeconds(complete - elapsed.TotalSeconds);
 
-            string text = GetRemainingText(remaining);
+            var text = GetRemainingText(remaining);
 
             return (text);
         }
@@ -46,21 +46,21 @@
 
         private static string GetRemainingText(TimeSpan remaining)
         {
-            int days = remaining.Days;
+            var days = remaining.Days;
 
-            int hours = remaining.Hours;
+            var hours = remaining.Hours;
 
-            int minutes = remaining.Minutes;
+            var minutes = remaining.Minutes;
 
-            int seconds = remaining.Seconds;
+            var seconds = remaining.Seconds;
 
-            string dayString = (days > 0) ? $"{days}d " : string.Empty;
+            var dayString = (days > 0) ? $"{days}d " : string.Empty;
 
-            string hourString = ((days > 0) || (hours > 0)) ? $"{hours}h " : string.Empty;
+            var hourString = ((days > 0) || (hours > 0)) ? $"{hours}h " : string.Empty;
 
-            string minuteString = ((days > 0) || (hours > 0) || minutes > 0) ? $"{minutes}m " : string.Empty;
+            var minuteString = ((days > 0) || (hours > 0) || minutes > 0) ? $"{minutes}m " : string.Empty;
 
-            string text = $"( est. {dayString}{hourString}{minuteString}{seconds}s remaining)";
+            var text = $"( est. {dayString}{hourString}{minuteString}{seconds}s remaining)";
 
             return (text);
         }

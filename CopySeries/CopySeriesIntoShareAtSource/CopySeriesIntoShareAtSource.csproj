@@ -14,43 +14,45 @@
 
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="call copy.cmd" />
+		<Exec Command="call copy.cmd $(Platform) $(Configuration) $(TargetFramework)" />
 	</Target>
 
-
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1004" />
+		<PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1004" />
 	</ItemGroup>
 
 
 	<ItemGroup>
-	  <ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj" />
+		<ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj" />
 	</ItemGroup>
 
 
 	<ItemGroup>
-	  <Compile Update="CopySeriesIntoShareAtSourceSettings.Designer.cs">
-	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>CopySeriesIntoShareAtSourceSettings.settings</DependentUpon>
-	  </Compile>
+		<Compile Update="CopySeriesIntoShareAtSourceSettings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>CopySeriesIntoShareAtSourceSettings.settings</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 
 	<ItemGroup>
-	  <None Update="CopySeriesIntoShareAtSourceSettings.settings">
-	    <Generator>SettingsSingleFileGenerator</Generator>
-	    <LastGenOutput>CopySeriesIntoShareAtSourceSettings.Designer.cs</LastGenOutput>
-	  </None>
-	  <None Update="Recipients.xml">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="XslPrefix.txt">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="XslSuffix.txt">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+		<None Update="copy.cmd">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
+		<None Update="CopySeriesIntoShareAtSourceSettings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>CopySeriesIntoShareAtSourceSettings.Designer.cs</LastGenOutput>
+		</None>
+		<None Update="Recipients.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="XslPrefix.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="XslSuffix.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
-	
+
 </Project>

@@ -1,7 +1,5 @@
 ﻿namespace DoenaSoft.CopySeries.Main.Implementations
 {
-    using System;
-
     internal static class OverwriteOptionConstants
     {
         public const string Ask = nameof(Ask);

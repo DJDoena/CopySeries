@@ -1,7 +1,5 @@
 ﻿namespace DoenaSoft.CopySeries.Main.Implementations
 {
-    using System;
-
     internal sealed class FileEntryViewModel : IFileEntryViewModel
     {
         private string File { get; }
@@ -18,9 +16,9 @@
         {
             get
             {
-                string file = File;
+                var file = File;
 
-                string root = Properties.Settings.Default.SourcePath;
+                var root = Properties.Settings.Default.SourcePath;
 
                 file = file.Replace(root, string.Empty);
 

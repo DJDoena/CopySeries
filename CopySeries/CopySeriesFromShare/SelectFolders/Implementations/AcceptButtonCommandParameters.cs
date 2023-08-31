@@ -1,7 +1,5 @@
 ﻿namespace DoenaSoft.CopySeries.SelectFolders.Implementations
 {
-    using System;
-    using System.Collections;
     using System.Collections.Generic;
 
     internal sealed class AcceptButtonCommandParameters : IAcceptButtonCommandParameters

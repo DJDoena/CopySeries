@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.CopySeries.Filter
 {
-    using System;
     using System.ComponentModel;
     using System.Windows.Input;
 

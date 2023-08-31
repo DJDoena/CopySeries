@@ -130,11 +130,11 @@
         {
             try
             {
-                using (System.IO.Stream fs = IOServices.GetFileStream(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read))
+                using (var fs = IOServices.GetFileStream(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read))
                 {
-                    RecentFiles recentFiles = Serializer<RecentFiles>.Deserialize(fs);
+                    var recentFiles = Serializer<RecentFiles>.Deserialize(fs);
 
-                    foreach (string file in recentFiles.Files)
+                    foreach (var file in recentFiles.Files)
                     {
                         if (IOServices.File.Exists(file))
                         {
@@ -154,16 +154,16 @@
             , bool onlyHDs
             , bool onlySDs)
         {
-            List<string> entries = Entries.ToList();
+            var entries = Entries.ToList();
 
-            foreach (string entry in entries)
+            foreach (var entry in entries)
             {
                 if ((entry.Contains(" 1x01")) || (entry.Contains(" 1x00")))
                 {
                     continue;
                 }
 
-                bool isValid = CheckFilter(entry, filter);
+                var isValid = CheckFilter(entry, filter);
 
                 if (isValid)
                 {
@@ -187,13 +187,13 @@
 
             ProgressValue = 0;
 
-            List<SourceTarget> fileInfos = new List<SourceTarget>();
+            var fileInfos = new List<SourceTarget>();
 
-            foreach (string entry in Entries)
+            foreach (var entry in Entries)
             {
                 if (IOServices.Folder.Exists(entry))
                 {
-                    IEnumerable<string> files = IOServices.Folder.GetFileNames(entry, searchOption: System.IO.SearchOption.AllDirectories);
+                    var files = IOServices.Folder.GetFileNames(entry, searchOption: System.IO.SearchOption.AllDirectories);
 
                     fileInfos.AddRange(files.Select(file => new SourceTarget(IOServices.GetFileInfo(file))));
                 }
@@ -211,13 +211,13 @@
 
             ResetSize();
 
-            IDriveInfo driveInfo = IOServices.GetDriveInfo(IOServices.GetFolderInfo(TargetLocation).Root.Name.Substring(0, 1));
+            var driveInfo = IOServices.GetDriveInfo(IOServices.GetFolderInfo(TargetLocation).Root.Name.Substring(0, 1));
 
             if (driveInfo.AvailableFreeSpace <= Size)
             {
-                FileSize spaceSize = new FileSize(driveInfo.AvailableFreeSpace);
+                var spaceSize = new FileSize(driveInfo.AvailableFreeSpace);
 
-                FileSize bytesSize = new FileSize(Size);
+                var bytesSize = new FileSize(Size);
 
                 UIServices.ShowMessageBox($"Target is Full!{Environment.NewLine}Available: {spaceSize}{Environment.NewLine}Needed: {bytesSize}", "Target Full", Buttons.OK, Icon.Warning);
 
@@ -241,11 +241,11 @@
 
         private void Copy(List<SourceTarget> fileInfos)
         {
-            bool taskCancelled = false;
+            var taskCancelled = false;
 
             try
             {
-                foreach (SourceTarget fileInfo in fileInfos)
+                foreach (var fileInfo in fileInfos)
                 {
                     if (CancellationToken.IsCancellationRequested)
                     {
@@ -289,7 +289,7 @@
 
         private bool CommenceCopy(List<SourceTarget> fileInfos)
         {
-            foreach (SourceTarget fileInfo in fileInfos)
+            foreach (var fileInfo in fileInfos)
             {
                 if (CancellationToken.IsCancellationRequested)
                 {
@@ -298,11 +298,11 @@
                     return (true);
                 }
 
-                string path = IOServices.Path.Combine(fileInfo.TargetFolder.FullName, fileInfo.SourceFile.Name);
+                var path = IOServices.Path.Combine(fileInfo.TargetFolder.FullName, fileInfo.SourceFile.Name);
 
-                IFileInfo targetFileInfo = IOServices.GetFileInfo(path);
+                var targetFileInfo = IOServices.GetFileInfo(path);
 
-                Result result = GetOverwriteResult(fileInfo, targetFileInfo);
+                var result = GetOverwriteResult(fileInfo, targetFileInfo);
 
                 if (result == Result.Cancel)
                 {
@@ -329,13 +329,13 @@
                     }
                     catch (Exception ex)
                     {
-                        long startTicks = DateTime.Now.Ticks;
+                        var startTicks = DateTime.Now.Ticks;
 
                         if (UIServices.ShowMessageBox(ex.Message + "\nContinue?", "Continue?", Buttons.YesNo, Icon.Question) == Result.Yes)
                         {
-                            long endTicks = DateTime.Now.Ticks;
+                            var endTicks = DateTime.Now.Ticks;
 
-                            TimeSpan span = new TimeSpan(endTicks - startTicks);
+                            var span = new TimeSpan(endTicks - startTicks);
 
                             CopyPaused?.Invoke(this, new EventArgs<TimeSpan>(span));
 
@@ -359,7 +359,7 @@
         private Result GetOverwriteResult(SourceTarget source
             , IFileInfo target)
         {
-            Result result = Result.Yes;
+            var result = Result.Yes;
 
             if (target.Exists)
             {
@@ -367,13 +367,13 @@
 
                 if (Overwrite == OverwriteOptionConstants.Ask)
                 {
-                    long startTicks = DateTime.Now.Ticks;
+                    var startTicks = DateTime.Now.Ticks;
 
                     result = UIServices.ShowMessageBox("Overwrite \"" + target.FullName + "\"\nfrom \"" + source.SourceFile.FullName + "\"?", "Overwrite?", Buttons.YesNoCancel, Icon.Question);
 
-                    long endTicks = DateTime.Now.Ticks;
+                    var endTicks = DateTime.Now.Ticks;
 
-                    TimeSpan span = new TimeSpan(endTicks - startTicks);
+                    var span = new TimeSpan(endTicks - startTicks);
 
                     CopyPaused?.Invoke(this, new EventArgs<TimeSpan>(span));
                 }
@@ -388,7 +388,7 @@
 
         private void EnsureSubFolders(SourceTarget fileInfo)
         {
-            string directoryName = fileInfo.SourceFile.FolderName;
+            var directoryName = fileInfo.SourceFile.FolderName;
 
             string newPath;
             if (directoryName.StartsWith(Properties.Settings.Default.SourcePath))
@@ -412,7 +412,7 @@
                 }
             }
 
-            string path = IOServices.Path.Combine(TargetLocation, newPath);
+            var path = IOServices.Path.Combine(TargetLocation, newPath);
 
             fileInfo.TargetFolder = IOServices.GetFolderInfo(path);
 
@@ -427,13 +427,13 @@
         private static bool CheckFilter(string entry
             , IEnumerable<string> filter)
         {
-            bool isValid = true;
+            var isValid = true;
 
             if (filter.Any())
             {
                 isValid = false;
 
-                foreach (string series in filter)
+                foreach (var series in filter)
                 {
                     if (entry.Contains(@"\" + series + @"\"))
                     {
@@ -454,7 +454,7 @@
             , bool onlyHDs
             , bool onlySDs)
         {
-            bool isValid = true;
+            var isValid = true;
 
             if ((noSubs) && (entry.EndsWith(".srt")))
             {
@@ -490,7 +490,7 @@
             const string SDMkv = ".480.mkv";
             const string SDMp4 = ".480.mp4";
 
-            bool isSD = ((entry.EndsWith(SDMkv)) || (entry.EndsWith(SDMp4)));
+            var isSD = ((entry.EndsWith(SDMkv)) || (entry.EndsWith(SDMp4)));
 
             return (isSD);
         }
@@ -501,24 +501,24 @@
         private bool CheckForPartner(string currentFile
             , bool toHD)
         {
-            bool valid = true;
+            var valid = true;
 
-            IFileInfo fi = IOServices.GetFileInfo(currentFile);
+            var fi = IOServices.GetFileInfo(currentFile);
 
-            string fileWithoutExtension = fi.Name.Substring(0, fi.Name.LastIndexOf("."));
+            var fileWithoutExtension = fi.Name.Substring(0, fi.Name.LastIndexOf("."));
 
             if ((fileWithoutExtension.EndsWith(".480")) || (fileWithoutExtension.EndsWith(".720")) || (fileWithoutExtension.EndsWith(".1080")))
             {
                 fileWithoutExtension = fileWithoutExtension.Substring(0, fileWithoutExtension.LastIndexOf("."));
             }
 
-            IEnumerable<string> partners = toHD ? GetHDExtensions() : GetSDExtensions();
+            var partners = toHD ? GetHDExtensions() : GetSDExtensions();
 
-            foreach (string partner in partners)
+            foreach (var partner in partners)
             {
-                string folder = fi.FolderName + @"\..\" + (toHD ? "HD" : "SD");
+                var folder = fi.FolderName + @"\..\" + (toHD ? "HD" : "SD");
 
-                string fileInQuestion = folder + @"\" + fileWithoutExtension + partner;
+                var fileInQuestion = folder + @"\" + fileWithoutExtension + partner;
 
                 if (IOServices.File.Exists(fileInQuestion))
                 {
@@ -557,7 +557,7 @@
         {
             ulong size = 0;
 
-            foreach (string entry in Entries)
+            foreach (var entry in Entries)
             {
                 GetEntrySize(entry, ref size);
             }
@@ -581,9 +581,9 @@
         private void GetFolderSize(string folder
             , ref ulong size)
         {
-            IEnumerable<string> files = IOServices.Folder.GetFileNames(folder, searchOption: System.IO.SearchOption.AllDirectories);
+            var files = IOServices.Folder.GetFileNames(folder, searchOption: System.IO.SearchOption.AllDirectories);
 
-            foreach (string file in files)
+            foreach (var file in files)
             {
                 GetFileSize(file, ref size);
             }
@@ -592,7 +592,7 @@
         private void GetFileSize(string file
             , ref ulong bytes)
         {
-            IFileInfo fi = IOServices.GetFileInfo(file);
+            var fi = IOServices.GetFileInfo(file);
 
             bytes += fi.Length;
         }

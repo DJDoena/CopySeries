@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.CopySeries.Implementations
 {
-    using System;
     using Main;
 
     internal static class SortHelper
@@ -8,11 +7,11 @@
         internal static int CompareFileEntries(IFileEntryViewModel left
             , IFileEntryViewModel right)
         {
-            string compareLeft = CreateSortPath(left.FullName);
+            var compareLeft = CreateSortPath(left.FullName);
 
-            string compareRight = CreateSortPath(right.FullName);
+            var compareRight = CreateSortPath(right.FullName);
 
-            int compare = compareLeft.CompareTo(compareRight);
+            var compare = compareLeft.CompareTo(compareRight);
 
             return (compare);
         }
@@ -20,32 +19,32 @@
         internal static int CompareSeries(string left
             , string right)
         {
-            string compareLeft = RemoveArticle(left);
+            var compareLeft = RemoveArticle(left);
 
-            string compareRight = RemoveArticle(right);
+            var compareRight = RemoveArticle(right);
 
-            int compare = compareLeft.CompareTo(compareRight);
+            var compare = compareLeft.CompareTo(compareRight);
 
             return (compare);
         }
 
         private static string CreateSortPath(string input)
         {
-            string[] split = input.Split('\\');
+            var split = input.Split('\\');
 
-            for (int i = 0; i < split.Length; i++)
+            for (var i = 0; i < split.Length; i++)
             {
                 split[i] = RemoveArticle(split[i]);
             }
 
-            string output = string.Join(@"\", split);
+            var output = string.Join(@"\", split);
 
             return (output);
         }
 
         private static string RemoveArticle(string input)
         {
-            string output = input;
+            var output = input;
 
             if (input.StartsWith("The "))
             {

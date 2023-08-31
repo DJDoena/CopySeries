@@ -67,7 +67,7 @@
             {
                 using (var sw = new StreamWriter(fs, Encoding.GetEncoding(1252)))
                 {
-                    foreach (string file in allFiles)
+                    foreach (var file in allFiles)
                     {
                         sw.WriteLine($"{file.Replace(targetDir, string.Empty)};{(new FileInfo(file)).Length}");
                     }

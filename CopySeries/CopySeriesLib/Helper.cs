@@ -44,7 +44,7 @@ namespace DoenaSoft.CopySeries
 
                 for (var fileIndex = fis.Count - 1; fileIndex >= 0; fileIndex--)
                 {
-                    string name = fis[fileIndex].Name.ToLower();
+                    var name = fis[fileIndex].Name.ToLower();
 
                     if ((name == "thumbs.db") || (name.EndsWith(".lnk")) || (name.EndsWith(".title")))
                     {
@@ -655,7 +655,7 @@ namespace DoenaSoft.CopySeries
                 Serializer<Names>.Serialize(Path.Combine(targetDir, "Names.xml"), nameList);
             }
 
-            bool success = Names.TryGetValue(shortName, out name);
+            var success = Names.TryGetValue(shortName, out name);
 
             if (success == false)
             {

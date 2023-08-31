@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DoenaSoft.MediaInfoHelper;
-using DoenaSoft.ToolBox.Extensions;
 using DoenaSoft.MediaInfoHelper.Helpers;
+using DoenaSoft.ToolBox.Extensions;
 
 namespace DoenaSoft.CopySeries
 {
@@ -26,19 +25,19 @@ namespace DoenaSoft.CopySeries
 
         public FileSize FileSize { get; }
 
-        public string SeriesName => this.Name.LongName;
+        public string SeriesName => Name.LongName;
 
-        private string SortName => this.Name.SortName;
+        private string SortName => Name.SortName;
 
-        public string DisplayName => this.Name.DisplayName;
+        public string DisplayName => Name.DisplayName;
 
-        public bool IsFirstOfSeason => this.IsDateShow == false && this.EpisodeNumber.StartsWith("01");
+        public bool IsFirstOfSeason => IsDateShow == false && EpisodeNumber.StartsWith("01");
 
-        public bool IsPilot => (this.IsDateShow == false) && (this.SeasonNumber == "1") && this.IsFirstOfSeason;
+        public bool IsPilot => (IsDateShow == false) && (SeasonNumber == "1") && IsFirstOfSeason;
 
-        public string OriginalLanguage => this.Name.OriginalLanguage;
+        public string OriginalLanguage => Name.OriginalLanguage;
 
-        public string Link => this.Name.Link;
+        public string Link => Name.Link;
 
         private List<string> Audio { get; }
 
@@ -46,25 +45,25 @@ namespace DoenaSoft.CopySeries
 
         public EpisodeData(Name name, string seasonNumber, string episodeNumber, bool isDateShow, string episodeName, string addInfo, FileSize fileSize)
         {
-            this.Name = name;
+            Name = name;
 
-            this.SeasonNumber = seasonNumber;
+            SeasonNumber = seasonNumber;
 
-            this.EpisodeNumber = episodeNumber;
+            EpisodeNumber = episodeNumber;
 
-            this.IsDateShow = isDateShow;
+            IsDateShow = isDateShow;
 
-            this.EpisodeID = this.GetEpisodeId(episodeName);
+            EpisodeID = GetEpisodeId(episodeName);
 
-            this.EpisodeName = this.GetEpisodeName(episodeName);
+            EpisodeName = GetEpisodeName(episodeName);
 
-            this.AddInfo = addInfo;
+            AddInfo = addInfo;
 
-            this.FileSize = fileSize;
+            FileSize = fileSize;
 
-            this.Audio = new List<string>();
+            Audio = new List<string>();
 
-            this.Subtitles = new List<string>();
+            Subtitles = new List<string>();
         }
 
         #region IComparable<EpisodeData>
@@ -76,21 +75,21 @@ namespace DoenaSoft.CopySeries
                 return 1;
             }
 
-            var compare = this.SortName.CompareTo(other.SortName);
+            var compare = SortName.CompareTo(other.SortName);
 
             if (compare == 0)
             {
-                compare = this.SeasonNumber.PadLeft(2, '0').CompareTo(other.SeasonNumber.PadLeft(2, '0'));
+                compare = SeasonNumber.PadLeft(2, '0').CompareTo(other.SeasonNumber.PadLeft(2, '0'));
             }
 
             if (compare == 0)
             {
-                compare = this.EpisodeNumber.CompareTo(other.EpisodeNumber);
+                compare = EpisodeNumber.CompareTo(other.EpisodeNumber);
             }
 
             if (compare == 0)
             {
-                compare = this.AddInfo.CompareTo(other.AddInfo);
+                compare = AddInfo.CompareTo(other.AddInfo);
             }
 
             return compare;
@@ -98,35 +97,35 @@ namespace DoenaSoft.CopySeries
 
         #endregion
 
-        private string GetEpisodeName(string episodeName) => this.IsDateShow ? episodeName.Substring(11) : episodeName;
+        private string GetEpisodeName(string episodeName) => IsDateShow ? episodeName.Substring(11) : episodeName;
 
-        private string GetEpisodeId(string episodeName) => this.IsDateShow ? this.GetDateShowId(episodeName) : this.GetSeasonShowId();
+        private string GetEpisodeId(string episodeName) => IsDateShow ? GetDateShowId(episodeName) : GetSeasonShowId();
 
         private string GetDateShowId(string episodeName) => DateTime.Parse(episodeName.Substring(0, 10)).ToShortDateString();
 
-        private string GetSeasonShowId() => $"{this.SeasonNumber}x{this.EpisodeNumber}";
+        private string GetSeasonShowId() => $"{SeasonNumber}x{EpisodeNumber}";
 
         public override string ToString()
         {
             var sb = new StringBuilder();
 
-            sb.Append(this.DisplayName);
+            sb.Append(DisplayName);
             sb.Append(" ");
-            sb.Append(this.EpisodeID);
+            sb.Append(EpisodeID);
             sb.Append(" \"");
-            sb.Append(this.EpisodeName);
+            sb.Append(EpisodeName);
             sb.Append("\"");
             sb.Append(" ");
-            sb.Append(this.AddInfo);
+            sb.Append(AddInfo);
             sb.Append(" (");
-            sb.Append(this.FileSize.ToString());
+            sb.Append(FileSize.ToString());
             sb.Append(")");
 
-            if (this.Audio.Count > 0)
+            if (Audio.Count > 0)
             {
                 sb.Append(": ");
 
-                sb.Append(this.GetAudio());
+                sb.Append(GetAudio());
             }
 
             return sb.ToString();
@@ -136,15 +135,15 @@ namespace DoenaSoft.CopySeries
         {
             if (language.IsNotEmpty())
             {
-                this.Audio.Add(language);
+                Audio.Add(language);
             }
         }
 
         public string GetAudio()
         {
-            if (this.Audio.Count > 0)
+            if (Audio.Count > 0)
             {
-                var audio = this.Audio
+                var audio = Audio
                     .StandardizeLanguage()
                     .OrderBy(LanguageExtensions.GetLanguageWeight);
 
@@ -158,15 +157,15 @@ namespace DoenaSoft.CopySeries
         {
             if (language.IsNotEmpty())
             {
-                this.Subtitles.Add(language);
+                Subtitles.Add(language);
             }
         }
 
         public string GetSubtitles()
         {
-            if (this.Subtitles.Count > 0)
+            if (Subtitles.Count > 0)
             {
-                var filtered = this.Subtitles
+                var filtered = Subtitles
                     .StandardizeLanguage()
                     .Where(s => s == "en" || s == "de" || s == "es" || s == "ar")
                     .OrderBy(LanguageExtensions.GetLanguageWeight);

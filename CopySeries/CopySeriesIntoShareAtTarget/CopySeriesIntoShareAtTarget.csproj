@@ -12,40 +12,37 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\CopySeriesIntoShareAtSource\RecipientFilter.cs" Link="RecipientFilter.cs" />
+		<Compile Include="..\CopySeriesIntoShareAtSource\RecipientFilter.cs" Link="RecipientFilter.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1004" />
+		<PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1004" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj" />
+		<ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="CopySeriesIntoShareAtTargetSettings.Designer.cs">
-	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>CopySeriesIntoShareAtTargetSettings.settings</DependentUpon>
-	  </Compile>
+		<Compile Update="CopySeriesIntoShareAtTargetSettings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>CopySeriesIntoShareAtTargetSettings.settings</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="copy.cmd">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="CopySeriesIntoShareAtTargetSettings.settings">
-	    <Generator>SettingsSingleFileGenerator</Generator>
-	    <LastGenOutput>CopySeriesIntoShareAtTargetSettings.Designer.cs</LastGenOutput>
-	  </None>
-	  <None Update="Recipients.xml">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+		<None Update="CopySeriesIntoShareAtTargetSettings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>CopySeriesIntoShareAtTargetSettings.Designer.cs</LastGenOutput>
+		</None>
+		<None Update="Recipients.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="call copy.cmd" />
+		<Exec Command="call copy.cmd" />
 	</Target>
 
 </Project>

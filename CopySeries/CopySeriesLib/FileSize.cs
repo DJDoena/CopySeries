@@ -44,16 +44,16 @@
                 bytesPower = " Byte";
             }
 
-            string formatted = roundBytes.ToString(CultureInfo.GetCultureInfo("de-DE")).PadLeft(numberPadding) + bytesPower;
+            var formatted = roundBytes.ToString(CultureInfo.GetCultureInfo("de-DE")).PadLeft(numberPadding) + bytesPower;
 
             return formatted;
         }
 
         private static bool CheckOrderOfMagnitude(decimal fileSize, double exponent, int decimals, out decimal roundBytes)
         {
-            decimal pow = (decimal)(Math.Pow(2, exponent));
+            var pow = (decimal)(Math.Pow(2, exponent));
 
-            decimal quotient = fileSize / pow;
+            var quotient = fileSize / pow;
 
             roundBytes = Math.Round(quotient, decimals, MidpointRounding.AwayFromZero);
 

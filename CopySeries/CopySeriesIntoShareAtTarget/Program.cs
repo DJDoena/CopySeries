@@ -60,7 +60,7 @@
                     Console.WriteLine("Press <Enter> to retry.");
                     Console.ReadLine();
                 }
-                if (Helper.CopySeriesIntoShare(di, SearchOption.AllDirectories, TargetDir, true, RemoteDir, StickDrive, out List<EpisodeData> episodes, out RecentFiles recentFiles))
+                if (Helper.CopySeriesIntoShare(di, SearchOption.AllDirectories, TargetDir, true, RemoteDir, StickDrive, out var episodes, out var recentFiles))
                 {
                     const string SubDir = "_RecentFiles";
 
@@ -96,7 +96,7 @@
         {
             episodes.Sort();
 
-            CalculatePadding(episodes, out int padSeriesName, out int padEpisodeID, out int padEpisodeName, out int padAddInfo);
+            CalculatePadding(episodes, out var padSeriesName, out var padEpisodeID, out var padEpisodeName, out var padAddInfo);
 
             var email = new StringBuilder();
 
@@ -149,7 +149,7 @@
 
             var mail = (Outlook.MailItem)(outlook.CreateItem(Outlook.OlItemType.olMailItem));
 
-            var newSeries = AddNewSeasonInfo(episodes, mail, out string addInfo);
+            var newSeries = AddNewSeasonInfo(episodes, mail, out var addInfo);
 
             mail.BodyFormat = Outlook.OlBodyFormat.olFormatHTML;
 
@@ -191,7 +191,7 @@
             {
                 var names = new HashSet<string>();
 
-                newSeason.Split(episode => episode.IsPilot, out IEnumerable<EpisodeData> pilots, out IEnumerable<EpisodeData> nonPilots);
+                newSeason.Split(episode => episode.IsPilot, out var pilots, out var nonPilots);
 
                 foreach (var pilot in pilots)
                 {
@@ -279,7 +279,7 @@
             padEpisodeName = 1;
             padAddInfo = 1;
 
-            foreach (EpisodeData data in list)
+            foreach (var data in list)
             {
                 if (data.DisplayName.Length > padSeriesName)
                 {

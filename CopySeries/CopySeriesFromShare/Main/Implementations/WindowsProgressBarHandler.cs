@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.CopySeries.Main.Implementations
 {
-    using System;
     using Microsoft.WindowsAPICodePack.Taskbar;
 
     internal sealed class WindowsProgressBarHandler : IWindowsProgressBarHandler

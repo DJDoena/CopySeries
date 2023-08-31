@@ -4,7 +4,7 @@
     {
         public static void Main()
         {
-            DirAtTargetSettings settings = DirAtTargetSettings.Default;
+            var settings = DirAtTargetSettings.Default;
 
             Dir.CreateFileList(settings.StickDrive, settings.TargetPath);
         }

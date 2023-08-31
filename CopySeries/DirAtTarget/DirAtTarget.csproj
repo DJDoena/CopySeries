@@ -11,18 +11,18 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Update="DirAtTargetSettings.Designer.cs">
-	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>DirAtTargetSettings.settings</DependentUpon>
-	  </Compile>
+		<Compile Update="DirAtTargetSettings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>DirAtTargetSettings.settings</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="DirAtTargetSettings.settings">
-	    <Generator>SettingsSingleFileGenerator</Generator>
-	    <LastGenOutput>DirAtTargetSettings.Designer.cs</LastGenOutput>
-	  </None>
+		<None Update="DirAtTargetSettings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>DirAtTargetSettings.Designer.cs</LastGenOutput>
+		</None>
 	</ItemGroup>
 
 </Project>

@@ -11,22 +11,22 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj" />
+		<ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="DirAtSourceSettings.Designer.cs">
-	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>DirAtSourceSettings.settings</DependentUpon>
-	  </Compile>
+		<Compile Update="DirAtSourceSettings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>DirAtSourceSettings.settings</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="DirAtSourceSettings.settings">
-	    <Generator>SettingsSingleFileGenerator</Generator>
-	    <LastGenOutput>DirAtSourceSettings.Designer.cs</LastGenOutput>
-	  </None>
+		<None Update="DirAtSourceSettings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>DirAtSourceSettings.Designer.cs</LastGenOutput>
+		</None>
 	</ItemGroup>
 
 </Project>

@@ -1,8 +1,6 @@
 ﻿namespace DoenaSoft.CopySeries.Main
 {
-    using System;
-
-    interface IFileEntryViewModel
+    internal interface IFileEntryViewModel
     {
         string DisplayName { get; }
 
