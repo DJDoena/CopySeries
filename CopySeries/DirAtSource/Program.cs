@@ -1,30 +1,30 @@
-﻿namespace DoenaSoft.CopySeries
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-    using ToolBox.Generics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using DoenaSoft.ToolBox.Generics;
 
+namespace DoenaSoft.CopySeries
+{
     public static class Program
     {
-        private static String TargetDir { get; } = DirAtSourceSettings.Default.LocalDir;
+        private static string TargetDir { get; } = DirAtSourceSettings.Default.LocalDir;
 
-        private static String DirFile { get; } = DirAtSourceSettings.Default.StickDrive + "dir@home.txt";
+        private static string DirFile { get; } = DirAtSourceSettings.Default.StickDrive + "dir@home.txt";
 
-        private static String RemoteDirFile { get; } = DirAtSourceSettings.Default.StickDrive + "dir.txt";
+        private static string RemoteDirFile { get; } = DirAtSourceSettings.Default.StickDrive + "dir.txt";
 
-        private static String FileTypesFile { get; } = DirAtSourceSettings.Default.StickDrive + "FileTypes.xml";
+        private static string FileTypesFile { get; } = DirAtSourceSettings.Default.StickDrive + "FileTypes.xml";
 
-        private static String BeyondCompareFile { get; } = DirAtSourceSettings.Default.BeyondCompare;
+        private static string BeyondCompareFile { get; } = DirAtSourceSettings.Default.BeyondCompare;
 
         [STAThread]
-        static void Main(String[] args)
+        private static void Main(string[] args)
         {
-            Dictionary<String, List<String>> dict = new Dictionary<String, List<String>>();
+            var dict = new Dictionary<string, List<string>>();
 
-            Boolean full = false;
+            var full = false;
 
             if ((args?.Length > 0) && (args[0] == "/full"))
             {
@@ -33,21 +33,21 @@
 
             if (full == false)
             {
-                using (FileStream fs = new FileStream(RemoteDirFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var fs = new FileStream(RemoteDirFile, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    using (StreamReader sr = new StreamReader(fs, Encoding.GetEncoding(1252)))
+                    using (var sr = new StreamReader(fs, Encoding.GetEncoding(1252)))
                     {
                         while (sr.EndOfStream == false)
                         {
-                            String line = sr.ReadLine();
+                            var line = sr.ReadLine();
 
-                            String[] split = line.Split('\\');
+                            var split = line.Split('\\');
 
                             if (split.Length > 3)
                             {
-                                String key = split[0] + @"\" + split[1] + @"\" + split[2];
+                                var key = split[0] + @"\" + split[1] + @"\" + split[2];
 
-                                List<String> extensions;
+                                List<string> extensions;
                                 if (dict.TryGetValue(key, out extensions) == false)
                                 {
                                     dict.Add(key, null);
@@ -58,32 +58,32 @@
                 }
             }
 
-            FileTypes fileTypes = Serializer<FileTypes>.Deserialize(FileTypesFile);
+            var fileTypes = Serializer<FileTypes>.Deserialize(FileTypesFile);
 
-            List<String> allFiles;
+            List<string> allFiles;
             if (fileTypes.FileTypeList != null)
             {
-                allFiles = new List<String>(2500);
+                allFiles = new List<string>(2500);
 
-                foreach (String fileType in fileTypes.FileTypeList)
+                foreach (var fileType in fileTypes.FileTypeList)
                 {
                     allFiles.AddRange(Directory.GetFiles(TargetDir, "*." + fileType, SearchOption.AllDirectories));
                 }
             }
             else
             {
-                allFiles = new List<String>(0);
+                allFiles = new List<string>(0);
             }
 
             allFiles.Sort();
 
-            using (FileStream fs = new FileStream(DirFile, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (var fs = new FileStream(DirFile, FileMode.Create, FileAccess.Write, FileShare.None))
             {
-                using (StreamWriter sw = new StreamWriter(fs, Encoding.GetEncoding(1252)))
+                using (var sw = new StreamWriter(fs, Encoding.GetEncoding(1252)))
                 {
-                    foreach (String file in allFiles)
+                    foreach (var file in allFiles)
                     {
-                        String shortFile = file.Replace(TargetDir, "");
+                        var shortFile = file.Replace(TargetDir, "");
 
                         if (shortFile.StartsWith(@"sonstiges\"))
                         {
@@ -102,12 +102,12 @@
 
                         if (full == false)
                         {
-                            String[] split = shortFile.Split('\\');
+                            var split = shortFile.Split('\\');
 
                             if (split.Length > 3)
                             {
-                                List<String> extensions;
-                                String key = split[0] + @"\" + split[1] + @"\" + split[2];
+                                List<string> extensions;
+                                var key = split[0] + @"\" + split[1] + @"\" + split[2];
 
                                 if (dict.TryGetValue(key, out extensions) == false)
                                 {

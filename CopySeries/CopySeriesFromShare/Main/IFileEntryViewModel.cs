@@ -4,8 +4,8 @@
 
     interface IFileEntryViewModel
     {
-        String DisplayName { get; }
+        string DisplayName { get; }
 
-        String FullName { get; }
+        string FullName { get; }
     }
 }

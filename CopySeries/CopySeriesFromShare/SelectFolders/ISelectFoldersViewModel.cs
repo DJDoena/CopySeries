@@ -6,9 +6,9 @@
 
     internal interface ISelectFoldersViewModel
     {
-        IEnumerable<String> Folders { get; }
+        IEnumerable<string> Folders { get; }
 
-        IEnumerable<String> SelectedFolders { get; }
+        IEnumerable<string> SelectedFolders { get; }
 
         ICommand AcceptCommand { get; }
 

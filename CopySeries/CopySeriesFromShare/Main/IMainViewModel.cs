@@ -1,59 +1,59 @@
-﻿namespace DoenaSoft.CopySeries.Main
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Windows.Input;
-    using ToolBox.Commands;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Input;
+using DoenaSoft.AbstractionLayer.Commands;
 
+namespace DoenaSoft.CopySeries.Main
+{
     internal interface IMainViewModel : INotifyPropertyChanged
     {
-        String Filter { get; set; }
+        string Filter { get; set; }
 
         #region CheckBoxes
 
-        Boolean NoSubs { get; set; }
+        bool NoSubs { get; set; }
 
-        Boolean OnlyHDs { get; set; }
+        bool OnlyHDs { get; set; }
 
-        Boolean OnlySDs { get; set; }
+        bool OnlySDs { get; set; }
 
-        Boolean AutoApplyFilter { get; set; }
+        bool AutoApplyFilter { get; set; }
 
-        Boolean PreserveSubFolders { get; set; }
+        bool PreserveSubFolders { get; set; }
 
-        Boolean IgnoreResolutionFolders { get; set; }
+        bool IgnoreResolutionFolders { get; set; }
 
         #endregion
 
-        String TargetPath { get; set; }
+        string TargetPath { get; set; }
 
         ObservableCollection<IFileEntryViewModel> FileEntries { get; }
 
         DateTime LastUsed { get; set; }
 
-        String Size { get; }
+        string Size { get; }
 
         #region OverwriteOptions
 
-        IEnumerable<String> OverwriteOptions { get; }
+        IEnumerable<string> OverwriteOptions { get; }
 
-        String SelectedOverwriteOption { get; set; }
+        string SelectedOverwriteOption { get; set; }
 
         #endregion
 
         #region Progress
 
-        Boolean TaskIsRunning { get; }
+        bool TaskIsRunning { get; }
 
-        Boolean TaskIsNotRunning { get; }
+        bool TaskIsNotRunning { get; }
 
-        Int32 ProgressMax { get; }
+        int ProgressMax { get; }
 
-        Int32 ProgressValue { get; }
+        int ProgressValue { get; }
 
-        String ProgressText { get; }
+        string ProgressText { get; }
 
         #endregion
 

@@ -11,23 +11,23 @@
     {
         #region IMultiValueConverter
 
-        public Object Convert(Object[] values
+        public object Convert(object[] values
             , Type targetType
-            , Object parameter
+            , object parameter
             , CultureInfo culture)
         {
             ICloseable closeable = (ICloseable)(values[0]);
 
-            IEnumerable<String> selectedFolders = ((IList)(values[1])).Cast<String>();
+            IEnumerable<string> selectedFolders = ((IList)(values[1])).Cast<string>();
 
             IAcceptButtonCommandParameters parameters = new AcceptButtonCommandParameters(selectedFolders, closeable);
 
             return (parameters);
         }
 
-        public Object[] ConvertBack(Object value
+        public object[] ConvertBack(object value
             , Type[] targetTypes
-            , Object parameter
+            , object parameter
             , CultureInfo culture)
         {
             throw (new NotSupportedException());

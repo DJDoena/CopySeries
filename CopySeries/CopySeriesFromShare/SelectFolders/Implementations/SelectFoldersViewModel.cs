@@ -1,17 +1,16 @@
-﻿namespace DoenaSoft.CopySeries.SelectFolders.Implementations
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows.Input;
-    using AbstractionLayer.IOServices;
-    using ToolBox.Commands;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
+using DoenaSoft.AbstractionLayer.Commands;
+using DoenaSoft.AbstractionLayer.IOServices;
 
+namespace DoenaSoft.CopySeries.SelectFolders.Implementations
+{
     internal sealed class SelectFoldersViewModel : ISelectFoldersViewModel
     {
         #region Properties
 
-        private IEnumerable<String> ExcludeList
+        private IEnumerable<string> ExcludeList
         {
             get
             {
@@ -35,9 +34,9 @@
 
         #region ISelectFoldersViewModel
 
-        public IEnumerable<String> Folders { get; private set; }
+        public IEnumerable<string> Folders { get; private set; }
 
-        public IEnumerable<String> SelectedFolders { get; private set; }
+        public IEnumerable<string> SelectedFolders { get; private set; }
 
         public ICommand AcceptCommand
             => (new ParameterizedRelayCommand(Accept));
@@ -49,21 +48,21 @@
 
         #region Methods
 
-        private Boolean NotInExcludeList(String folder)
+        private bool NotInExcludeList(string folder)
             => (ExcludeList.Contains(folder) == false);
 
-        private String GetFolderName(String folder)
+        private string GetFolderName(string folder)
         {
-            String[] split = folder.Split('\\');
+            var split = folder.Split('\\');
 
             folder = split[split.Length - 1];
 
             return (folder);
         }
 
-        private void Accept(Object parameter)
+        private void Accept(object parameter)
         {
-            IAcceptButtonCommandParameters parameters = (IAcceptButtonCommandParameters)parameter;
+            var parameters = (IAcceptButtonCommandParameters)parameter;
 
             SelectedFolders = parameters.SelectedFolders;
 
@@ -72,11 +71,11 @@
             parameters.Closeable.Close();
         }
 
-        private void Cancel(Object parameter)
+        private void Cancel(object parameter)
         {
             SelectedFolders = null;
 
-            ICloseable closeable = (ICloseable)parameter;
+            var closeable = (ICloseable)parameter;
 
             closeable.DialogResult = false;
 

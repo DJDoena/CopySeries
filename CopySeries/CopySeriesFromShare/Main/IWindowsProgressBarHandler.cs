@@ -4,7 +4,7 @@
 
     internal interface IWindowsProgressBarHandler
     {
-        void Set(Int32 value
-            , Int32 max);
+        void Set(int value
+            , int max);
     }
 }

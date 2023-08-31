@@ -1,25 +1,25 @@
-﻿namespace DoenaSoft.CopySeries.Filter.Implementations
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Windows.Input;
-    using CopySeries.Implementations;
-    using ToolBox.Commands;
-    using ToolBox.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Input;
+using DoenaSoft.AbstractionLayer.Commands;
+using DoenaSoft.CopySeries.Implementations;
+using DoenaSoft.ToolBox.Extensions;
 
+namespace DoenaSoft.CopySeries.Filter.Implementations
+{
     internal sealed class FilterViewModel : IFilterViewModel
     {
         #region Fields
 
-        private Boolean m_NoSubs;
+        private bool m_NoSubs;
 
-        private Boolean m_OnlyHDs;
+        private bool m_OnlyHDs;
 
-        private Boolean m_OnlySDs;
+        private bool m_OnlySDs;
 
-        private String m_Filter;
+        private string m_Filter;
 
         #endregion
 
@@ -46,7 +46,7 @@
 
         #region IFilterViewModel
 
-        public Boolean NoSubs
+        public bool NoSubs
         {
             get
             {
@@ -63,7 +63,7 @@
             }
         }
 
-        public Boolean OnlyHDs
+        public bool OnlyHDs
         {
             get
             {
@@ -85,7 +85,7 @@
             }
         }
 
-        public Boolean OnlySDs
+        public bool OnlySDs
         {
             get
             {
@@ -107,7 +107,7 @@
             }
         }
 
-        public String Filter
+        public string Filter
         {
             get
             {
@@ -145,14 +145,14 @@
 
         private void SelectFolders()
         {
-            IEnumerable<String> selectedShows;
+            IEnumerable<string> selectedShows;
             if (WindowFactory.OpenSelectFoldersWindow(out selectedShows))
             {
                 Filter = Transform(Environment.NewLine, selectedShows);
             }
         }
 
-        private void Accept(Object parameter)
+        private void Accept(object parameter)
         {
             Properties.Settings.Default.NoSubs = NoSubs;
             Properties.Settings.Default.OnlyHD = OnlyHDs;
@@ -160,16 +160,16 @@
 
             Properties.Settings.Default.Filter = Transform(";");
 
-            ICloseable closeable = (ICloseable)parameter;
+            var closeable = (ICloseable)parameter;
 
             closeable.DialogResult = true;
 
             closeable.Close();
         }
 
-        private void Cancel(Object parameter)
+        private void Cancel(object parameter)
         {
-            ICloseable closeable = (ICloseable)parameter;
+            var closeable = (ICloseable)parameter;
 
             closeable.DialogResult = false;
 
@@ -177,15 +177,15 @@
         }
 
 
-        private void RaisePropertyChanged(String attribute)
+        private void RaisePropertyChanged(string attribute)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
         }
 
-        private String Transform(String separator
-            , IEnumerable<String> additionalShows = null)
+        private string Transform(string separator
+            , IEnumerable<string> additionalShows = null)
         {
-            IEnumerable<String> selectedShows = Split(Filter);
+            IEnumerable<string> selectedShows = Split(Filter);
 
             if (additionalShows != null)
             {
@@ -194,25 +194,25 @@
 
             selectedShows = Clean(selectedShows);
 
-            String filter = String.Join(separator, selectedShows.ToArray());
+            var filter = string.Join(separator, selectedShows.ToArray());
 
             return (filter);
         }
 
-        private static String[] Split(String filter)
+        private static string[] Split(string filter)
             => (filter.Split('\r', '\n'));
 
-        private IEnumerable<String> Clean(IEnumerable<String> input)
+        private IEnumerable<string> Clean(IEnumerable<string> input)
         {
-            IEnumerable<String> output = Enumerable.Empty<String>();
+            var output = Enumerable.Empty<string>();
 
             if (input.HasItems())
             {
-                input = input.Where(show => show.Trim() != String.Empty);
+                input = input.Where(show => show.Trim() != string.Empty);
 
-                HashSet<String> hashed = new HashSet<String>(input);
+                var hashed = new HashSet<string>(input);
 
-                List<String> sorted = new List<String>(hashed);
+                var sorted = new List<string>(hashed);
 
                 sorted.Sort(SortHelper.CompareSeries);
 

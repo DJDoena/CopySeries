@@ -12,7 +12,7 @@
     {
         #region Fields
 
-        private Nullable<UInt64> m_Size;
+        private Nullable<ulong> m_Size;
 
         #endregion
 
@@ -22,11 +22,11 @@
 
         private IIOServices IOServices { get; }
 
-        private HashSet<String> HashedEntries { get; }
+        private HashSet<string> HashedEntries { get; }
 
-        private String TargetLocation { get; set; }
+        private string TargetLocation { get; set; }
 
-        private String Overwrite { get; set; }
+        private string Overwrite { get; set; }
 
         private CancellationToken CancellationToken { get; set; }
 
@@ -40,7 +40,7 @@
             UIServices = uiServices;
             IOServices = ioServices;
 
-            HashedEntries = new HashSet<String>();
+            HashedEntries = new HashSet<string>();
         }
 
         #endregion
@@ -49,10 +49,10 @@
 
         #region Properties
 
-        public IEnumerable<String> Entries
+        public IEnumerable<string> Entries
             => (HashedEntries);
 
-        public Boolean PreserveSubFolders
+        public bool PreserveSubFolders
         {
             get
             {
@@ -64,7 +64,7 @@
             }
         }
 
-        public Boolean IgnoreResolutionFolders
+        public bool IgnoreResolutionFolders
         {
             get
             {
@@ -76,7 +76,7 @@
             }
         }
 
-        public UInt64 Size
+        public ulong Size
         {
             get
             {
@@ -89,7 +89,7 @@
             }
         }
 
-        public UInt64 ProgressValue { get; private set; }
+        public ulong ProgressValue { get; private set; }
 
         #endregion
 
@@ -105,7 +105,7 @@
 
         #region Methods
 
-        public void AddEntry(String entry)
+        public void AddEntry(string entry)
         {
             HashedEntries.Add(entry);
 
@@ -119,14 +119,14 @@
             ResetSize();
         }
 
-        public void RemoveEntry(String entry)
+        public void RemoveEntry(string entry)
         {
             HashedEntries.Remove(entry);
 
             ResetSize();
         }
 
-        public void ReadXml(String fileName)
+        public void ReadXml(string fileName)
         {
             try
             {
@@ -134,7 +134,7 @@
                 {
                     RecentFiles recentFiles = Serializer<RecentFiles>.Deserialize(fs);
 
-                    foreach (String file in recentFiles.Files)
+                    foreach (string file in recentFiles.Files)
                     {
                         if (IOServices.File.Exists(file))
                         {
@@ -149,21 +149,21 @@
             }
         }
 
-        public void ApplyFilter(IEnumerable<String> filter
-            , Boolean noSubs
-            , Boolean onlyHDs
-            , Boolean onlySDs)
+        public void ApplyFilter(IEnumerable<string> filter
+            , bool noSubs
+            , bool onlyHDs
+            , bool onlySDs)
         {
-            List<String> entries = Entries.ToList();
+            List<string> entries = Entries.ToList();
 
-            foreach (String entry in entries)
+            foreach (string entry in entries)
             {
                 if ((entry.Contains(" 1x01")) || (entry.Contains(" 1x00")))
                 {
                     continue;
                 }
 
-                Boolean isValid = CheckFilter(entry, filter);
+                bool isValid = CheckFilter(entry, filter);
 
                 if (isValid)
                 {
@@ -177,8 +177,8 @@
             }
         }
 
-        public void Copy(String targetLocation
-            , String overwrite
+        public void Copy(string targetLocation
+            , string overwrite
             , CancellationToken cancellationToken)
         {
             TargetLocation = targetLocation;
@@ -189,11 +189,11 @@
 
             List<SourceTarget> fileInfos = new List<SourceTarget>();
 
-            foreach (String entry in Entries)
+            foreach (string entry in Entries)
             {
                 if (IOServices.Folder.Exists(entry))
                 {
-                    IEnumerable<String> files = IOServices.Folder.GetFileNames(entry, searchOption: System.IO.SearchOption.AllDirectories);
+                    IEnumerable<string> files = IOServices.Folder.GetFileNames(entry, searchOption: System.IO.SearchOption.AllDirectories);
 
                     fileInfos.AddRange(files.Select(file => new SourceTarget(IOServices.GetFileInfo(file))));
                 }
@@ -241,7 +241,7 @@
 
         private void Copy(List<SourceTarget> fileInfos)
         {
-            Boolean taskCancelled = false;
+            bool taskCancelled = false;
 
             try
             {
@@ -249,7 +249,7 @@
                 {
                     if (CancellationToken.IsCancellationRequested)
                     {
-                        UIServices.ShowMessageBox("The Copy process was aborted.", String.Empty, Buttons.OK, Icon.Warning);
+                        UIServices.ShowMessageBox("The Copy process was aborted.", string.Empty, Buttons.OK, Icon.Warning);
 
                         taskCancelled = true;
 
@@ -282,23 +282,23 @@
 
                 if (taskCancelled == false)
                 {
-                    UIServices.ShowMessageBox("Copy Finished.", String.Empty, Buttons.OK, Icon.Information);
+                    UIServices.ShowMessageBox("Copy Finished.", string.Empty, Buttons.OK, Icon.Information);
                 }
             }
         }
 
-        private Boolean CommenceCopy(List<SourceTarget> fileInfos)
+        private bool CommenceCopy(List<SourceTarget> fileInfos)
         {
             foreach (SourceTarget fileInfo in fileInfos)
             {
                 if (CancellationToken.IsCancellationRequested)
                 {
-                    UIServices.ShowMessageBox("The Copy process was aborted.", String.Empty, Buttons.OK, Icon.Warning);
+                    UIServices.ShowMessageBox("The Copy process was aborted.", string.Empty, Buttons.OK, Icon.Warning);
 
                     return (true);
                 }
 
-                String path = IOServices.Path.Combine(fileInfo.TargetFolder.FullName, fileInfo.SourceFile.Name);
+                string path = IOServices.Path.Combine(fileInfo.TargetFolder.FullName, fileInfo.SourceFile.Name);
 
                 IFileInfo targetFileInfo = IOServices.GetFileInfo(path);
 
@@ -329,11 +329,11 @@
                     }
                     catch (Exception ex)
                     {
-                        Int64 startTicks = DateTime.Now.Ticks;
+                        long startTicks = DateTime.Now.Ticks;
 
                         if (UIServices.ShowMessageBox(ex.Message + "\nContinue?", "Continue?", Buttons.YesNo, Icon.Question) == Result.Yes)
                         {
-                            Int64 endTicks = DateTime.Now.Ticks;
+                            long endTicks = DateTime.Now.Ticks;
 
                             TimeSpan span = new TimeSpan(endTicks - startTicks);
 
@@ -367,11 +367,11 @@
 
                 if (Overwrite == OverwriteOptionConstants.Ask)
                 {
-                    Int64 startTicks = DateTime.Now.Ticks;
+                    long startTicks = DateTime.Now.Ticks;
 
                     result = UIServices.ShowMessageBox("Overwrite \"" + target.FullName + "\"\nfrom \"" + source.SourceFile.FullName + "\"?", "Overwrite?", Buttons.YesNoCancel, Icon.Question);
 
-                    Int64 endTicks = DateTime.Now.Ticks;
+                    long endTicks = DateTime.Now.Ticks;
 
                     TimeSpan span = new TimeSpan(endTicks - startTicks);
 
@@ -388,16 +388,16 @@
 
         private void EnsureSubFolders(SourceTarget fileInfo)
         {
-            String directoryName = fileInfo.SourceFile.FolderName;
+            string directoryName = fileInfo.SourceFile.FolderName;
 
-            String newPath;
+            string newPath;
             if (directoryName.StartsWith(Properties.Settings.Default.SourcePath))
             {
-                newPath = directoryName.Replace(Properties.Settings.Default.SourcePath, String.Empty);
+                newPath = directoryName.Replace(Properties.Settings.Default.SourcePath, string.Empty);
             }
             else
             {
-                Int32 indexOfFirstBackSlash;
+                int indexOfFirstBackSlash;
 
                 indexOfFirstBackSlash = directoryName.IndexOf(@"\");
 
@@ -412,7 +412,7 @@
                 }
             }
 
-            String path = IOServices.Path.Combine(TargetLocation, newPath);
+            string path = IOServices.Path.Combine(TargetLocation, newPath);
 
             fileInfo.TargetFolder = IOServices.GetFolderInfo(path);
 
@@ -424,16 +424,16 @@
 
         #endregion
 
-        private static Boolean CheckFilter(String entry
-            , IEnumerable<String> filter)
+        private static bool CheckFilter(string entry
+            , IEnumerable<string> filter)
         {
-            Boolean isValid = true;
+            bool isValid = true;
 
             if (filter.Any())
             {
                 isValid = false;
 
-                foreach (String series in filter)
+                foreach (string series in filter)
                 {
                     if (entry.Contains(@"\" + series + @"\"))
                     {
@@ -449,12 +449,12 @@
 
         #region CheckExtension
 
-        private Boolean CheckExtension(String entry
-            , Boolean noSubs
-            , Boolean onlyHDs
-            , Boolean onlySDs)
+        private bool CheckExtension(string entry
+            , bool noSubs
+            , bool onlyHDs
+            , bool onlySDs)
         {
-            Boolean isValid = true;
+            bool isValid = true;
 
             if ((noSubs) && (entry.EndsWith(".srt")))
             {
@@ -485,40 +485,40 @@
             return (isValid);
         }
 
-        private static Boolean IsSD(String entry)
+        private static bool IsSD(string entry)
         {
-            const String SDMkv = ".480.mkv";
-            const String SDMp4 = ".480.mp4";
+            const string SDMkv = ".480.mkv";
+            const string SDMp4 = ".480.mp4";
 
-            Boolean isSD = ((entry.EndsWith(SDMkv)) || (entry.EndsWith(SDMp4)));
+            bool isSD = ((entry.EndsWith(SDMkv)) || (entry.EndsWith(SDMp4)));
 
             return (isSD);
         }
 
-        private static Boolean IsNotSD(String entry)
+        private static bool IsNotSD(string entry)
             => (IsSD(entry) == false);
 
-        private Boolean CheckForPartner(String currentFile
-            , Boolean toHD)
+        private bool CheckForPartner(string currentFile
+            , bool toHD)
         {
-            Boolean valid = true;
+            bool valid = true;
 
             IFileInfo fi = IOServices.GetFileInfo(currentFile);
 
-            String fileWithoutExtension = fi.Name.Substring(0, fi.Name.LastIndexOf("."));
+            string fileWithoutExtension = fi.Name.Substring(0, fi.Name.LastIndexOf("."));
 
             if ((fileWithoutExtension.EndsWith(".480")) || (fileWithoutExtension.EndsWith(".720")) || (fileWithoutExtension.EndsWith(".1080")))
             {
                 fileWithoutExtension = fileWithoutExtension.Substring(0, fileWithoutExtension.LastIndexOf("."));
             }
 
-            IEnumerable<String> partners = toHD ? GetHDExtensions() : GetSDExtensions();
+            IEnumerable<string> partners = toHD ? GetHDExtensions() : GetSDExtensions();
 
-            foreach (String partner in partners)
+            foreach (string partner in partners)
             {
-                String folder = fi.FolderName + @"\..\" + (toHD ? "HD" : "SD");
+                string folder = fi.FolderName + @"\..\" + (toHD ? "HD" : "SD");
 
-                String fileInQuestion = folder + @"\" + fileWithoutExtension + partner;
+                string fileInQuestion = folder + @"\" + fileWithoutExtension + partner;
 
                 if (IOServices.File.Exists(fileInQuestion))
                 {
@@ -531,7 +531,7 @@
             return (valid);
         }
 
-        private static IEnumerable<String> GetSDExtensions()
+        private static IEnumerable<string> GetSDExtensions()
         {
             yield return (".480.mkv");
             yield return (".480.mp4");
@@ -540,7 +540,7 @@
             yield return (".flv");
         }
 
-        private static IEnumerable<String> GetHDExtensions()
+        private static IEnumerable<string> GetHDExtensions()
         {
             yield return (".1080.mkv");
             yield return (".720.mkv");
@@ -553,11 +553,11 @@
 
         #region CalculateSize
 
-        private UInt64 CalculateSize()
+        private ulong CalculateSize()
         {
-            UInt64 size = 0;
+            ulong size = 0;
 
-            foreach (String entry in Entries)
+            foreach (string entry in Entries)
             {
                 GetEntrySize(entry, ref size);
             }
@@ -565,8 +565,8 @@
             return (size);
         }
 
-        private void GetEntrySize(String entry
-            , ref UInt64 size)
+        private void GetEntrySize(string entry
+            , ref ulong size)
         {
             if (IOServices.Folder.Exists(entry))
             {
@@ -578,19 +578,19 @@
             }
         }
 
-        private void GetFolderSize(String folder
-            , ref UInt64 size)
+        private void GetFolderSize(string folder
+            , ref ulong size)
         {
-            IEnumerable<String> files = IOServices.Folder.GetFileNames(folder, searchOption: System.IO.SearchOption.AllDirectories);
+            IEnumerable<string> files = IOServices.Folder.GetFileNames(folder, searchOption: System.IO.SearchOption.AllDirectories);
 
-            foreach (String file in files)
+            foreach (string file in files)
             {
                 GetFileSize(file, ref size);
             }
         }
 
-        private void GetFileSize(String file
-            , ref UInt64 bytes)
+        private void GetFileSize(string file
+            , ref ulong bytes)
         {
             IFileInfo fi = IOServices.GetFileInfo(file);
 

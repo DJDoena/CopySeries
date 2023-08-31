@@ -1,23 +1,22 @@
-﻿namespace DoenaSoft.CopySeries.Main.Implementations
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading;
+using System.Windows;
+using System.Windows.Input;
+using DoenaSoft.AbstractionLayer.Commands;
+using DoenaSoft.AbstractionLayer.IOServices;
+using DoenaSoft.AbstractionLayer.Threading;
+using DoenaSoft.AbstractionLayer.UIServices;
+using DoenaSoft.CopySeries.Implementations;
+using DoenaSoft.ToolBox.Extensions;
+using DoenaSoft.ToolBox.Generics;
+
+namespace DoenaSoft.CopySeries.Main.Implementations
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Threading;
-    using System.Windows;
-    using System.Windows.Input;
-    using AbstractionLayer.IOServices;
-    using AbstractionLayer.UIServices;
-    using CopySeries.Implementations;
-    using ToolBox.Commands;
-    using ToolBox.Extensions;
-    using ToolBox.Generics;
-    using ToolBox.Threading;
-
-
     internal sealed class MainViewModel : IMainViewModel
     {
         #region Fields
@@ -27,21 +26,21 @@
         /// <summary>
         /// for access: only use the property to make sure it's thread-safe
         /// </summary>
-        private Boolean m_TaskIsRunning;
+        private bool m_TaskIsRunning;
 
         /// <summary>
         /// for access: only use the property to make sure it's thread-safe
         /// </summary>
-        private Int32 m_ProgressValue;
+        private int m_ProgressValue;
 
         /// <summary>
         /// for access: only use the property to make sure it's thread-safe
         /// </summary>
-        private Int32 m_ProgressMax;
+        private int m_ProgressMax;
 
         #endregion
 
-        private String m_SelectedOverwriteOption;
+        private string m_SelectedOverwriteOption;
 
         private ICancelableCommand m_CopyCommand;
 
@@ -63,13 +62,13 @@
 
         private ISynchronizer Synchronizer { get; }
 
-        private String LastFolder { get; set; }
+        private string LastFolder { get; set; }
 
-        private UInt64 Divider
+        private ulong Divider
         {
             get
             {
-                UInt64 divider = 1;
+                ulong divider = 1;
 
                 if (Model.Size >= Math.Pow(2, 40) * 2)
                 {
@@ -118,7 +117,7 @@
             {
                 Func<ObservableCollection<IFileEntryViewModel>> func = () =>
                     {
-                        List<FileEntryViewModel> list = Model.Entries.Select(item => new FileEntryViewModel(item)).ToList();
+                        var list = Model.Entries.Select(item => new FileEntryViewModel(item)).ToList();
 
                         list.Sort(SortHelper.CompareFileEntries);
 
@@ -129,12 +128,12 @@
             }
         }
 
-        public String Size
+        public string Size
             => ((new FileSize(Model.Size)).ToString());
 
         #region CheckBoxes
 
-        public Boolean NoSubs
+        public bool NoSubs
         {
             get
             {
@@ -153,7 +152,7 @@
             }
         }
 
-        public Boolean OnlyHDs
+        public bool OnlyHDs
         {
             get
             {
@@ -177,7 +176,7 @@
             }
         }
 
-        public Boolean OnlySDs
+        public bool OnlySDs
         {
             get
             {
@@ -201,7 +200,7 @@
             }
         }
 
-        public Boolean IgnoreResolutionFolders
+        public bool IgnoreResolutionFolders
         {
             get
             {
@@ -220,7 +219,7 @@
             }
         }
 
-        public Boolean PreserveSubFolders
+        public bool PreserveSubFolders
         {
             get
             {
@@ -237,7 +236,7 @@
             }
         }
 
-        public Boolean AutoApplyFilter
+        public bool AutoApplyFilter
         {
             get
             {
@@ -258,7 +257,7 @@
 
         #endregion
 
-        public String Filter
+        public string Filter
         {
             get
             {
@@ -298,11 +297,11 @@
             }
         }
 
-        public String TargetPath
+        public string TargetPath
         {
             get
             {
-                String targetPath = Properties.Settings.Default.TargetPath;
+                var targetPath = Properties.Settings.Default.TargetPath;
 
                 if (IOServices.Folder.Exists(targetPath) == false)
                 {
@@ -324,7 +323,7 @@
 
         #region OverwriteOptions
 
-        public IEnumerable<String> OverwriteOptions
+        public IEnumerable<string> OverwriteOptions
         {
             get
             {
@@ -334,7 +333,7 @@
             }
         }
 
-        public String SelectedOverwriteOption
+        public string SelectedOverwriteOption
         {
             get
             {
@@ -355,7 +354,7 @@
 
         #region Progress
 
-        public Int32 ProgressMax
+        public int ProgressMax
         {
             get
             {
@@ -380,7 +379,7 @@
             }
         }
 
-        public Int32 ProgressValue
+        public int ProgressValue
         {
             get
             {
@@ -405,22 +404,22 @@
             }
         }
 
-        public String ProgressText
+        public string ProgressText
         {
             get
             {
-                Func<String> func = () =>
+                Func<string> func = () =>
                 {
-                    if ((TaskIsNotRunning) || (ProgressMax == Int32.MaxValue))
+                    if ((TaskIsNotRunning) || (ProgressMax == int.MaxValue))
                     {
-                        return (String.Empty);
+                        return (string.Empty);
                     }
 
-                    String remaining = RemainingTimeCalculator.Get(ProgressValue, ProgressMax);
+                    var remaining = RemainingTimeCalculator.Get(ProgressValue, ProgressMax);
 
-                    FileSize progressSize = new FileSize(Model.ProgressValue);
+                    var progressSize = new FileSize(Model.ProgressValue);
 
-                    FileSize maxSize = new FileSize(Model.Size);
+                    var maxSize = new FileSize(Model.Size);
 
                     return ($"{progressSize} / {maxSize} {remaining}");
                 };
@@ -429,7 +428,7 @@
             }
         }
 
-        public Boolean TaskIsRunning
+        public bool TaskIsRunning
         {
             get
             {
@@ -455,7 +454,7 @@
             }
         }
 
-        public Boolean TaskIsNotRunning
+        public bool TaskIsNotRunning
             => (TaskIsRunning == false);
 
         #endregion
@@ -533,7 +532,7 @@
 
         #region Commands
 
-        private Boolean CanExecute()
+        private bool CanExecute()
             => (TaskIsNotRunning);
 
         private void EditFilter()
@@ -551,13 +550,13 @@
 
         private void SelectTarget()
         {
-            FolderBrowserDialogOptions options = new FolderBrowserDialogOptions();
+            var options = new FolderBrowserDialogOptions();
 
             options.ShowNewFolderButton = true;
             options.SelectedPath = TargetPath;
             options.Description = "Select Target Folder";
 
-            String targetPath;
+            string targetPath;
             if (UIServices.ShowFolderBrowserDialog(options, out targetPath))
             {
                 TargetPath = targetPath;
@@ -566,19 +565,19 @@
 
         private void AddFiles()
         {
-            OpenFileDialogOptions options = new OpenFileDialogOptions();
+            var options = new OpenFileDialogOptions();
 
             options.CheckFileExists = true;
             options.Filter = "Film files|*.avi;*.srt;*.mkv;*.mp4;*.flv|Recent files|RecentFiles.*.xml|All files|*.*";
             options.InitialFolder = LastFolder;
             options.Title = "Select File(s) to Copy";
 
-            String[] fileNames;
+            string[] fileNames;
             if (UIServices.ShowOpenFileDialog(options, out fileNames))
             {
                 LastFolder = IOServices.GetFileInfo(fileNames[0]).FolderName;
 
-                foreach (String file in fileNames)
+                foreach (var file in fileNames)
                 {
                     if ((file.Contains("RecentFiles")) && (file.EndsWith(".xml")))
                     {
@@ -598,13 +597,13 @@
 
         private void AddFolder()
         {
-            FolderBrowserDialogOptions options = new FolderBrowserDialogOptions();
+            var options = new FolderBrowserDialogOptions();
 
             options.ShowNewFolderButton = false;
             options.SelectedPath = LastFolder;
             options.Description = "Select Folder to Copy";
 
-            String folder;
+            string folder;
             if (UIServices.ShowFolderBrowserDialog(options, out folder))
             {
                 Model.AddEntry(folder);
@@ -613,14 +612,14 @@
             }
         }
 
-        private Boolean CanRemoveEntries(Object parameter)
+        private bool CanRemoveEntries(object parameter)
             => ((CanExecute()) && (((IList)parameter).Count > 0));
 
-        private void RemoveEntries(Object parameter)
+        private void RemoveEntries(object parameter)
         {
-            IEnumerable<IFileEntryViewModel> entries = ((IList)parameter).Cast<IFileEntryViewModel>();
+            var entries = ((IList)parameter).Cast<IFileEntryViewModel>();
 
-            foreach (IFileEntryViewModel entry in entries)
+            foreach (var entry in entries)
             {
                 Model.RemoveEntry(entry.FullName);
             }
@@ -628,7 +627,7 @@
             RaiseFileEntriesChanged();
         }
 
-        private Boolean CanClearEntries()
+        private bool CanClearEntries()
            => ((CanExecute()) && (FileEntries.HasItems()));
 
         private void ClearEntries()
@@ -638,8 +637,8 @@
             RaiseFileEntriesChanged();
         }
 
-        private Boolean CanCopy()
-            => ((CanExecute()) && (Model.Entries.HasItems()) && (String.IsNullOrEmpty(TargetPath) == false));
+        private bool CanCopy()
+            => ((CanExecute()) && (Model.Entries.HasItems()) && (string.IsNullOrEmpty(TargetPath) == false));
 
         private void Copy(CancellationToken cancellationToken)
         {
@@ -670,25 +669,25 @@
             Model.SizeChanged -= OnModelProgressMaxChanged;
         }
 
-        private void OnModelCopyPaused(Object sender
+        private void OnModelCopyPaused(object sender
             , EventArgs<TimeSpan> e)
         {
             RemainingTimeCalculator.AddDelay(e.Value);
         }
 
-        private void OnModelProgressMaxChanged(Object sender
+        private void OnModelProgressMaxChanged(object sender
             , EventArgs e)
         {
-            ProgressMax = (Int32)(Model.Size / Divider);
+            ProgressMax = (int)(Model.Size / Divider);
         }
 
-        private void OnModelProgressValueChanged(Object sender
+        private void OnModelProgressValueChanged(object sender
             , EventArgs e)
         {
-            ProgressValue = (Int32)(Model.ProgressValue / Divider);
+            ProgressValue = (int)(Model.ProgressValue / Divider);
         }
 
-        private Boolean CanCancel()
+        private bool CanCancel()
             => (TaskIsRunning);
 
         private void Cancel()
@@ -700,7 +699,7 @@
 
         #region RaiseEvents
 
-        private void RaisePropertyChanged(String attribute)
+        private void RaisePropertyChanged(string attribute)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
         }
@@ -726,19 +725,19 @@
 
         private void SaschasFunction()
         {
-            IFolderInfo di = IOServices.GetFolderInfo(IOServices.Path.Combine(Properties.Settings.Default.SourcePath, "_RecentFiles"));
+            var di = IOServices.GetFolderInfo(IOServices.Path.Combine(Properties.Settings.Default.SourcePath, "_RecentFiles"));
 
-            IEnumerable<IFileInfo> fis = di.GetFileInfos("RecentFiles.*.xml");
+            var fis = di.GetFileInfos("RecentFiles.*.xml");
 
-            DateTime lastUsed = LastUsed.ToUniversalTime();
+            var lastUsed = LastUsed.ToUniversalTime();
 
-            DateTime undefined = (new DateTime(2000, 1, 1, 0, 0, 1)).ToUniversalTime();
+            var undefined = (new DateTime(2000, 1, 1, 0, 0, 1)).ToUniversalTime();
 
             if (lastUsed != undefined)
             {
-                foreach (IFileInfo fi in fis)
+                foreach (var fi in fis)
                 {
-                    DateTime fileTime = fi.LastWriteTime.ToUniversalTime();
+                    var fileTime = fi.LastWriteTime.ToUniversalTime();
 
                     if (fileTime > lastUsed)
                     {
@@ -752,7 +751,7 @@
 
         private void ReadLastRecentFile()
         {
-            String recentFile = IOServices.Path.Combine(Properties.Settings.Default.SourcePath, "_RecentFiles", "RecentFiles.xml");
+            var recentFile = IOServices.Path.Combine(Properties.Settings.Default.SourcePath, "_RecentFiles", "RecentFiles.xml");
 
             if (IOServices.File.Exists(recentFile))
             {
@@ -776,7 +775,7 @@
 
         private void ApplyFilter()
         {
-            IEnumerable<String> filter = Filter.IsNotEmpty() ? Filter.Split(';') : Enumerable.Empty<String>();
+            var filter = Filter.IsNotEmpty() ? Filter.Split(';') : Enumerable.Empty<string>();
 
             Model.ApplyFilter(filter, NoSubs, OnlyHDs, OnlySDs);
 

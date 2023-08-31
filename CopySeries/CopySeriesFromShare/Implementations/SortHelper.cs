@@ -5,47 +5,47 @@
 
     internal static class SortHelper
     {
-        internal static Int32 CompareFileEntries(IFileEntryViewModel left
+        internal static int CompareFileEntries(IFileEntryViewModel left
             , IFileEntryViewModel right)
         {
-            String compareLeft = CreateSortPath(left.FullName);
+            string compareLeft = CreateSortPath(left.FullName);
 
-            String compareRight = CreateSortPath(right.FullName);
+            string compareRight = CreateSortPath(right.FullName);
 
-            Int32 compare = compareLeft.CompareTo(compareRight);
-
-            return (compare);
-        }
-
-        internal static Int32 CompareSeries(String left
-            , String right)
-        {
-            String compareLeft = RemoveArticle(left);
-
-            String compareRight = RemoveArticle(right);
-
-            Int32 compare = compareLeft.CompareTo(compareRight);
+            int compare = compareLeft.CompareTo(compareRight);
 
             return (compare);
         }
 
-        private static String CreateSortPath(String input)
+        internal static int CompareSeries(string left
+            , string right)
         {
-            String[] split = input.Split('\\');
+            string compareLeft = RemoveArticle(left);
 
-            for (Int32 i = 0; i < split.Length; i++)
+            string compareRight = RemoveArticle(right);
+
+            int compare = compareLeft.CompareTo(compareRight);
+
+            return (compare);
+        }
+
+        private static string CreateSortPath(string input)
+        {
+            string[] split = input.Split('\\');
+
+            for (int i = 0; i < split.Length; i++)
             {
                 split[i] = RemoveArticle(split[i]);
             }
 
-            String output = String.Join(@"\", split);
+            string output = string.Join(@"\", split);
 
             return (output);
         }
 
-        private static String RemoveArticle(String input)
+        private static string RemoveArticle(string input)
         {
-            String output = input;
+            string output = input;
 
             if (input.StartsWith("The "))
             {

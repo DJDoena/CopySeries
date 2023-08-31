@@ -39,7 +39,7 @@
 
             CompleteSeriesFile = "CompleteSeriesList.txt";
 
-            TenGibiByte = 10L * ((UInt64)(Math.Pow(2, 30)));
+            TenGibiByte = 10L * ((ulong)(Math.Pow(2, 30)));
 
             DirFile = Path.Combine(StickDrive, "dir.txt");
         }

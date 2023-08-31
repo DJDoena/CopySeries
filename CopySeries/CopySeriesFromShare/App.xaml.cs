@@ -6,7 +6,7 @@
 
     public partial class App : Application
     {
-        internal static Boolean WasCopied { private get; set; } = false;
+        internal static bool WasCopied { private get; set; } = false;
 
         protected override void OnStartup(StartupEventArgs e)
         {

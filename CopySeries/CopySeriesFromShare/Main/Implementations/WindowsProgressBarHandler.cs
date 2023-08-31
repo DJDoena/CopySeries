@@ -5,26 +5,26 @@
 
     internal sealed class WindowsProgressBarHandler : IWindowsProgressBarHandler
     {
-        private Boolean Indeterminate
-            => (Max == Int32.MaxValue);
+        private bool Indeterminate
+            => (Max == int.MaxValue);
 
-        private Boolean IsRunning
+        private bool IsRunning
             => (Value >= 0);
 
-        private Int32 Value { get; set; }
+        private int Value { get; set; }
 
-        private Int32 Max { get; set; }
+        private int Max { get; set; }
 
         public WindowsProgressBarHandler()
         {
             Value = -1;
-            Max = Int32.MaxValue;
+            Max = int.MaxValue;
         }
 
         #region IWindowsProgressBarHandler
 
-        public void Set(Int32 value
-            , Int32 max)
+        public void Set(int value
+            , int max)
         {
             Value = value;
             Max = max;

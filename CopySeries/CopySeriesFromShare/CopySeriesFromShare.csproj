@@ -1,154 +1,45 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5184FACC-8643-40D3-85F2-2F2376835F08}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DoenaSoft.CopySeries</RootNamespace>
-    <AssemblyName>CopySeriesFromShare</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkSubset>
-    </TargetFrameworkSubset>
-    <ApplicationIcon>DJDSOFT.ICO</ApplicationIcon>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Filter\Implementations\FilterViewModel.cs" />
-    <Compile Include="Filter\IFilterViewModel.cs" />
-    <Compile Include="Filter\Implementations\FilterWindow.xaml.cs">
-      <DependentUpon>FilterWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ICloseable.cs" />
-    <Compile Include="SelectFolders\Implementations\AcceptButtonCommandParameters.cs" />
-    <Compile Include="SelectFolders\IAcceptButtonCommandParameters.cs" />
-    <Compile Include="Implementations\SortHelper.cs" />
-    <Compile Include="Implementations\WindowFactory.cs" />
-    <Compile Include="IWindowFactory.cs" />
-    <Compile Include="Main\IFileEntryViewModel.cs" />
-    <Compile Include="Main\Implementations\FileEntryViewModel.cs" />
-    <Compile Include="Main\IMainModel.cs" />
-    <Compile Include="Main\IMainViewModel.cs" />
-    <Compile Include="Main\Implementations\MainModel.cs" />
-    <Compile Include="Main\Implementations\MainViewModel.cs" />
-    <Compile Include="Main\Implementations\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Main\Implementations\OverwriteOptionConstants.cs" />
-    <Compile Include="Main\Implementations\RemainingTimeCalculator.cs" />
-    <Compile Include="Main\Implementations\SourceTarget.cs" />
-    <Compile Include="Main\Implementations\WindowsProgressBarHandler.cs" />
-    <Compile Include="Main\IRemainingTimeCalulator.cs" />
-    <Compile Include="Main\IWindowsProgressBarHandler.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="SelectFolders\Implementations\AcceptButtonCommandParametersConverter.cs" />
-    <Compile Include="SelectFolders\ISelectFoldersViewModel.cs" />
-    <Compile Include="SelectFolders\Implementations\SelectFoldersViewModel.cs" />
-    <Compile Include="SelectFolders\Implementations\SelectFoldersWindow.xaml.cs">
-      <DependentUpon>SelectFoldersWindow.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="copy.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="DJDSOFT.ICO">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj">
-      <Project>{1884DE15-E601-47F5-812E-4F6F42AA5D7D}</Project>
-      <Name>CopySeriesLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Filter\Implementations\FilterWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Main\Implementations\MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SelectFolders\Implementations\SelectFoldersWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DoenaSoft.AbstractionLayer">
-      <Version>2.0.6</Version>
-    </PackageReference>
-    <PackageReference Include="DoenaSoft.MediaInfoHelper">
-      <Version>3.0.5</Version>
-    </PackageReference>
-    <PackageReference Include="DoenaSoft.ToolBox">
-      <Version>1.0.8</Version>
-    </PackageReference>
-    <PackageReference Include="DoenaSoft.WindowsAPICodePack">
-      <Version>1.1.2</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>call copy.cmd</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net481</TargetFrameworks>
+		<Platforms>x64</Platforms>
+		<Configurations>Debug</Configurations>
+		<OutputType>WinExe</OutputType>
+		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
+		<AssemblyName>CopySeriesFromShare</AssemblyName>
+		<ApplicationIcon>djdsoft.ico</ApplicationIcon>
+		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="call copy.cmd" />
+	</Target>
+
+	<ItemGroup>
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="1.0.2" />
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.WPF" Version="1.1.4" />
+	  <PackageReference Include="DoenaSoft.WindowsAPICodePack" Version="1.1.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\Settings.Designer.cs">
+	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Settings.settings</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Properties\Settings.settings">
+	    <Generator>SettingsSingleFileGenerator</Generator>
+	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
+	</ItemGroup>
+	
 </Project>

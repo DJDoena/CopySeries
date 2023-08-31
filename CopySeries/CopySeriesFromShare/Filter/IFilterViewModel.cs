@@ -6,13 +6,13 @@
 
     internal interface IFilterViewModel : INotifyPropertyChanged
     {
-        Boolean NoSubs { get; set; }
+        bool NoSubs { get; set; }
 
-        Boolean OnlyHDs { get; set; }
+        bool OnlyHDs { get; set; }
 
-        Boolean OnlySDs { get; set; }
+        bool OnlySDs { get; set; }
 
-        String Filter { get; set; }
+        string Filter { get; set; }
 
         ICommand SelectFoldersCommand { get; }
 

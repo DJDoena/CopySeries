@@ -186,7 +186,7 @@ namespace DoenaSoft.CopySeries
 
             episodes.Sort();
 
-            CalculatePadding(episodes, out int padSeriesName, out var padEpisodeID, out var padEpisodeName, out var padAddInfo);
+            CalculatePadding(episodes, out var padSeriesName, out var padEpisodeID, out var padEpisodeName, out var padAddInfo);
 
             var mailTextBuilder = new StringBuilder();
 

@@ -7,8 +7,8 @@
     {
         void OpenMainWindow();
 
-        Boolean OpenFilterWindow();
+        bool OpenFilterWindow();
 
-        Boolean OpenSelectFoldersWindow(out IEnumerable<String> selectedShows);
+        bool OpenSelectFoldersWindow(out IEnumerable<string> selectedShows);
     }
 }

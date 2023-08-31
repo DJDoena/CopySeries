@@ -8,7 +8,7 @@
 
         void AddDelay(TimeSpan delay);
 
-        String Get(Int32 progressValue
-            , Int32 progressMax);
+        string Get(int progressValue
+            , int progressMax);
     }
 }

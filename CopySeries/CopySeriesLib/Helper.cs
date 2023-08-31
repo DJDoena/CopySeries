@@ -1,14 +1,14 @@
-﻿namespace DoenaSoft.CopySeries
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Web;
-    using ToolBox.Generics;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
+using DoenaSoft.ToolBox.Generics;
 
+namespace DoenaSoft.CopySeries
+{
     public static class Helper
     {
         public static Regex NameRegex { get; }

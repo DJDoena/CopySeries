@@ -4,7 +4,7 @@
 
     internal interface ICloseable
     {
-        Nullable<Boolean> DialogResult { get; set; }
+        Nullable<bool> DialogResult { get; set; }
 
         void Close();
     }

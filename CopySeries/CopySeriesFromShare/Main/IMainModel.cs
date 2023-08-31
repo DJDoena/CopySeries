@@ -1,21 +1,21 @@
-﻿namespace DoenaSoft.CopySeries.Main
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using ToolBox.Generics;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using DoenaSoft.ToolBox.Generics;
 
+namespace DoenaSoft.CopySeries.Main
+{
     internal interface IMainModel
     {
-        IEnumerable<String> Entries { get; }
+        IEnumerable<string> Entries { get; }
 
-        UInt64 Size { get; }
+        ulong Size { get; }
 
-        Boolean PreserveSubFolders { get; set; }
+        bool PreserveSubFolders { get; set; }
 
-        Boolean IgnoreResolutionFolders { get; set; }
+        bool IgnoreResolutionFolders { get; set; }
 
-        UInt64 ProgressValue { get; }
+        ulong ProgressValue { get; }
 
         event EventHandler<EventArgs<TimeSpan>> CopyPaused;
 
@@ -23,21 +23,21 @@
 
         event EventHandler SizeChanged;
 
-        void AddEntry(String entry);
+        void AddEntry(string entry);
 
-        void RemoveEntry(String entry);
+        void RemoveEntry(string entry);
 
         void ClearEntries();
 
-        void ApplyFilter(IEnumerable<String> filter
-            , Boolean noSubs
-            , Boolean onlyHDs
-            , Boolean onlySDs);
+        void ApplyFilter(IEnumerable<string> filter
+            , bool noSubs
+            , bool onlyHDs
+            , bool onlySDs);
 
-        void ReadXml(String fileName);
+        void ReadXml(string fileName);
 
-        void Copy(String targetLocation
-            , String overwrite
+        void Copy(string targetLocation
+            , string overwrite
             , CancellationToken cancellationToken);
     }
 }

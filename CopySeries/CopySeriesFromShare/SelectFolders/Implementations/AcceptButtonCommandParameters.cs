@@ -6,11 +6,11 @@
 
     internal sealed class AcceptButtonCommandParameters : IAcceptButtonCommandParameters
     {
-        public IEnumerable<String> SelectedFolders { get; private set; }
+        public IEnumerable<string> SelectedFolders { get; private set; }
 
         public ICloseable Closeable { get; private set; }
 
-        public AcceptButtonCommandParameters(IEnumerable<String> selectedFolders
+        public AcceptButtonCommandParameters(IEnumerable<string> selectedFolders
             , ICloseable closeable)
         {
             SelectedFolders = selectedFolders;

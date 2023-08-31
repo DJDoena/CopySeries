@@ -4,25 +4,25 @@
 
     internal sealed class FileEntryViewModel : IFileEntryViewModel
     {
-        private String File { get; }
+        private string File { get; }
 
-        public FileEntryViewModel(String file)
+        public FileEntryViewModel(string file)
         {
             File = file;
         }
 
-        public String FullName
+        public string FullName
             => (File);
 
-        public String DisplayName
+        public string DisplayName
         {
             get
             {
-                String file = File;
+                string file = File;
 
-                String root = Properties.Settings.Default.SourcePath;
+                string root = Properties.Settings.Default.SourcePath;
 
-                file = file.Replace(root, String.Empty);
+                file = file.Replace(root, string.Empty);
 
                 return (file);
             }

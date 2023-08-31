@@ -5,7 +5,7 @@
 
     internal interface IAcceptButtonCommandParameters
     {
-        IEnumerable<String> SelectedFolders { get; }
+        IEnumerable<string> SelectedFolders { get; }
 
         ICloseable Closeable { get; }
     }

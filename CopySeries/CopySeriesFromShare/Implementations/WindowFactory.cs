@@ -1,19 +1,16 @@
-﻿namespace DoenaSoft.CopySeries.Implementations
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Windows;
-    using AbstractionLayer.IOServices;
-    using AbstractionLayer.IOServices.Implementations;
-    using AbstractionLayer.UIServices;
-    using AbstractionLayer.UIServices.Implementations;
-    using Filter;
-    using Filter.Implementations;
-    using Main;
-    using Main.Implementations;
-    using SelectFolders;
-    using SelectFolders.Implementations;
+﻿using System.Collections.Generic;
+using System.Windows;
+using DoenaSoft.AbstractionLayer.IOServices;
+using DoenaSoft.AbstractionLayer.UIServices;
+using DoenaSoft.CopySeries.Filter;
+using DoenaSoft.CopySeries.Filter.Implementations;
+using DoenaSoft.CopySeries.Main;
+using DoenaSoft.CopySeries.Main.Implementations;
+using DoenaSoft.CopySeries.SelectFolders;
+using DoenaSoft.CopySeries.SelectFolders.Implementations;
 
+namespace DoenaSoft.CopySeries.Implementations
+{
     internal sealed class WindowFactory : IWindowFactory
     {
         private IUIServices UIServices { get; }
@@ -45,7 +42,7 @@
             window.Show();
         }
 
-        public Boolean OpenFilterWindow()
+        public bool OpenFilterWindow()
         {
             IFilterViewModel viewModel = new FilterViewModel(this);
 
@@ -53,12 +50,12 @@
 
             window.DataContext = viewModel;
 
-            Nullable<Boolean> result = window.ShowDialog();
+            var result = window.ShowDialog();
 
             return (result == true);
         }
 
-        public Boolean OpenSelectFoldersWindow(out IEnumerable<String> selectedShows)
+        public bool OpenSelectFoldersWindow(out IEnumerable<string> selectedShows)
         {
             ISelectFoldersViewModel viewModel = new SelectFoldersViewModel(IOServices);
 
@@ -66,7 +63,7 @@
 
             window.DataContext = viewModel;
 
-            Nullable<Boolean> result = window.ShowDialog();
+            var result = window.ShowDialog();
 
             selectedShows = viewModel.SelectedFolders;
 
