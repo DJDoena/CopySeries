@@ -19,7 +19,7 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Version>1.0.0</Version>
-		<FileVersion>1.0.</FileVersion>
+		<FileVersion>1.0.0</FileVersion>
 		<PackageIcon>djdsoft.png</PackageIcon>
 	</PropertyGroup>
 

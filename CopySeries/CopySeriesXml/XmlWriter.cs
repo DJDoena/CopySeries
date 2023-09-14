@@ -8,13 +8,13 @@ using DoenaSoft.MediaInfoHelper.Helpers;
 
 namespace DoenaSoft.CopySeries
 {
-    internal static class XmlWriter
+    public static class XmlWriter
     {
         private static string _prefix;
 
         private static string _suffix;
 
-        internal static void Write(FileInfo fileInfo, VideoMeta instance)
+        public static void Write(FileInfo fileInfo, VideoMeta instance)
         {
             var xmlFI = GetXmlFileName(fileInfo);
 
