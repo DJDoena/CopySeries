@@ -11,7 +11,7 @@ on:
 env:
   SOURCE_URL: https://api.nuget.org/v3/index.json
   PROJECT_FILE: CopySeriesXml.csproj
-  PROJECT_FOLDER: CopySeriesXml
+  PROJECT_FOLDER: CopySeries\CopySeriesXml
   BUILD_CONFIGURATION: Release
   
 jobs:
@@ -30,10 +30,10 @@ jobs:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_API_KEY}}
 
       - name: Build AnyCPU
-        run: dotnet build ${{env.PROJECT_FOLDER}}/${{env.PROJECT_FILE}} -c=${{env.BUILD_CONFIGURATION}} --no-incremental /p:Platform=AnyCPU
+        run: dotnet build ${{env.PROJECT_FOLDER}}\${{env.PROJECT_FILE}} -c=${{env.BUILD_CONFIGURATION}} --no-incremental /p:Platform=AnyCPU
 
       - name: Pack
-        run: dotnet pack ${{ env.PROJECT_FOLDER }}/${{ env.PROJECT_FILE }} --no-build -c=${{env.BUILD_CONFIGURATION}} -o=./${{env.PROJECT_FOLDER}}/
+        run: dotnet pack ${{ env.PROJECT_FOLDER }}\${{ env.PROJECT_FILE }} --no-build -c=${{env.BUILD_CONFIGURATION}} -o=./${{env.PROJECT_FOLDER}}/
           
       - name: Push generated package to Nuget.org
         run: dotnet nuget push ${{env.PROJECT_FOLDER}}\*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source "${{env.SOURCE_URL}}" --skip-duplicate
