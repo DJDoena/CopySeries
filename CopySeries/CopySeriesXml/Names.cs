@@ -24,7 +24,7 @@ namespace DoenaSoft.CopySeries
 
         public string SortName
         {
-            get => SortNameSpecified ? _sortName : LongName;
+            get => this.SortNameSpecified ? _sortName : this.LongName;
             set => _sortName = value;
         }
 
@@ -33,7 +33,7 @@ namespace DoenaSoft.CopySeries
 
         public string DisplayName
         {
-            get => DisplayNameSpecified ? _displayName : LongName;
+            get => this.DisplayNameSpecified ? _displayName : this.LongName;
             set => _displayName = value;
         }
 
@@ -42,7 +42,7 @@ namespace DoenaSoft.CopySeries
 
         public string LocalizedName
         {
-            get => LocalizedNameSpecified ? _localizedName : DisplayName;
+            get => this.LocalizedNameSpecified ? _localizedName : this.DisplayName;
             set => _localizedName = value;
         }
 
@@ -55,7 +55,7 @@ namespace DoenaSoft.CopySeries
 
         public string EpisodeNamesLink { get; set; }
 
-        public override int GetHashCode() => ShortName?.GetHashCode() ?? 0;
+        public override int GetHashCode() => this.ShortName?.GetHashCode() ?? 0;
 
         public override bool Equals(object obj)
         {
@@ -65,7 +65,7 @@ namespace DoenaSoft.CopySeries
             }
             else
             {
-                return ShortName == other.ShortName;
+                return this.ShortName == other.ShortName;
             }
         }
 

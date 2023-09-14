@@ -250,3 +250,9 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+/CopySeries/CopySeriesXml/DateShows.xml
+/CopySeries/CopySeriesXml/FileTypes.xml
+/CopySeries/CopySeriesXml/IgnoreDirectories.xml
+/CopySeries/CopySeriesXml/Names.xml
+/CopySeries/CopySeriesXml/Recipients.xml

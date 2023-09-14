@@ -1,0 +1,80 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net481</TargetFrameworks>
+		<Platforms>x64</Platforms>
+		<Configurations>Debug;Release</Configurations>
+		<OutputType>Library</OutputType>
+		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
+		<AssemblyName>DoenaSoft.CopySeriesXml</AssemblyName>
+		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<NoWarn>1701;1702;1591</NoWarn>
+		<Title>DoenaSoft.DVDProfilerHelper</Title>
+		<Company>Doena Soft.</Company>
+		<Authors>DJ Doena</Authors>
+		<Description>XML schemas for handling CopySeries</Description>
+		<PackageProjectUrl>https://github.com/DJDoena/CopySeries</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/DJDoena/CopySeries</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Version>1.0.0</Version>
+		<FileVersion>1.0.</FileVersion>
+		<PackageIcon>djdsoft.png</PackageIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="DateShows.xsd" />
+		<None Remove="FileTypes.xsd" />
+		<None Remove="IgnoreDirectories.xsd" />
+		<None Remove="KodiTVShow.xsd" />
+		<None Remove="Names.xsd" />
+		<None Remove="RecentFiles.xsd" />
+		<None Remove="Recipients.xsd" />
+		<None Remove="XslPrefix.txt" />
+		<None Remove="XslSuffix.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="DateShows.xsd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FileTypes.xsd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="IgnoreDirectories.xsd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="KodiTVShow.xsd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Names.xsd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="RecentFiles.xsd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Recipients.xsd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="XslPrefix.txt">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="XslSuffix.txt">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\..\djdsoft.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DoenaSoft.MediaInfoHelper" Version="3.1.1" />
+		<PackageReference Include="DoenaSoft.ToolBox" Version="2.0.0" />
+	</ItemGroup>
+
+</Project>

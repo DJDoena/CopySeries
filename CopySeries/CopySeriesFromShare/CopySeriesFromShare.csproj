@@ -18,8 +18,8 @@
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="1.0.2" />
-		<PackageReference Include="DoenaSoft.AbstractionLayer.WPF" Version="1.1.4" />
+		<PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="1.0.3" />
+		<PackageReference Include="DoenaSoft.AbstractionLayer.WPF" Version="1.1.5" />
 		<PackageReference Include="DoenaSoft.WindowsAPICodePack" Version="1.1.2" />
 	</ItemGroup>
 
