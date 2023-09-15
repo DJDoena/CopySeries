@@ -10,7 +10,7 @@ on:
       
 env:
   SOURCE_URL: https://api.nuget.org/v3/index.json
-  PROJECT_FILE: CopySeriesXml.csproj
+  PROJECT_FILE: CopySeries.Xml.csproj
   PROJECT_FOLDER: CopySeries\CopySeriesXml
   BUILD_CONFIGURATION: Release
   

@@ -6,11 +6,11 @@
 		<Configurations>Debug;Release</Configurations>
 		<OutputType>Library</OutputType>
 		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
-		<AssemblyName>DoenaSoft.CopySeriesXml</AssemblyName>
+		<AssemblyName>DoenaSoft.CopySeries.Xml</AssemblyName>
 		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<NoWarn>1701;1702;1591</NoWarn>
-		<Title>DoenaSoft.CopySeriesXml</Title>
+		<Title>DoenaSoft.CopySeries.Xml</Title>
 		<Company>Doena Soft.</Company>
 		<Authors>DJ Doena</Authors>
 		<Description>XML schemas for handling CopySeries</Description>
@@ -18,8 +18,8 @@
 		<RepositoryUrl>https://github.com/DJDoena/CopySeries</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>1.0.4</Version>
-		<FileVersion>1.0.4</FileVersion>
+		<Version>1.0.5</Version>
+		<FileVersion>1.0.5</FileVersion>
 		<PackageIcon>djdsoft.png</PackageIcon>
 	</PropertyGroup>
 

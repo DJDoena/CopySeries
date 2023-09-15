@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirAtTarget", "CopySeries\D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CopySeriesFromShare", "CopySeries\CopySeriesFromShare\CopySeriesFromShare.csproj", "{5184FACC-8643-40D3-85F2-2F2376835F08}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CopySeriesXml", "CopySeries\CopySeriesXml\CopySeriesXml.csproj", "{8FAF4167-6980-46AF-8A55-69A1E1C5D879}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CopySeries.Xml", "CopySeries\CopySeriesXml\CopySeries.Xml.csproj", "{8FAF4167-6980-46AF-8A55-69A1E1C5D879}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
