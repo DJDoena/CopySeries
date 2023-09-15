@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net481</TargetFrameworks>
-		<Platforms>x64</Platforms>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<Platforms>AnyCPU</Platforms>
 		<Configurations>Debug;Release</Configurations>
 		<OutputType>Library</OutputType>
 		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
@@ -18,8 +18,8 @@
 		<RepositoryUrl>https://github.com/DJDoena/CopySeries</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>1.0.0</Version>
-		<FileVersion>1.0.0</FileVersion>
+		<Version>1.0.1</Version>
+		<FileVersion>1.0.1</FileVersion>
 		<PackageIcon>djdsoft.png</PackageIcon>
 	</PropertyGroup>
 
