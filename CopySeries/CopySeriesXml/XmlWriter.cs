@@ -32,7 +32,7 @@ namespace DoenaSoft.CopySeries
             File.SetAttributes(fileInfo.FullName, FileAttributes.Archive);
         }
 
-        internal static string GetPrefix()
+        public static string GetPrefix()
         {
             if (_prefix == null)
             {
@@ -42,7 +42,7 @@ namespace DoenaSoft.CopySeries
             return _prefix;
         }
 
-        internal static string GetSuffix()
+        public static string GetSuffix()
         {
             if (_suffix == null)
             {
@@ -52,7 +52,7 @@ namespace DoenaSoft.CopySeries
             return _suffix;
         }
 
-        internal static FileInfo GetXmlFileName(FileInfo fileInfo)
+        public static FileInfo GetXmlFileName(FileInfo fileInfo)
         {
             var xmlFileName = fileInfo.Name + ".xml";
 
