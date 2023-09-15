@@ -3,16 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="TargetDir" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">c:\Videos</Value>
+      <Value Profile="(Default)">N:\Drive1\TVShows\</Value>
     </Setting>
     <Setting Name="SourceDir" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">c:\Download</Value>
+      <Value Profile="(Default)">N:\Fresh Downloads\Finished\</Value>
     </Setting>
     <Setting Name="ToolsDir" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">c:\Tools</Value>
+      <Value Profile="(Default)">N:\Fresh Downloads\!Tools\</Value>
     </Setting>
     <Setting Name="StickDrive" Type="System.String" Scope="User">
-      <Value Profile="(Default)">s:\</Value>
+      <Value Profile="(Default)">N:\Fresh Downloads\!Tools\</Value>
     </Setting>
   </Settings>
 </SettingsFile>

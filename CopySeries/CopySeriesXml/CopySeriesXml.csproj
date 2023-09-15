@@ -10,7 +10,7 @@
 		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<NoWarn>1701;1702;1591</NoWarn>
-		<Title>DoenaSoft.DVDProfilerHelper</Title>
+		<Title>DoenaSoft.CopySeriesXml</Title>
 		<Company>Doena Soft.</Company>
 		<Authors>DJ Doena</Authors>
 		<Description>XML schemas for handling CopySeries</Description>
