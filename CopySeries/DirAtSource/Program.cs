@@ -22,6 +22,8 @@ namespace DoenaSoft.CopySeries
         [STAThread]
         private static void Main(string[] args)
         {
+            Console.WriteLine(typeof(Program).Assembly.GetName().Version);
+
             var dict = new Dictionary<string, List<string>>();
 
             var full = false;
@@ -47,8 +49,7 @@ namespace DoenaSoft.CopySeries
                             {
                                 var key = split[0] + @"\" + split[1] + @"\" + split[2];
 
-                                List<string> extensions;
-                                if (dict.TryGetValue(key, out extensions) == false)
+                                if (dict.TryGetValue(key, out var extensions) == false)
                                 {
                                     dict.Add(key, null);
                                 }
@@ -106,10 +107,9 @@ namespace DoenaSoft.CopySeries
 
                             if (split.Length > 3)
                             {
-                                List<string> extensions;
                                 var key = split[0] + @"\" + split[1] + @"\" + split[2];
 
-                                if (dict.TryGetValue(key, out extensions) == false)
+                                if (dict.TryGetValue(key, out var extensions) == false)
                                 {
                                     continue;
                                 }
@@ -120,7 +120,7 @@ namespace DoenaSoft.CopySeries
                             }
                         }
 
-                        sw.WriteLine($"{shortFile};{(new FileInfo(file)).Length}");
+                        sw.WriteLine($"{shortFile};{new FileInfo(file).Length}");
                     }
                 }
             }

@@ -11,6 +11,8 @@
 		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
+		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>
+		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</FileVersion>
 	</PropertyGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

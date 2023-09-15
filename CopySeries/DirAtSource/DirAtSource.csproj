@@ -8,6 +8,8 @@
 		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
 		<AssemblyName>DirAtSource</AssemblyName>
 		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
+		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>
+		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

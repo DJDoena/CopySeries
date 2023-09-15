@@ -40,6 +40,8 @@ namespace DoenaSoft.CopySeries
 
         public static void Main(string[] args)
         {
+            Console.WriteLine(typeof(Program).Assembly.GetName().Version);
+
             if (Process.GetProcessesByName("CopySeriesIntoShareAtSource").Length > 1)
             {
                 return;
