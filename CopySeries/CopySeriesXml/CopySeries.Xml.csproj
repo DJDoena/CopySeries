@@ -18,8 +18,8 @@
 		<RepositoryUrl>https://github.com/DJDoena/CopySeries</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>1.0.6</Version>
-		<FileVersion>1.0.6</FileVersion>
+		<Version>1.0.7</Version>
+		<FileVersion>1.0.7</FileVersion>
 		<PackageIcon>djdsoft.png</PackageIcon>
 	</PropertyGroup>
 
