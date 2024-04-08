@@ -1,67 +1,64 @@
-﻿namespace DoenaSoft.CopySeries
+﻿using System;
+using System.Globalization;
+
+namespace DoenaSoft.CopySeries
 {
-    using System;
-    using System.Globalization;
 
-    public class FileSize
+    public sealed class FileSize
     {
-        private string FileSizeFormatted { get; }
+        public ulong Bytes { get; private set; }
 
-        private ulong FileSizeInBytes { get; }
-
-        public ulong InBytes => FileSizeInBytes;
-
-        public FileSize(ulong fileSize)
+        public FileSize(ulong bytes)
         {
-            FileSizeInBytes = fileSize;
-
-            FileSizeFormatted = FormatFileSize(fileSize, 0);
+            this.Bytes = bytes;
         }
 
-        private static string FormatFileSize(ulong fileSize, int numberPadding)
+        private static string FormatFileSize(ulong bytes, int padding)
         {
-            string bytesPower;
-            if (CheckOrderOfMagnitude(fileSize, 40, 1, out var roundBytes))
+            string unit;
+            if (CheckOrderOfMagnitude(bytes, 40, 1, out var rounded))
             {
-                bytesPower = " TiB";
+                unit = "TiB";
             }
-            else if (CheckOrderOfMagnitude(fileSize, 30, 1, out roundBytes))
+            else if (CheckOrderOfMagnitude(bytes, 30, 1, out rounded))
             {
-                bytesPower = " GiB";
+                unit = "GiB";
             }
-            else if (CheckOrderOfMagnitude(fileSize, 20, 0, out roundBytes))
+            else if (CheckOrderOfMagnitude(bytes, 20, 0, out rounded))
             {
-                bytesPower = " MiB";
+                unit = "MiB";
             }
-            else if (CheckOrderOfMagnitude(fileSize, 10, 0, out roundBytes))
+            else if (CheckOrderOfMagnitude(bytes, 10, 0, out rounded))
             {
-                bytesPower = " KiB";
+                unit = "KiB";
             }
             else
             {
-                roundBytes = fileSize;
+                rounded = bytes;
 
-                bytesPower = " Byte";
+                unit = "Byte";
             }
 
-            var formatted = roundBytes.ToString(CultureInfo.GetCultureInfo("de-DE")).PadLeft(numberPadding) + bytesPower;
+            var formatted = $"{rounded.ToString(CultureInfo.GetCultureInfo("de-DE")).PadLeft(padding)} {unit}";
 
             return formatted;
         }
 
-        private static bool CheckOrderOfMagnitude(decimal fileSize, double exponent, int decimals, out decimal roundBytes)
+        private static bool CheckOrderOfMagnitude(decimal number, double exponent, int decimals, out decimal rounded)
         {
-            var pow = (decimal)(Math.Pow(2, exponent));
+            var pow = (decimal)Math.Pow(2, exponent);
 
-            var quotient = fileSize / pow;
+            var quotient = number / pow;
 
-            roundBytes = Math.Round(quotient, decimals, MidpointRounding.AwayFromZero);
+            rounded = Math.Round(quotient, decimals, MidpointRounding.AwayFromZero);
 
-            return roundBytes >= 1;
+            return rounded >= 1;
         }
 
-        public override string ToString() => FileSizeFormatted;
+        public override string ToString()
+            => this.ToString(0);
 
-        public string ToString(int numberPadding) => FormatFileSize(FileSizeInBytes, numberPadding);
+        public string ToString(int padding)
+            => FormatFileSize(this.Bytes, padding);
     }
 }

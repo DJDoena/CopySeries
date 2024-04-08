@@ -33,7 +33,10 @@ namespace DoenaSoft.CopySeries
 
             var dateShowShortNames = dateShows.ShortNameList ?? Enumerable.Empty<string>();
 
+            var targetDrive = new DriveInfo(targetDir.Substring(0, 1));
+
             ulong bytes;
+            ulong targetBytes;
             bool abort;
             List<FileInfo> fis;
             do
@@ -46,7 +49,7 @@ namespace DoenaSoft.CopySeries
                 {
                     var name = fis[fileIndex].Name.ToLower();
 
-                    if ((name == "thumbs.db") || (name.EndsWith(".lnk")) || (name.EndsWith(".title")))
+                    if ((name == "thumbs.db") || name.EndsWith(".lnk") || name.EndsWith(".title"))
                     {
                         fis.RemoveAt(fileIndex);
 
@@ -58,11 +61,22 @@ namespace DoenaSoft.CopySeries
 
                 bytes = 0;
 
+                targetBytes = 0;
+
                 abort = false;
 
                 foreach (var fi in fis)
                 {
-                    bytes += (ulong)(fi.Length);
+                    var fileLength = (ulong)fi.Length;
+
+                    bytes += fileLength;
+
+                    var sourceDrive = new DriveInfo(fi.FullName.Substring(0, 1));
+
+                    if (sourceDrive.Name != targetDrive.Name)
+                    {
+                        targetBytes += fileLength;
+                    }
 
                     var match = NameRegex.Match(fi.Name);
 
@@ -109,13 +123,11 @@ namespace DoenaSoft.CopySeries
                 }
             } while (abort == true);
 
-            var driveInfo = new DriveInfo(targetDir.Substring(0, 1));
+            var availableFreeSpace = (ulong)targetDrive.AvailableFreeSpace;
 
-            var availableFreeSpace = (ulong)(driveInfo.AvailableFreeSpace);
-
-            if (availableFreeSpace <= bytes)
+            if (availableFreeSpace <= targetBytes)
             {
-                var bytesSize = new FileSize(bytes);
+                var bytesSize = new FileSize(targetBytes);
 
                 var spaceSize = new FileSize(availableFreeSpace);
 
@@ -130,7 +142,7 @@ namespace DoenaSoft.CopySeries
 
             recentFiles = new RecentFiles()
             {
-                Files = new string[fis.Count]
+                Files = new string[fis.Count],
             };
 
             episodeList = new List<EpisodeData>(fis.Count);
@@ -266,7 +278,7 @@ namespace DoenaSoft.CopySeries
 
             var episodeName = File.Exists(titleFile) ? GetEpisodeName(titleFile) : match.Groups["EpisodeName"].Value;
 
-            var fileSize = new FileSize((ulong)(fi.Length));
+            var fileSize = new FileSize((ulong)fi.Length);
 
             var episodeData = new EpisodeData(name, seasonNumber, episodeNumber, isDateShow, episodeName, addInfo, fileSize);
 
@@ -380,15 +392,15 @@ namespace DoenaSoft.CopySeries
         private static string GetResultionExtension(FileInfo fi)
         {
             string addInfo;
-            if ((fi.Name.EndsWith(".480.mkv")) || (fi.Name.EndsWith(".480.mp4")) || (fi.Name.EndsWith(".480.avi")))
+            if (fi.Name.EndsWith(".480.mkv") || fi.Name.EndsWith(".480.mp4") || fi.Name.EndsWith(".480.avi"))
             {
                 addInfo = "SD"; //".480" + fi.Extension;
             }
-            else if ((fi.Name.EndsWith(".720.mkv")) || (fi.Name.EndsWith(".720.mp4")))
+            else if (fi.Name.EndsWith(".720.mkv") || fi.Name.EndsWith(".720.mp4"))
             {
                 addInfo = "HD"; //".720" + fi.Extension;
             }
-            else if ((fi.Name.EndsWith(".1080.mkv")) || (fi.Name.EndsWith(".1080.mp4")))
+            else if (fi.Name.EndsWith(".1080.mkv") || fi.Name.EndsWith(".1080.mp4"))
             {
                 addInfo = "FullHD"; //".1080" + fi.Extension;
             }
@@ -423,7 +435,7 @@ namespace DoenaSoft.CopySeries
 
             addInfo += GetResultionExtension(newFileInfo);
 
-            return (addInfo);
+            return addInfo;
         }
 
         private static void CheckSeries(string targetDir, Name name, string seasonNumber, string resolution, Dictionary<string, bool> mismatches, string fileName, ref bool abort)

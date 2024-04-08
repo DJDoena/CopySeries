@@ -108,7 +108,7 @@
             {
                 AppendEpisode(episode, padSeriesName, padEpisodeID, padEpisodeName, padAddInfo, email);
 
-                fileSize += episode.FileSize.InBytes;
+                fileSize += episode.FileSize.Bytes;
             }
 
             AddSummarySize(padSeriesName, padEpisodeID, padEpisodeName, padAddInfo, fileSize, email);
