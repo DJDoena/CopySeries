@@ -7,7 +7,6 @@ using DoenaSoft.MediaInfoHelper.Helpers;
 using DoenaSoft.MediaInfoHelper.Reader;
 using DoenaSoft.MediaInfoHelper.Readers;
 using DoenaSoft.ToolBox.Extensions;
-using DoenaSoft.ToolBox.Generics;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace DoenaSoft.CopySeries;
@@ -109,7 +108,7 @@ public static class Program
                 EpisodeName = episode.EpisodeName
             };
 
-            (new XsltSerializer<VideoMeta>(new VideoMetaXsltSerializerDataProvider())).Serialize(fi.FullName, xmlInfo);
+            XmlWriter.Write(fi, xmlInfo);
         }
 
         var audioLanguages = (xmlInfo?.Audio ?? Enumerable.Empty<Audio>()).Select(a => a.Language).Distinct();
