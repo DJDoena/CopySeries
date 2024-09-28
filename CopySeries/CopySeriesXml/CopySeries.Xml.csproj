@@ -21,8 +21,8 @@
 		<Company>Doena Soft.</Company>
 		<Authors>DJ Doena</Authors>
 		<Copyright>Copyright © Doena Soft. 2010 - 2024</Copyright>
-		<Version>1.0.10</Version>
-		<FileVersion>1.0.10</FileVersion>
+		<Version>1.0.11</Version>
+		<FileVersion>1.0.11</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -78,7 +78,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="DoenaSoft.MediaInfoHelper" Version="3.1.6" />
-		<PackageReference Include="DoenaSoft.ToolBox" Version="3.0.1" />
 	</ItemGroup>
 
 </Project>
