@@ -1,15 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AssemblyName>CopySeriesIntoShareAtSource</AssemblyName>
+		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
+		<OutputType>Exe</OutputType>
 		<TargetFrameworks>net481</TargetFrameworks>
 		<Platforms>x64</Platforms>
 		<Configurations>Debug</Configurations>
-		<OutputType>Exe</OutputType>
-		<AppDesignerFolder>Properties</AppDesignerFolder>
-		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
-		<AssemblyName>CopySeriesIntoShareAtSource</AssemblyName>
-		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
 		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>10.0</LangVersion>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
 		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>
 		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</FileVersion>
 	</PropertyGroup>

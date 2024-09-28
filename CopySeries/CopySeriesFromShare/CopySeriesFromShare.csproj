@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AssemblyName>CopySeriesFromShare</AssemblyName>
+		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
+		<OutputType>WinExe</OutputType>
 		<TargetFrameworks>net481</TargetFrameworks>
 		<Platforms>x64</Platforms>
 		<Configurations>Debug</Configurations>
-		<OutputType>WinExe</OutputType>
-		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
-		<AssemblyName>CopySeriesFromShare</AssemblyName>
 		<ApplicationIcon>djdsoft.ico</ApplicationIcon>
-		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
-		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
+		<UseWPF>true</UseWPF>
+		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
 		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>
 		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</FileVersion>
 	</PropertyGroup>

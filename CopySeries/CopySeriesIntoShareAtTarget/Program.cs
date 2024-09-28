@@ -64,11 +64,11 @@
                 {
                     const string SubDir = "_RecentFiles";
 
-                    Serializer<RecentFiles>.Serialize(Path.Combine(TargetDir, SubDir, "RecentFiles.xml"), recentFiles);
+                    XmlSerializer<RecentFiles>.Serialize(Path.Combine(TargetDir, SubDir, "RecentFiles.xml"), recentFiles);
 
                     var newFileName = Helper.GetNewFileName("RecentFiles", "xml", TargetDir, SubDir);
 
-                    Serializer<RecentFiles>.Serialize(newFileName, recentFiles);
+                    XmlSerializer<RecentFiles>.Serialize(newFileName, recentFiles);
 
                     Helper.CleanFolder("RecentFiles", "xml", 8, TargetDir, SubDir);
 
@@ -242,7 +242,7 @@
 
         private static string GetBcc(bool newSeries)
         {
-            var recipients = Serializer<Recipients>.Deserialize(Path.Combine(TargetDir, "Recipients.xml"));
+            var recipients = XmlSerializer<Recipients>.Deserialize(Path.Combine(TargetDir, "Recipients.xml"));
 
             if (recipients?.RecipientList?.Length > 0)
             {

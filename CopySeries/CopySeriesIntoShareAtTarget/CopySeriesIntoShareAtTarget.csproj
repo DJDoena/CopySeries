@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AssemblyName>CopySeriesIntoShareAtTarget</AssemblyName>
+		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
+		<OutputType>Exe</OutputType>
 		<TargetFrameworks>net481</TargetFrameworks>
 		<Platforms>x64</Platforms>
 		<Configurations>Debug</Configurations>
-		<OutputType>Exe</OutputType>
-		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
-		<AssemblyName>CopySeriesIntoShareAtTarget</AssemblyName>
 		<ApplicationIcon>djdsoft.ico</ApplicationIcon>
 		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
 		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>

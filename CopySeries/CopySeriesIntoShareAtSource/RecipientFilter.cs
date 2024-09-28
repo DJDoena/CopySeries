@@ -1,37 +1,33 @@
-﻿namespace DoenaSoft.CopySeries
+﻿namespace DoenaSoft.CopySeries;
+
+internal static class RecipientFilter
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    public static IEnumerable<string> GetBcc(this IEnumerable<Recipient> recipients, bool newSeries, bool newSeason) => recipients.Filter(newSeries, newSeason).Select(r => r.Value);
 
-    internal static class RecipientFilter
+    public static IEnumerable<Recipient> Filter(this IEnumerable<Recipient> recipients, bool newSeries, bool newSeason) => recipients.Where(r => IsInFilter(r, newSeries, newSeason));
+
+    private static bool IsInFilter(Recipient recipient, bool isNewSeries, bool isNewSeason)
     {
-        public static IEnumerable<string> GetBcc(this IEnumerable<Recipient> recipients, bool newSeries, bool newSeason) => recipients.Filter(newSeries, newSeason).Select(r => r.Value);
+        var interested = false;
 
-        public static IEnumerable<Recipient> Filter(this IEnumerable<Recipient> recipients, bool newSeries, bool newSeason) => recipients.Where(r => IsInFilter(r, newSeries, newSeason));
-
-        private static bool IsInFilter(Recipient recipient, bool isNewSeries, bool isNewSeason)
+        if (!string.IsNullOrEmpty(recipient.Flags))
         {
-            var interested = false;
+            var flags = recipient.Flags.Split(',');
 
-            if (!string.IsNullOrEmpty(recipient.Flags))
+            if (isNewSeries)
             {
-                var flags = recipient.Flags.Split(',');
-
-                if (isNewSeries)
-                {
-                    interested = flags.Any(f => f == "TVShows" || f == "NewSeason" || f == "NewSeries");
-                }
-                else if (isNewSeason)
-                {
-                    interested = flags.Any(f => f == "TVShows" || f == "NewSeason");
-                }
-                else
-                {
-                    interested = flags.Any(f => f == "TVShows");
-                }
+                interested = flags.Any(f => f == "TVShows" || f == "NewSeason" || f == "NewSeries");
             }
-
-            return interested;
+            else if (isNewSeason)
+            {
+                interested = flags.Any(f => f == "TVShows" || f == "NewSeason");
+            }
+            else
+            {
+                interested = flags.Any(f => f == "TVShows");
+            }
         }
+
+        return interested;
     }
 }

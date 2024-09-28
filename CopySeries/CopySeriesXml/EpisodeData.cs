@@ -1,179 +1,174 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using DoenaSoft.MediaInfoHelper.Helpers;
-using DoenaSoft.ToolBox.Extensions;
 
-namespace DoenaSoft.CopySeries
+namespace DoenaSoft.CopySeries;
+
+public sealed class EpisodeData : IComparable<EpisodeData>
 {
-    public sealed class EpisodeData : IComparable<EpisodeData>
+    private Name Name { get; }
+
+    private string SeasonNumber { get; }
+
+    private string EpisodeNumber { get; }
+
+    private bool IsDateShow { get; }
+
+    public string EpisodeID { get; }
+
+    public string EpisodeName { get; }
+
+    public string AddInfo { get; }
+
+    public FileSize FileSize { get; }
+
+    public string SeriesName => this.Name.LongName;
+
+    private string SortName => this.Name.SortName;
+
+    public string DisplayName => this.Name.DisplayName;
+
+    public bool IsFirstOfSeason => this.IsDateShow == false && this.EpisodeNumber.StartsWith("01");
+
+    public bool IsPilot => (this.IsDateShow == false) && (this.SeasonNumber == "1") && this.IsFirstOfSeason;
+
+    public string OriginalLanguage => this.Name.OriginalLanguage;
+
+    public string Link => this.Name.Link;
+
+    private List<string> Audio { get; }
+
+    private List<string> Subtitles { get; }
+
+    public EpisodeData(Name name, string seasonNumber, string episodeNumber, bool isDateShow, string episodeName, string addInfo, FileSize fileSize)
     {
-        private Name Name { get; }
+        this.Name = name;
 
-        private string SeasonNumber { get; }
+        this.SeasonNumber = seasonNumber;
 
-        private string EpisodeNumber { get; }
+        this.EpisodeNumber = episodeNumber;
 
-        private bool IsDateShow { get; }
+        this.IsDateShow = isDateShow;
 
-        public string EpisodeID { get; }
+        this.EpisodeID = this.GetEpisodeId(episodeName);
 
-        public string EpisodeName { get; }
+        this.EpisodeName = this.GetEpisodeName(episodeName);
 
-        public string AddInfo { get; }
+        this.AddInfo = addInfo;
 
-        public FileSize FileSize { get; }
+        this.FileSize = fileSize;
 
-        public string SeriesName => Name.LongName;
+        this.Audio = new List<string>();
 
-        private string SortName => Name.SortName;
+        this.Subtitles = new List<string>();
+    }
 
-        public string DisplayName => Name.DisplayName;
+    #region IComparable<EpisodeData>
 
-        public bool IsFirstOfSeason => IsDateShow == false && EpisodeNumber.StartsWith("01");
-
-        public bool IsPilot => (IsDateShow == false) && (SeasonNumber == "1") && IsFirstOfSeason;
-
-        public string OriginalLanguage => Name.OriginalLanguage;
-
-        public string Link => Name.Link;
-
-        private List<string> Audio { get; }
-
-        private List<string> Subtitles { get; }
-
-        public EpisodeData(Name name, string seasonNumber, string episodeNumber, bool isDateShow, string episodeName, string addInfo, FileSize fileSize)
+    int IComparable<EpisodeData>.CompareTo(EpisodeData other)
+    {
+        if (other == null)
         {
-            Name = name;
-
-            SeasonNumber = seasonNumber;
-
-            EpisodeNumber = episodeNumber;
-
-            IsDateShow = isDateShow;
-
-            EpisodeID = GetEpisodeId(episodeName);
-
-            EpisodeName = GetEpisodeName(episodeName);
-
-            AddInfo = addInfo;
-
-            FileSize = fileSize;
-
-            Audio = new List<string>();
-
-            Subtitles = new List<string>();
+            return 1;
         }
 
-        #region IComparable<EpisodeData>
+        var compare = this.SortName.CompareTo(other.SortName);
 
-        int IComparable<EpisodeData>.CompareTo(EpisodeData other)
+        if (compare == 0)
         {
-            if (other == null)
-            {
-                return 1;
-            }
-
-            var compare = SortName.CompareTo(other.SortName);
-
-            if (compare == 0)
-            {
-                compare = SeasonNumber.PadLeft(2, '0').CompareTo(other.SeasonNumber.PadLeft(2, '0'));
-            }
-
-            if (compare == 0)
-            {
-                compare = EpisodeNumber.CompareTo(other.EpisodeNumber);
-            }
-
-            if (compare == 0)
-            {
-                compare = AddInfo.CompareTo(other.AddInfo);
-            }
-
-            return compare;
+            compare = this.SeasonNumber.PadLeft(2, '0').CompareTo(other.SeasonNumber.PadLeft(2, '0'));
         }
 
-        #endregion
-
-        private string GetEpisodeName(string episodeName) => IsDateShow ? episodeName.Substring(11) : episodeName;
-
-        private string GetEpisodeId(string episodeName) => IsDateShow ? GetDateShowId(episodeName) : GetSeasonShowId();
-
-        private string GetDateShowId(string episodeName) => DateTime.Parse(episodeName.Substring(0, 10)).ToShortDateString();
-
-        private string GetSeasonShowId() => $"{SeasonNumber}x{EpisodeNumber}";
-
-        public override string ToString()
+        if (compare == 0)
         {
-            var sb = new StringBuilder();
-
-            sb.Append(DisplayName);
-            sb.Append(" ");
-            sb.Append(EpisodeID);
-            sb.Append(" \"");
-            sb.Append(EpisodeName);
-            sb.Append("\"");
-            sb.Append(" ");
-            sb.Append(AddInfo);
-            sb.Append(" (");
-            sb.Append(FileSize.ToString());
-            sb.Append(")");
-
-            if (Audio.Count > 0)
-            {
-                sb.Append(": ");
-
-                sb.Append(GetAudio());
-            }
-
-            return sb.ToString();
+            compare = this.EpisodeNumber.CompareTo(other.EpisodeNumber);
         }
 
-        public void AddAudio(string language)
+        if (compare == 0)
         {
-            if (language.IsNotEmpty())
-            {
-                Audio.Add(language);
-            }
+            compare = this.AddInfo.CompareTo(other.AddInfo);
         }
 
-        public string GetAudio()
+        return compare;
+    }
+
+    #endregion
+
+    private string GetEpisodeName(string episodeName) => this.IsDateShow ? episodeName.Substring(11) : episodeName;
+
+    private string GetEpisodeId(string episodeName) => this.IsDateShow ? this.GetDateShowId(episodeName) : this.GetSeasonShowId();
+
+    private string GetDateShowId(string episodeName) => DateTime.Parse(episodeName.Substring(0, 10)).ToShortDateString();
+
+    private string GetSeasonShowId() => $"{this.SeasonNumber}x{this.EpisodeNumber}";
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+
+        sb.Append(this.DisplayName);
+        sb.Append(" ");
+        sb.Append(this.EpisodeID);
+        sb.Append(" \"");
+        sb.Append(this.EpisodeName);
+        sb.Append("\"");
+        sb.Append(" ");
+        sb.Append(this.AddInfo);
+        sb.Append(" (");
+        sb.Append(this.FileSize.ToString());
+        sb.Append(")");
+
+        if (this.Audio.Count > 0)
         {
-            if (Audio.Count > 0)
-            {
-                var audio = Audio
-                    .StandardizeLanguage()
-                    .OrderBy(LanguageExtensions.GetLanguageWeight);
+            sb.Append(": ");
 
-                return string.Join(", ", audio);
-            }
-
-            return string.Empty;
+            sb.Append(this.GetAudio());
         }
 
-        public void AddSubtitle(string language)
+        return sb.ToString();
+    }
+
+    public void AddAudio(string language)
+    {
+        if (!string.IsNullOrWhiteSpace(language))
         {
-            if (language.IsNotEmpty())
-            {
-                Subtitles.Add(language);
-            }
+            this.Audio.Add(language);
+        }
+    }
+
+    public string GetAudio()
+    {
+        if (this.Audio.Count > 0)
+        {
+            var audio = this.Audio
+                .StandardizeLanguage()
+                .OrderBy(LanguageExtensions.GetLanguageWeight);
+
+            return string.Join(", ", audio);
         }
 
-        public string GetSubtitles()
+        return string.Empty;
+    }
+
+    public void AddSubtitle(string language)
+    {
+        if (!string.IsNullOrWhiteSpace(language))
         {
-            if (Subtitles.Count > 0)
-            {
-                var filtered = Subtitles
-                    .StandardizeLanguage()
-                    .Where(s => s == "en" || s == "de" || s == "es" || s == "ar")
-                    .OrderBy(LanguageExtensions.GetLanguageWeight);
-
-                return string.Join(", ", filtered);
-            }
-
-            return string.Empty;
+            this.Subtitles.Add(language);
         }
+    }
+
+    public string GetSubtitles()
+    {
+        if (this.Subtitles.Count > 0)
+        {
+            var filtered = this.Subtitles
+                .StandardizeLanguage()
+                .Where(s => s == "en" || s == "de" || s == "es" || s == "ar")
+                .OrderBy(LanguageExtensions.GetLanguageWeight);
+
+            return string.Join(", ", filtered);
+        }
+
+        return string.Empty;
     }
 }

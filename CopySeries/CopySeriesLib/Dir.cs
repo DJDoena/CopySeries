@@ -1,76 +1,73 @@
-﻿namespace DoenaSoft.CopySeries
+﻿using System.Text;
+using DoenaSoft.ToolBox.Generics;
+
+namespace DoenaSoft.CopySeries;
+
+public static class Dir
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-    using ToolBox.Generics;
-
-    public static class Dir
+    public static void CreateFileList(string stickDrive, string targetDir)
     {
-        public static void CreateFileList(string stickDrive, string targetDir)
+        var ignoreDirectories = XmlSerializer<IgnoreDirectories>.Deserialize(stickDrive + "IgnoreDirectories.xml");
+
+        Dictionary<string, bool> ignoreDirectoriesDict;
+        if (ignoreDirectories.IgnoreDirectoryList != null)
         {
-            var ignoreDirectories = Serializer<IgnoreDirectories>.Deserialize(stickDrive + "IgnoreDirectories.xml");
+            ignoreDirectoriesDict = new Dictionary<string, bool>(ignoreDirectories.IgnoreDirectoryList.Length);
 
-            Dictionary<string, bool> ignoreDirectoriesDict;
-            if (ignoreDirectories.IgnoreDirectoryList != null)
+            foreach (var dir in ignoreDirectories.IgnoreDirectoryList)
             {
-                ignoreDirectoriesDict = new Dictionary<string, bool>(ignoreDirectories.IgnoreDirectoryList.Length);
-
-                foreach (var dir in ignoreDirectories.IgnoreDirectoryList)
+                if (Directory.Exists(dir))
                 {
-                    if (Directory.Exists(dir))
-                    {
-                        ignoreDirectoriesDict[dir] = true;
-                    }
+                    ignoreDirectoriesDict[dir] = true;
                 }
             }
-            else
+        }
+        else
+        {
+            ignoreDirectoriesDict = new Dictionary<string, bool>(0);
+        }
+
+        var fileTypes = XmlSerializer<FileTypes>.Deserialize(stickDrive + "FileTypes.xml");
+
+        var allFiles = new List<string>(2500);
+
+        if (fileTypes.FileTypeList?.Length > 0)
+        {
+            var directories = new List<string>(Directory.GetDirectories(targetDir, "*.*", SearchOption.AllDirectories));
+
+            for (var directoryIndex = directories.Count - 1; directoryIndex >= 0; directoryIndex--)
             {
-                ignoreDirectoriesDict = new Dictionary<string, bool>(0);
-            }
-
-            var fileTypes = Serializer<FileTypes>.Deserialize(stickDrive + "FileTypes.xml");
-
-            var allFiles = new List<string>(2500);
-
-            if (fileTypes.FileTypeList?.Length > 0)
-            {
-                var directories = new List<string>(Directory.GetDirectories(targetDir, "*.*", SearchOption.AllDirectories));
-
-                for (var directoryIndex = directories.Count - 1; directoryIndex >= 0; directoryIndex--)
+                foreach (var key in ignoreDirectoriesDict.Keys)
                 {
-                    foreach (var key in ignoreDirectoriesDict.Keys)
+                    if (directories[directoryIndex].StartsWith(key))
                     {
-                        if (directories[directoryIndex].StartsWith(key))
-                        {
-                            directories.RemoveAt(directoryIndex);
+                        directories.RemoveAt(directoryIndex);
 
-                            break;
-                        }
-                    }
-                }
-
-                foreach (var directory in directories)
-                {
-                    foreach (var fileType in fileTypes.FileTypeList)
-                    {
-                        allFiles.AddRange(Directory.GetFiles(directory, "*." + fileType, SearchOption.TopDirectoryOnly));
+                        break;
                     }
                 }
             }
 
-            allFiles.Sort();
-
-            var dirFile = Path.Combine(stickDrive, "dir.txt");
-
-            using (var fs = new FileStream(dirFile, FileMode.Create, FileAccess.Write, FileShare.None))
+            foreach (var directory in directories)
             {
-                using (var sw = new StreamWriter(fs, Encoding.GetEncoding(1252)))
+                foreach (var fileType in fileTypes.FileTypeList)
                 {
-                    foreach (var file in allFiles)
-                    {
-                        sw.WriteLine($"{file.Replace(targetDir, string.Empty)};{(new FileInfo(file)).Length}");
-                    }
+                    allFiles.AddRange(Directory.GetFiles(directory, "*." + fileType, SearchOption.TopDirectoryOnly));
+                }
+            }
+        }
+
+        allFiles.Sort();
+
+        var dirFile = Path.Combine(stickDrive, "dir.txt");
+
+        using (var fs = new FileStream(dirFile, FileMode.Create, FileAccess.Write, FileShare.None))
+        {
+            using (var sw = new StreamWriter(fs, Encoding.GetEncoding(1252)))
+            {
+                foreach (var file in allFiles)
+                {
+                    sw.WriteLine($"{file.Replace(targetDir, string.Empty)};{(new FileInfo(file)).Length}");
                 }
             }
         }

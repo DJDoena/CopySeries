@@ -1,16 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AssemblyName>CopySeriesLib</AssemblyName>
+		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
+		<OutputType>Library</OutputType>
 		<TargetFrameworks>net481</TargetFrameworks>
 		<Platforms>x64</Platforms>
 		<Configurations>Debug</Configurations>
-		<OutputType>Library</OutputType>
-		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
-		<AssemblyName>CopySeriesLib</AssemblyName>
+		<ImplicitUsings>true</ImplicitUsings>
+		<LangVersion>10.0</LangVersion>
 		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
 		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>
 		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</FileVersion>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="DoenaSoft.ToolBox" Version="3.0.1" />
+	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\CopySeriesXml\CopySeries.Xml.csproj" />

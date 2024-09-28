@@ -132,7 +132,7 @@
             {
                 using (var fs = IOServices.GetFileStream(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read))
                 {
-                    var recentFiles = Serializer<RecentFiles>.Deserialize(fs);
+                    var recentFiles = XmlSerializer<RecentFiles>.Deserialize(fs);
 
                     foreach (var file in recentFiles.Files)
                     {
