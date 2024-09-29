@@ -17,6 +17,7 @@ internal sealed class VideoMetaXsltSerializerDataProvider : IXsltSerializerDataP
     private static string GetContent(string file)
     {
         using var sr = new StreamReader(file);
+
         var content = sr.ReadToEnd();
 
         return content;

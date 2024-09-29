@@ -6,7 +6,7 @@ namespace DoenaSoft.CopySeries;
 public static class XmlWriter
 {
     public static void Write(FileInfo fileInfo, VideoMeta instance)
-        => (new XsltSerializer<VideoMeta>(new VideoMetaXsltSerializerDataProvider())).Serialize(fileInfo.FullName, instance);
+        => (new XsltSerializer<VideoMeta>(new VideoMetaXsltSerializerDataProvider())).Serialize(GetXmlFileName(fileInfo).FullName, instance);
 
     public static FileInfo GetXmlFileName(FileInfo fileInfo)
     {
