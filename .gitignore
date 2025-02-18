@@ -256,3 +256,4 @@ paket-files/
 /CopySeries/CopySeriesXml/IgnoreDirectories.xml
 /CopySeries/CopySeriesXml/Names.xml
 /CopySeries/CopySeriesXml/Recipients.xml
+/CopySeries/CopySeriesIntoShareAtSource/Properties/launchSettings.json
