@@ -32,25 +32,23 @@ public static class Program
 
         if (full == false)
         {
-            using (var fs = new FileStream(RemoteDirFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using var fs = new FileStream(RemoteDirFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+            using var sr = new StreamReader(fs, Encoding.GetEncoding(1252));
+
+            while (sr.EndOfStream == false)
             {
-                using (var sr = new StreamReader(fs, Encoding.GetEncoding(1252)))
+                var line = sr.ReadLine();
+
+                var split = line.Split('\\');
+
+                if (split.Length > 3)
                 {
-                    while (sr.EndOfStream == false)
+                    var key = split[0] + @"\" + split[1] + @"\" + split[2];
+
+                    if (!dict.ContainsKey(key))
                     {
-                        var line = sr.ReadLine();
-
-                        var split = line.Split('\\');
-
-                        if (split.Length > 3)
-                        {
-                            var key = split[0] + @"\" + split[1] + @"\" + split[2];
-
-                            if (dict.TryGetValue(key, out var extensions) == false)
-                            {
-                                dict.Add(key, null);
-                            }
-                        }
+                        dict.Add(key, null);
                     }
                 }
             }

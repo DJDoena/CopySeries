@@ -9,9 +9,9 @@
 		<Configurations>Debug</Configurations>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<LangVersion>10.0</LangVersion>
+		<LangVersion>12.0</LangVersion>
 		<AppDesignerFolder>Properties</AppDesignerFolder>
-		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
+		<Copyright>Copyright © Doena Soft. 2010 - 2025</Copyright>
 		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>
 		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</FileVersion>
 	</PropertyGroup>

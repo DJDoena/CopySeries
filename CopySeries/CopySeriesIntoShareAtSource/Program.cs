@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using DoenaSoft.MediaInfoHelper.DataObjects.FFProbeMetaXml;
@@ -34,7 +36,7 @@ public static class Program
 
     public static void Main(string[] args)
     {
-        Console.WriteLine(typeof(Program).Assembly.GetName().Version);
+        Console.WriteLine($"v{typeof(Program).Assembly.GetName().Version}");
 
         if (Process.GetProcessesByName("CopySeriesIntoShareAtSource").Length > 1)
         {
@@ -198,6 +200,8 @@ public static class Program
         mailTextBuilder.AppendLine();
         mailTextBuilder.AppendLine();
 
+        TryAddIPv6Address(mailTextBuilder);
+
         AddNewSeasonInfo(episodes, out var subject, out var addInfo, out var newSeries, out var newSeason);
 
         if (!string.IsNullOrEmpty(addInfo))
@@ -236,6 +240,24 @@ public static class Program
                 Thread.Sleep(30000);
             }
         } while (success == false);
+    }
+
+    private static void TryAddIPv6Address(StringBuilder mailTextBuilder)
+    {
+        try
+        {
+            var address = Dns.GetHostAddresses("djd-nas")?.FirstOrDefault(a => a.AddressFamily == AddressFamily.InterNetworkV6);
+
+            if (address != null)
+            {                
+                mailTextBuilder.AppendLine($"IPv6: [{address}]");
+                mailTextBuilder.AppendLine();
+                mailTextBuilder.AppendLine();
+            }
+        }
+        catch
+        {
+        }
     }
 
     private static void CalculatePadding(List<EpisodeData> episodes, out int padSeriesName, out int padEpisodeID, out int padEpisodeName, out int padAddInfo)
