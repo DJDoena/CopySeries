@@ -9,13 +9,22 @@
 		<Configurations>Debug</Configurations>
 		<ImplicitUsings>true</ImplicitUsings>
 		<LangVersion>10.0</LangVersion>
-		<Copyright>Copyright © Doena Soft. 2010 - 2023</Copyright>
-		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>
-		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</FileVersion>
+		<Title>DoenaSoft.CopySeriesLib</Title>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/DJDoena/CopySeries</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/DJDoena/CopySeries</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageIcon>djdsoft.png</PackageIcon>
+		<Description>Lib for handling CopySeries</Description>
+		<Company>Doena Soft.</Company>
+		<Authors>DJ Doena</Authors>
+		<Copyright>Copyright © Doena Soft. 2010 - 2025</Copyright>
+		<Version>1.0.0</Version>
+		<FileVersion>1.0.0</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\CopySeriesXml\CopySeries.Xml.csproj" />
+	  <PackageReference Include="DoenaSoft.CopySeries.Xml" Version="1.0.14" />
 	</ItemGroup>
 
 </Project>

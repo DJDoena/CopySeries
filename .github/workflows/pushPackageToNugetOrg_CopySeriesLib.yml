@@ -1,0 +1,39 @@
+#In this script it is important to set the RepositoryUrl in the *.csproj file
+
+name: NuGet Generation for DoenaSoft.CopySeriesLib
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+      
+env:
+  SOURCE_URL: https://api.nuget.org/v3/index.json
+  PROJECT_FILE: CopySeriesLib.csproj
+  PROJECT_FOLDER: CopySeries\CopySeriesLib
+  BUILD_CONFIGURATION: Release
+  
+jobs:
+  build:
+    runs-on: windows-latest
+    name: Update NuGet package
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+     
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          source-url: ${{env.SOURCE_URL}}  
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.NUGET_API_KEY}}
+
+      - name: Build AnyCPU
+        run: dotnet build ${{env.PROJECT_FOLDER}}\${{env.PROJECT_FILE}} -c=${{env.BUILD_CONFIGURATION}} --no-incremental /p:Platform=AnyCPU
+
+      - name: Pack
+        run: dotnet pack ${{ env.PROJECT_FOLDER }}\${{ env.PROJECT_FILE }} --no-build -c=${{env.BUILD_CONFIGURATION}} -o=./${{env.PROJECT_FOLDER}}/
+          
+      - name: Push generated package to Nuget.org
+        run: dotnet nuget push ${{env.PROJECT_FOLDER}}\*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source "${{env.SOURCE_URL}}" --skip-duplicate
