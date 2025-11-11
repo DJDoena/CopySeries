@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<AssemblyName>CopySeriesLib</AssemblyName>
+		<AssemblyName>DoenaSoft.CopySeries.Lib</AssemblyName>
 		<RootNamespace>DoenaSoft.CopySeries</RootNamespace>
 		<OutputType>Library</OutputType>
 		<TargetFrameworks>net481</TargetFrameworks>
@@ -9,7 +9,7 @@
 		<Configurations>Debug</Configurations>
 		<ImplicitUsings>true</ImplicitUsings>
 		<LangVersion>10.0</LangVersion>
-		<Title>DoenaSoft.CopySeriesLib</Title>
+		<Title>DoenaSoft.CopySeries.Lib</Title>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/DJDoena/CopySeries</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/DJDoena/CopySeries</RepositoryUrl>
