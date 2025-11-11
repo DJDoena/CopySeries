@@ -1,0 +1,44 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Source" />
+    <BuildType Name="Target" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/Source/">
+    <Project Path="CopySeries/CopySeriesIntoShareAtSource/CopySeriesIntoShareAtSource.csproj">
+      <BuildDependency Project="CopySeries/DirAtSource/DirAtSource.csproj" />
+      <BuildType Project="Debug" />
+      <Platform Project="x64" />
+      <Build Solution="Target|*" Project="false" />
+    </Project>
+    <Project Path="CopySeries/DirAtSource/DirAtSource.csproj">
+      <BuildType Project="Debug" />
+      <Platform Project="x64" />
+      <Build Solution="Target|*" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/Target/">
+    <Project Path="CopySeries/CopySeriesFromShare/CopySeriesFromShare.csproj">
+      <BuildType Project="Debug" />
+      <Platform Project="x64" />
+      <Build Solution="Source|*" Project="false" />
+    </Project>
+    <Project Path="CopySeries/CopySeriesIntoShareAtTarget/CopySeriesIntoShareAtTarget.csproj">
+      <BuildType Project="Debug" />
+      <Platform Project="x64" />
+      <Build Solution="Source|*" Project="false" />
+    </Project>
+    <Project Path="CopySeries/DirAtTarget/DirAtTarget.csproj">
+      <BuildType Project="Debug" />
+      <Platform Project="x64" />
+      <Build Solution="Source|*" Project="false" />
+    </Project>
+  </Folder>
+  <Project Path="CopySeries/CopySeriesLib/CopySeriesLib.csproj">
+    <BuildType Project="Debug" />
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="CopySeries/CopySeriesXml/CopySeries.Xml.csproj">
+    <BuildType Project="Debug" />
+  </Project>
+</Solution>
