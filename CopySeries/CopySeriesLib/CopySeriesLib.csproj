@@ -8,7 +8,7 @@
 		<Platforms>x64</Platforms>
 		<Configurations>Debug</Configurations>
 		<ImplicitUsings>true</ImplicitUsings>
-		<LangVersion>10.0</LangVersion>
+		<LangVersion>14.0</LangVersion>
 		<Title>DoenaSoft.CopySeries.Lib</Title>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/DJDoena/CopySeries</PackageProjectUrl>
@@ -18,9 +18,9 @@
 		<Description>Lib for handling CopySeries</Description>
 		<Company>Doena Soft.</Company>
 		<Authors>DJ Doena</Authors>
-		<Copyright>Copyright © Doena Soft. 2010 - 2025</Copyright>
-		<Version>1.0.2</Version>
-		<FileVersion>1.0.2</FileVersion>
+		<Copyright>Copyright © Doena Soft. 2010 - 2026</Copyright>
+		<Version>1.0.3</Version>
+		<FileVersion>1.0.3</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -31,7 +31,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="DoenaSoft.CopySeries.Xml" Version="1.0.16" />
+	  <PackageReference Include="DoenaSoft.CopySeries.Xml" Version="1.0.17" />
 	</ItemGroup>
 
 </Project>

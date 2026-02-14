@@ -9,7 +9,7 @@
 		<Configurations>Debug;Release</Configurations>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<LangVersion>10.0</LangVersion>
+		<LangVersion>14.0</LangVersion>
 		<NoWarn>1701;1702;1591</NoWarn>
 		<Title>DoenaSoft.CopySeries.Xml</Title>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -20,7 +20,7 @@
 		<Description>XML schemas for handling CopySeries</Description>
 		<Company>Doena Soft.</Company>
 		<Authors>DJ Doena</Authors>
-		<Copyright>Copyright © Doena Soft. 2010 - 2025</Copyright>
+		<Copyright>Copyright © Doena Soft. 2010 - 2026</Copyright>
 		<Version>1.0.17</Version>
 		<FileVersion>1.0.17</FileVersion>
 	</PropertyGroup>
