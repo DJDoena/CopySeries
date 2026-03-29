@@ -9,7 +9,7 @@
 		<Configurations>Debug;Release</Configurations>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<LangVersion>14.0</LangVersion>
+		<LangVersion>latest</LangVersion>
 		<NoWarn>1701;1702;1591</NoWarn>
 		<Title>DoenaSoft.CopySeries.Xml</Title>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -21,8 +21,8 @@
 		<Company>Doena Soft.</Company>
 		<Authors>DJ Doena</Authors>
 		<Copyright>Copyright © Doena Soft. 2010 - 2026</Copyright>
-		<Version>1.0.17</Version>
-		<FileVersion>1.0.17</FileVersion>
+		<Version>1.0.18</Version>
+		<FileVersion>1.0.18</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -77,7 +77,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DoenaSoft.MediaInfoHelper" Version="3.1.10" />
+		<PackageReference Include="DoenaSoft.MediaInfoHelper" Version="3.1.11" />
 	</ItemGroup>
 
 </Project>
