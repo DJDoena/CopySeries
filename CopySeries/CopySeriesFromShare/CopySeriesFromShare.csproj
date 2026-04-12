@@ -20,7 +20,7 @@
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="DoenaSoft.AbstractionLayer.WPF" Version="3.0.4" />
+		<PackageReference Include="DoenaSoft.AbstractionLayer.WPF" Version="3.0.5" />
 		<PackageReference Include="DoenaSoft.WindowsAPICodePack" Version="4.8.3" />
 	</ItemGroup>
 
