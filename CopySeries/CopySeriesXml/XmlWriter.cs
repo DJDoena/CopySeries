@@ -1,12 +1,12 @@
 ﻿using DoenaSoft.MediaInfoHelper.DataObjects.VideoMetaXml;
-using DoenaSoft.ToolBox.Generics;
+using DoenaSoft.MediaInfoHelper.Writers;
 
 namespace DoenaSoft.CopySeries;
 
 public static class XmlWriter
 {
     public static void Write(FileInfo fileInfo, VideoMeta instance)
-        => (new XsltSerializer<VideoMeta>(new VideoMetaXsltSerializerDataProvider())).Serialize(GetXmlFileName(fileInfo).FullName, instance);
+        => MetaWriter.WriteVideoMetaDocument(instance, fileInfo.FullName);
 
     public static FileInfo GetXmlFileName(FileInfo fileInfo)
     {

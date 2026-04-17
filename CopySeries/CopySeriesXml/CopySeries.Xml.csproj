@@ -21,8 +21,8 @@
 		<Company>Doena Soft.</Company>
 		<Authors>DJ Doena</Authors>
 		<Copyright>Copyright © Doena Soft. 2010 - 2026</Copyright>
-		<Version>1.0.19</Version>
-		<FileVersion>1.0.19</FileVersion>
+		<Version>1.0.20</Version>
+		<FileVersion>1.0.20</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -33,8 +33,6 @@
 		<None Remove="Names.xsd" />
 		<None Remove="RecentFiles.xsd" />
 		<None Remove="Recipients.xsd" />
-		<None Remove="XslPrefix.txt" />
-		<None Remove="XslSuffix.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -59,14 +57,6 @@
 		<Content Include="Recipients.xsd">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="XslPrefix.txt">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<PackageCopyToOutput>true</PackageCopyToOutput>
-		</Content>
-		<Content Include="XslSuffix.txt">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<PackageCopyToOutput>true</PackageCopyToOutput>
-		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -77,7 +67,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DoenaSoft.MediaInfoHelper" Version="3.1.12" />
+		<PackageReference Include="DoenaSoft.MediaInfoHelper" Version="3.2.2" />
 	</ItemGroup>
 
 </Project>
