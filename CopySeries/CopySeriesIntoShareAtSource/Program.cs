@@ -18,8 +18,6 @@ public static class Program
 
     private static readonly string _namesDir;
 
-    private static readonly string _toolsDir;
-
     private static readonly ulong _tenGibiByte;
 
     static Program()
@@ -27,8 +25,6 @@ public static class Program
         _targetDir = CopySeriesIntoShareAtSourceSettings.Default.TargetDir;
 
         _namesDir = CopySeriesIntoShareAtSourceSettings.Default.StickDrive;
-
-        _toolsDir = CopySeriesIntoShareAtSourceSettings.Default.ToolsDir;
 
         _tenGibiByte = 10L * ((ulong)(Math.Pow(2, 30)));
     }
