@@ -6,7 +6,6 @@ using System.Text;
 using DoenaSoft.MediaInfoHelper.DataObjects.FFProbeMetaXml;
 using DoenaSoft.MediaInfoHelper.DataObjects.VideoMetaXml;
 using DoenaSoft.MediaInfoHelper.Helpers;
-using DoenaSoft.MediaInfoHelper.Reader;
 using DoenaSoft.MediaInfoHelper.Readers;
 using DoenaSoft.ToolBox.Extensions;
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -249,7 +248,7 @@ public static class Program
             var address = Dns.GetHostAddresses("djd-nas")?.FirstOrDefault(a => a.AddressFamily == AddressFamily.InterNetworkV6);
 
             if (address != null)
-            {                
+            {
                 mailTextBuilder.AppendLine($"IPv6: [{address}]");
                 mailTextBuilder.AppendLine();
                 mailTextBuilder.AppendLine();

@@ -23,12 +23,8 @@
 	</Target>
 
 	<ItemGroup>
+		<PackageReference Include="DoenaSoft.CopySeries.Lib" Version="1.0.6" />
 		<PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1004" />
-	</ItemGroup>
-
-
-	<ItemGroup>
-		<ProjectReference Include="..\CopySeriesLib\CopySeriesLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
