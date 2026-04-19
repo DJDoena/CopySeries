@@ -19,8 +19,8 @@
 		<Company>Doena Soft.</Company>
 		<Authors>DJ Doena</Authors>
 		<Copyright>Copyright © Doena Soft. 2010 - 2026</Copyright>
-		<Version>1.0.6</Version>
-		<FileVersion>1.0.6</FileVersion>
+		<Version>1.0.7</Version>
+		<FileVersion>1.0.7</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -28,7 +28,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="DoenaSoft.CopySeries.Xml" Version="1.0.20" />
+	  <PackageReference Include="DoenaSoft.CopySeries.Xml" Version="1.0.22" />
 	</ItemGroup>
 
 </Project>
