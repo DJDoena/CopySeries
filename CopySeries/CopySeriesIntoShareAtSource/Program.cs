@@ -124,7 +124,7 @@ public static class Program
         if (additionalSubtitleMediaInfos?.Count > 0)
         {
             var subtitles = xmlInfo.Subtitle == null
-                  ? new List<Subtitle>()
+                  ? []
                   : new List<Subtitle>(xmlInfo.Subtitle);
 
             var additionalSubtitleXmlInfos = additionalSubtitleMediaInfos.Select(mi => FFProbeMetaConverter.Convert(mi, episode.OriginalLanguage)).ToList();
@@ -142,18 +142,16 @@ public static class Program
 
         if (xmlInfo.Audio?.Any() == true)
         {
-            xmlInfo.Audio = xmlInfo.Audio
+            xmlInfo.Audio = [.. xmlInfo.Audio
                 .Where(a => !string.IsNullOrWhiteSpace(a?.Language))
-                .Select(FixLanguage)
-                .ToArray();
+                .Select(FixLanguage)];
         }
 
         if (xmlInfo.Subtitle?.Any() == true)
         {
-            xmlInfo.Subtitle = xmlInfo.Subtitle
+            xmlInfo.Subtitle = [.. xmlInfo.Subtitle
                 .Where(s => !string.IsNullOrWhiteSpace(s?.Language))
-                .Select(FixLanguage)
-                .ToArray();
+                .Select(FixLanguage)];
         }
 
         return xmlInfo;
