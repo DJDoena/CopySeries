@@ -39,7 +39,7 @@ public static class Helper
         {
             var mismatches = new Dictionary<string, bool>();
 
-            fis = new List<FileInfo>(sourceDir.GetFiles("*.*", searchOption));
+            fis = [.. sourceDir.GetFiles("*.*", searchOption)];
 
             for (var fileIndex = fis.Count - 1; fileIndex >= 0; fileIndex--)
             {
