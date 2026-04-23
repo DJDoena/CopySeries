@@ -108,13 +108,13 @@ public static class Program
             XmlWriter.Write(fi, xmlInfo);
         }
 
-        var audioLanguages = (xmlInfo?.Audio ?? Enumerable.Empty<Audio>()).Select(a => a.Language).Distinct();
+        var audioLanguages = (xmlInfo?.Audio ?? []).Select(a => a.Language).Distinct();
 
-        audioLanguages.ForEach(language => episode.AddAudio(language));
+        audioLanguages.ForEach(episode.AddAudio);
 
-        var subtitleLanguages = (xmlInfo?.Subtitle ?? Enumerable.Empty<Subtitle>()).Select(s => s.Language).Distinct();
+        var subtitleLanguages = (xmlInfo?.Subtitle ?? []).Select(s => s.Language).Distinct();
 
-        subtitleLanguages.ForEach(language => episode.AddSubtitle(language));
+        subtitleLanguages.ForEach(episode.AddSubtitle);
     }
 
     private static VideoMeta GetXmlInfo(EpisodeData episode, FFProbeMeta mediaInfo, List<FFProbeMeta> additionalSubtitleMediaInfos)

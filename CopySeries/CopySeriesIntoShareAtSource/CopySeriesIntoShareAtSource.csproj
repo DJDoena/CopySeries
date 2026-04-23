@@ -11,7 +11,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>12.0</LangVersion>
 		<AppDesignerFolder>Properties</AppDesignerFolder>
-		<Copyright>Copyright © Doena Soft. 2010 - 2025</Copyright>
+		<Copyright>Copyright © Doena Soft. 2010 - 2026</Copyright>
 		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>
 		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</FileVersion>
 		<ApplicationIcon>djdsoft.ico</ApplicationIcon>
@@ -23,7 +23,7 @@
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="DoenaSoft.CopySeries.Lib" Version="1.0.7" />
+		<PackageReference Include="DoenaSoft.CopySeries.Lib" Version="1.0.8" />
 		<PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1004" />
 	</ItemGroup>
 
